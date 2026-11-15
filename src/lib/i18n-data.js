@@ -1,6 +1,7 @@
 // Textos que vêm dos arquivos de dados (catálogo, configuração, mapas, manifestos) — português → inglês.
 // Revisados à mão (não é tradução automática). Padrões com números ficam em PATTERNS.
 export const DATA_DICT = {
+  "Holuhraun, Islândia": "Holuhraun, Iceland", "Mauna Kea, Havaí, EUA": "Mauna Kea, Hawaii, USA", "Erg Chebbi, Saara, Marrocos": "Erg Chebbi, Sahara, Morocco",
   "'Fraco/forte' é a expressão da banda de 1 µm, não a abundância modal.": "'Weak/strong' refers to how pronounced the 1 µm band is, not to modal abundance.",
   "30% da área sem dados": "30% of the area without data",
   "A Lua não tem atmosfera e Marte tem menos de 1% da pressão da Terra. Nenhum local terrestre reproduz isso.": "The Moon has no atmosphere and Mars has less than 1% of Earth's pressure. No place on Earth reproduces that.",

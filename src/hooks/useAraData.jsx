@@ -42,7 +42,8 @@ export function AraDataProvider({ children }) {
     if (state.status !== "ready") return state;
     // textos dos dados no idioma escolhido (nomes, grupos, notas, avisos)
     const { config, catalog, sites, grid, stability, sim } = Object.fromEntries(Object.entries(state.raw).map(([k, v]) => [k, localizeData(v)]));
-    const cells = core.unpackGrid(grid);
+    // as 4 referências do Protótipo 1 duplicam locais da grade: ficam fora da busca (710 células comparáveis)
+    const cells = core.unpackGrid(grid).filter((c) => c.region !== "prototipo1");
     const siteById = (id) => catalog.sites.find((s) => s.id === id);
     const regionName = (id) => grid.regions.find((r) => r.id === id)?.name ?? id;
     return {

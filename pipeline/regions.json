@@ -4,29 +4,97 @@
     {
       "id": "atacama",
       "name": "Atacama, Chile",
-      "bbox": [-68.60, -23.20, -68.05, -22.70],
+      "bbox": [
+        -68.6,
+        -23.2,
+        -68.05,
+        -22.7
+      ],
       "why": "Baseline: contains the Prototype 1 site (Valle de la Luna)",
-      "known": [{ "name": "Valle de la Luna (Prototype 1)", "lat": -22.9112, "lon": -68.3230 }]
+      "known": [
+        {
+          "name": "Valle de la Luna (Prototype 1)",
+          "lat": -22.9112,
+          "lon": -68.323
+        }
+      ]
     },
     {
       "id": "death_valley",
       "name": "Death Valley, USA",
-      "bbox": [-117.10, 36.20, -116.55, 36.65],
+      "bbox": [
+        -117.1,
+        36.2,
+        -116.55,
+        36.65
+      ],
       "why": "Baseline: contains the Prototype 1 site",
-      "known": [{ "name": "Death Valley (Prototype 1)", "lat": 36.420, "lon": -116.812 }]
+      "known": [
+        {
+          "name": "Death Valley (Prototype 1)",
+          "lat": 36.42,
+          "lon": -116.812
+        }
+      ]
     },
     {
       "id": "lut",
       "name": "Lut desert yardangs (Kaluts), Iran",
-      "bbox": [57.90, 30.30, 58.45, 30.80],
+      "bbox": [
+        57.9,
+        30.3,
+        58.45,
+        30.8
+      ],
       "why": "Example of a less-used hyper-arid candidate. Check the bbox on a map before running",
       "known": []
     },
     {
       "id": "pinacate",
       "name": "Pinacate volcanic field, Mexico",
-      "bbox": [-113.75, 31.60, -113.25, 32.05],
+      "bbox": [
+        -113.75,
+        31.6,
+        -113.25,
+        32.05
+      ],
       "why": "Example of a volcanic candidate (team to confirm)",
+      "known": []
+    },
+    {
+      "id": "holuhraun",
+      "name": "Holuhraun, Islândia",
+      "bbox": [
+        -17.252745,
+        64.670338,
+        -16.407255,
+        65.029662
+      ],
+      "why": "Campo de lava para investigar relevo vulcânico análogo.",
+      "known": []
+    },
+    {
+      "id": "mauna_kea",
+      "name": "Mauna Kea, Havaí, EUA",
+      "bbox": [
+        -155.660975,
+        19.640338,
+        -155.279025,
+        19.999662
+      ],
+      "why": "Vulcão basáltico para investigar cones e variações de relevo.",
+      "known": []
+    },
+    {
+      "id": "erg_chebbi",
+      "name": "Erg Chebbi, Saara, Marrocos",
+      "bbox": [
+        -4.186005,
+        30.958438,
+        -3.766195,
+        31.317762
+      ],
+      "why": "Campo de dunas para investigar padrões topográficos eólicos.",
       "known": []
     }
   ]

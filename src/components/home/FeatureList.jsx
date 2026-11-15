@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useTr } from "../../hooks/useSettings.jsx";
 
 const STEPS = [
-  { to: "/explorar", label: ["Encontrar o análogo", "Find the analog"], sub: ["Ranking explicável de 522 lugares da Terra", "Explainable ranking of 522 places on Earth"] },
+  { to: "/explorar", label: ["Encontrar o análogo", "Find the analog"], sub: ["Ranking explicável de 710 lugares da Terra", "Explainable ranking of 710 places on Earth"] },
   { to: "/3d", label: ["Comparar em 3D", "Compare in 3D"], sub: ["Relevo real, lado a lado, com Sol e sombras", "Real relief, side by side, with Sun and shadows"] },
   { to: "/laboratorio", label: ["Testar os dados", "Test the data"], sub: ["Até onde o dado sustenta a semelhança", "How far the data supports the similarity"] },
   { to: "/missao", label: ["Planejar a missão", "Plan the mission"], sub: ["Dirija um rover sobre o relevo real", "Drive a rover on real terrain"] },

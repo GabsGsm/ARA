@@ -9,7 +9,7 @@ import { buildLiveScene } from "../lib/terrain3d/liveEarth.js";
 import { SEASON, fmtHour, shadowMask, sunPosition } from "../lib/terrain3d/sun.js";
 import { ROVERS, SOURCES, critAngle, softFromTI, startState, steerForWarp, step, tiSampler, withinTargetRadius } from "../lib/mission/rover.js";
 import { STRATEGIES, describeRoute, hazardGrid, obstacleLimit, planRover, routeEnergy } from "../lib/mission/planner.js";
-import { ROCK_SOURCES, clearRockCache, rockAbundance, rocksNear } from "../lib/mission/rocks.js";
+import { ROCK_SOURCES, clearRockCache, rockAbundance, rocksNear, setRockCorridor } from "../lib/mission/rocks.js";
 import { PP_SOURCES, at, consequences, loadMemory, permanentShadow, rasterTracks, rasterZones, saveMemory, sceneMemory, scienceFromMinerals } from "../lib/mission/pristine.js";
 import LiveEarthPicker from "../components/lab3d/LiveEarthPicker.jsx";
 import VehiclePicker from "../components/mission/VehiclePicker.jsx";
@@ -339,6 +339,10 @@ export default function Mission() {
     const nxt = route?.pts?.[Math.min(3, route.pts.length - 1)] ?? pts.b;
     const heading = nxt ? Math.atan2(nxt.u - pts.a.u, -(nxt.v - pts.a.v)) : 0;
     setLayer("imagem");
+    // a rota dourada passa entre as pedras (corredor livre); fora dela vale o campo estatístico
+    const lane = route?.pts ? [...route.pts, ...(pts.b ? [pts.b] : [])] : null;
+    setRockCorridor(lane ? lane.map((q) => ({ x: (q.u - 0.5) * S, z: (q.v - 0.5) * S })) : null, spec.width / 2 + 3, spec.wheelR * 0.6);
+    v._rockAt = null;
     const hits = new Set();
     const arrivalRadius = Math.max(2, spec.len * 1.25);
     const startTargetDistance = pts.b ? Math.hypot(pts.a.u - pts.b.u, pts.a.v - pts.b.v) * S : Infinity;
@@ -401,6 +405,7 @@ export default function Mission() {
     if (narration) speak(tr(...END[st.status][0]), lang);
   };
   // atalho só de desenvolvimento para testar o relatório
+  if (import.meta.env.DEV) window.__araState = () => sim.current && { st: sim.current.st, route: sim.current.route?.pts, b: pts.b, S, phase };
   if (import.meta.env.DEV) window.__araFinish = (status = "chegou") => sim.current && finishRef.current?.({ ...sim.current.st, status, dist: Math.max(10, sim.current.st.dist) });
   const stopDrive = useCallback(() => {
     const v = view.current;
@@ -414,7 +419,7 @@ export default function Mission() {
     setHud(null); setReport(null); setPhase("plan"); setPicker(true);
     setPanels({ left: true, right: true });
   };
-  const replan = () => { stopDrive(); sim.current = null; setHud(null); setReport(null); setPhase("plan"); setPanels({ left: true, right: true }); setPts((p) => ({ ...p })); };
+  const replan = () => { setRockCorridor(null); stopDrive(); sim.current = null; setHud(null); setReport(null); setPhase("plan"); setPanels({ left: true, right: true }); setPts((p) => ({ ...p })); };
   const retry = () => { stopDrive(); start(); };
   useEffect(() => () => stopDrive(), [stopDrive]);
 
@@ -579,6 +584,7 @@ export default function Mission() {
               <div><dt>{tr("Tempo de missão", "Mission time")}</dt><dd>{fmtDur(hud.t)}</dd></div>
             </dl>
             {hud.blocked && <p className="ms-alert">{tr(`Pedra de ${fmt(hud.blocked.h * 100, 0)} cm à frente — maior do que o veículo passa. Dê ré e contorne.`, `A ${fmt(hud.blocked.h * 100, 0)} cm rock ahead — taller than the vehicle can clear. Back up and go around.`)}</p>}
+            {hud.off != null && hud.off > spec.width / 2 + 3 && <p className="ms-alert">{tr("Fora do corredor da rota: aqui as pedras não foram desviadas pelo planejamento. Volte para a linha dourada.", "Outside the route corridor: rocks here were not avoided by the plan. Get back on the gold line.")}</p>}
             {!hud.inSun && spec.solarW > 0 && <p className="ms-alert">{tr("Na sombra: os painéis não carregam. Não pare aqui.", "In shade: panels are not charging. Do not stop here.")}</p>}
             {hud.slip > 0.6 && <p className="ms-alert">{tr("Patinando muito: pare, dê ré e suba em ângulo menor.", "Slipping hard: stop, back up and climb at a lower angle.")}</p>}
             {at(sci, NG, hud.u, hud.v) ? <p className="ms-alert pp">{tr("Você está numa zona científica protegida.", "You are inside a protected science zone.")}</p> : null}

@@ -1,0 +1,3 @@
+﻿modelo,k_anterior,k_novo_melhor,ari_antigo_vs_novo_k2,ari_antigo_vs_novo_melhor,silhouette_novo_melhor
+3_atributos,2,2,0.945440620865084,0.945440620865084,0.7247016765398363
+5_atributos,2,2,0.9286866694289424,0.9286866694289424,0.7049006242295085

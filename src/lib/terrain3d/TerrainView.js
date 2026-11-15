@@ -785,10 +785,13 @@ reflectedLight.directSpecular *= vShadow;
       return;
     }
     if (this.mode !== "walk") return;
+    const tag = e.target?.tagName;
+    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
     const down = e.type === "keydown";
     this.keys[e.code] = down;
     if (down && e.code === "Space") this.jump();
-    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyS", "KeyD"].includes(e.code) && this.pointerLock.isLocked) e.preventDefault();
+    // setas e espaço não rolam a página enquanto se caminha
+    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code) || (this.pointerLock.isLocked && ["KeyW", "KeyA", "KeyS", "KeyD"].includes(e.code))) e.preventDefault();
   }
 
   tick() {
@@ -798,12 +801,21 @@ reflectedLight.directSpecular *= vShadow;
       const k = this.keys, speed = (k.ShiftLeft || k.ShiftRight || this.running) ? RUN : WALK;
       const j = this.joy || { x: 0, y: 0 };
       let fwd = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0) - j.y;
-      let side = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0) + j.x;
+      // sem o mouse travado (teclado só): A/D e ←/→ GIRAM o astronauta; Q/E andam de lado.
+      // com o mouse travado: o mouse gira e A/D andam de lado (como num jogo em terceira pessoa).
+      const lr = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0);
+      const strafe = (k.KeyE ? 1 : 0) - (k.KeyQ ? 1 : 0);
+      let side = (this.pointerLock.isLocked ? lr : 0) + strafe + j.x;
+      if (!this.pointerLock.isLocked && lr) {
+        const e = new THREE.Euler(0, 0, 0, "YXZ").setFromQuaternion(this.camera.quaternion);
+        e.y -= lr * 1.9 * dt; this.camera.quaternion.setFromEuler(e);
+      }
       const inputLength = Math.hypot(fwd, side);
       if (inputLength > 1) { fwd /= inputLength; side /= inputLength; }
-      const p = this.walkPos, yaw = this.camera.rotation.y, half = this.S / 2 - 1;
-      p.x += (Math.sin(yaw) * fwd + Math.cos(yaw) * side) * speed * dt;
-      p.z += (-Math.cos(yaw) * fwd + Math.sin(yaw) * side) * speed * dt;
+      const p = this.walkPos, yaw = new THREE.Euler(0, 0, 0, "YXZ").setFromQuaternion(this.camera.quaternion).y, half = this.S / 2 - 1;
+      // frente da câmera (three.js olha para −Z): (−sen yaw, −cos yaw); direita: (cos yaw, −sen yaw)
+      p.x += (-Math.sin(yaw) * fwd + Math.cos(yaw) * side) * speed * dt;
+      p.z += (-Math.cos(yaw) * fwd - Math.sin(yaw) * side) * speed * dt;
       p.x = Math.max(-half, Math.min(half, p.x)); p.z = Math.max(-half, Math.min(half, p.z));
       const u = p.x / this.S + 0.5, v = p.z / this.S + 0.5;
       const elevation = (heightAt(this.data, u, v) - this.mid) * this.exag;
@@ -825,7 +837,7 @@ reflectedLight.directSpecular *= vShadow;
         parts.legs[0].rotation.x = swing; parts.legs[1].rotation.x = -swing;
         parts.arms[0].rotation.x = -swing * 0.7; parts.arms[1].rotation.x = swing * 0.7;
       }
-      const cameraX = p.x - Math.sin(yaw) * WALK_CAMERA_DISTANCE;
+      const cameraX = p.x + Math.sin(yaw) * WALK_CAMERA_DISTANCE;
       const cameraZ = p.z + Math.cos(yaw) * WALK_CAMERA_DISTANCE;
       const cameraU = cameraX / this.S + 0.5, cameraV = cameraZ / this.S + 0.5;
       const cameraGround = (heightAt(this.data, cameraU, cameraV) - this.mid) * this.exag;

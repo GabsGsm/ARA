@@ -3,6 +3,7 @@
 // com Dijkstra/A* em grade de 8 vizinhos. Nada aqui é o software da NASA: é a nossa versão, explicável.
 import { critAngle, slipAt } from "./rover.js";
 import { densityTallerThan } from "./rocks.js";
+import { slopeGrid } from "../terrain3d/data.js";
 
 const RAD = Math.PI / 180;
 
@@ -21,11 +22,14 @@ class Heap {
 export function hazardGrid(scene, N, softAt, litMask, extra = {}) {
   const { heights, n, meta } = scene;
   const k = n / N, h = new Float32Array(N * N), soft = new Float32Array(N * N), lit = new Float32Array(N * N).fill(1);
+  // rampa mais íngreme dentro da célula, na resolução fina do relevo (a célula grossa suaviza rampas curtas)
+  const fine = slopeGrid(scene), smax = new Float32Array(N * N);
   const sci = new Uint8Array(N * N), dist = new Uint8Array(N * N), rock = new Float32Array(N * N);
   for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
     let s = 0, c = 0, l = 0;
     for (let yy = Math.floor(y * k); yy < Math.floor((y + 1) * k); yy++) for (let xx = Math.floor(x * k); xx < Math.floor((x + 1) * k); xx++) {
       s += heights[yy * n + xx]; if (litMask) l += litMask[yy * n + xx]; c++;
+      if (fine[yy * n + xx] > smax[y * N + x]) smax[y * N + x] = fine[yy * n + xx];
     }
     h[y * N + x] = s / c;
     if (litMask) lit[y * N + x] = l / c;
@@ -35,7 +39,7 @@ export function hazardGrid(scene, N, softAt, litMask, extra = {}) {
     if (extra.disturbedAt) dist[i] = extra.disturbedAt(u, v) ? 1 : 0;
     rock[i] = extra.kAt ? extra.kAt(u, v) : 0.03;
   }
-  return { h, soft, lit, sci, dist, rock, N, res: meta.size_m / N };
+  return { h, soft, lit, sci, dist, rock, smax, N, res: meta.size_m / N };
 }
 
 /**
@@ -44,7 +48,7 @@ export function hazardGrid(scene, N, softAt, litMask, extra = {}) {
  * e penaliza areia (patinagem esperada) e sombra (rover solar não recarrega; frio).
  */
 export function planRover(grid, a, b, spec, w = { soil: 1, shadow: 1, sci: 0, reuse: 0, rock: 1 }) {
-  const { h, soft, lit, sci, dist: dz, rock, N, res } = grid;
+  const { h, soft, lit, sci, dist: dz, rock, smax, N, res } = grid;
   const hBlock = obstacleLimit(spec);
   const idx = (u, v) => Math.min(N - 1, Math.max(0, Math.floor(v * N))) * N + Math.min(N - 1, Math.max(0, Math.floor(u * N)));
   const s = idx(a.u, a.v), t = idx(b.u, b.v);
@@ -63,14 +67,19 @@ export function planRover(grid, a, b, spec, w = { soil: 1, shadow: 1, sci: 0, re
       if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
       const j = ny * N + nx, run = Math.hypot(dx, dy) * res, rise = h[j] - h[i];
       const ang = Math.atan2(Math.abs(rise), run) / RAD;
-      const limUp = Math.min(spec.maxSlope, critAngle(soft[j]) - 3);
+      // subida limitada a ~70% do ângulo de atolamento: a grade de ~78 m suaviza as rampas curtas reais
+      const limUp = Math.min(spec.maxSlope, critAngle(soft[j]) * 0.7);
       if (ang > (rise > 0 ? limUp : spec.maxSlope)) continue;
+      // rampas curtas dentro da célula: evita as que passam do limite de patinagem na escala do veículo
+      const steep = smax ? smax[j] : 0;
+      if (steep > Math.min(spec.maxSlope + 5, critAngle(soft[j]) * 0.97) && j !== t && i !== s) continue;
       const slip = rise > 0 ? slipAt(ang, soft[j]) : 0.03;
       let c = run * (1 + 0.08 * ang + (rise > 0 ? 0.06 * ang : 0)) / (1 - Math.min(0.9, slip))
         + run * w.soil * 1.5 * soft[j] * soft[j]
         + run * w.shadow * (1 - lit[j]) * (solar ? 2.5 : 0.4)
         + run * (w.rock ?? 1) * 400 * densityTallerThan(rock[j], hBlock) * spec.width
-        + run * (w.sci || 0) * sci[j];
+        + run * (w.sci || 0) * sci[j]
+        + run * 0.04 * Math.max(0, steep - limUp * 0.6);
       if (w.reuse && dz[j]) c *= 1 - w.reuse; // andar sobre trilha antiga não perturba chão novo
       const nd = dist[i] + c;
       if (nd < dist[j]) { dist[j] = nd; prev[j] = i; heap.push(nd + Math.hypot(nx - tx, ny - ty) * res, j); }

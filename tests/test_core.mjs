@@ -119,3 +119,22 @@ console.log("core.js: todos os testes passaram");
   const contact = step(startState(spec, { u: 0.5, v: 0.5 }), spec, { throttle: 1, steer: 0 }, 0.05, makeEnv({ ...rock, x: 0.8 }));
   assert.ok(contact.wheel > 0);
 }
+
+// 11) expansão terrestre 710 (Holuhraun, Mauna Kea, Erg Chebbi): critérios de homologação do relatório da equipe
+{
+  assert.equal(allCells.length, 714, "714 registros: 710 células de comparação + 4 referências do protótipo");
+  const search = allCells.filter((c) => c.region !== "prototipo1");
+  assert.equal(search.length, 710);
+  for (const r of ["holuhraun", "mauna_kea", "erg_chebbi"]) assert.equal(search.filter((c) => c.region === r).length, 64, r);
+  const ref = readFileSync(new URL("data/source/ml_710/ranking_top10_710.csv", root), "utf8")
+    .replace(/^﻿/, "").trim().split(/\r?\n/).slice(1).map((l) => l.split(","));
+  for (const sid of new Set(ref.map((r) => r[0]))) {
+    const ours = rank(sites[sid].terrain, search, w, scales, 10);
+    const theirs = ref.filter((r) => r[0] === sid).sort((a, b) => a[1] - b[1]);
+    assert.deepEqual(ours.map((r) => r.cell.id), theirs.map((r) => r[2]), `top 10 ${sid}`);
+    theirs.forEach((r, i) => assert.ok(Math.abs(ours[i].d - Number(r[4])) < 1e-6, `${sid}/${r[2]}`));
+  }
+  assert.equal(rank(sites.jezero_03.terrain, search, w, scales, 1)[0].cell.id, "erg_chebbi_004003");
+  assert.equal(rank(sites.nobile_rim_01.terrain, search, w, scales, 1)[0].cell.id, "mauna_kea_005003");
+  console.log("Expansão 710: 714 registros, 3 × 64 novas células e Top 10 dos 8 setores idênticos à entrega");
+}

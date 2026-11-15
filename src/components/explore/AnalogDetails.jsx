@@ -10,6 +10,7 @@ import { BODY_LABEL, fmt, withUnit } from "../../lib/format.js";
 import StatusChip from "../ui/StatusChip.jsx";
 import Pill from "../ui/Pill.jsx";
 import InspectPanel from "./InspectPanel.jsx";
+import MLProfile from "./MLProfile.jsx";
 import SiteFigure from "./SiteFigure.jsx";
 import TrekMap from "./TrekMap.jsx";
 import { T } from "../../lib/i18n.js";
@@ -109,7 +110,7 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
           </div>
         )}
 
-        {tab === "comparacao" && <InspectPanel siteId={ex.siteId} siteVec={siteVec} result={result} weights={ex.weights} />}
+        {tab === "comparacao" && <><InspectPanel siteId={ex.siteId} siteVec={siteVec} result={result} weights={ex.weights} /><MLProfile siteId={ex.siteId} cellId={cell.id} /></>}
 
         {tab === "limitacoes" && (
           <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
