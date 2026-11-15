@@ -1,0 +1,368 @@
+{
+ "run_id": "2026-11-15T08-32Z-8f98",
+ "started_utc": "2026-11-15T08:32:50+00:00",
+ "script": "build_earth_grid.py",
+ "code_version": "67100d6",
+ "params": {
+  "region": {
+   "id": "lut",
+   "name": "Lut desert yardangs (Kaluts), Iran",
+   "bbox": [
+    57.9,
+    30.3,
+    58.45,
+    30.8
+   ],
+   "why": "Example of a less-used hyper-arid candidate. Check the bbox on a map before running",
+   "known": []
+  },
+  "epsg": 32640,
+  "zoom": 12,
+  "res_m": 100,
+  "cell_km": 5,
+  "roughness_window_px": 3,
+  "resampling": "bilinear"
+ },
+ "sources": [
+  {
+   "name": "Mapzen Terrain Tiles (AWS Open Data, elevation-tiles-prod)",
+   "url": "https://registry.opendata.aws/terrain-tiles/",
+   "product_id": null,
+   "doi": null,
+   "license": null,
+   "accessed_utc": "2026-11-15T08:32:50+00:00"
+  }
+ ],
+ "requests": [
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2706/1686.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2707/1686.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2708/1686.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2709/1686.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2710/1686.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2711/1686.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2712/1686.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1679.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1680.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1681.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1682.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1683.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1684.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1685.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/2713/1686.tif",
+   "status": 200,
+   "n": null
+  }
+ ],
+ "quality": {
+  "cells_total": 132,
+  "cells_valid": 132,
+  "raster_valid_pct": 100.0
+ },
+ "notes": [],
+ "finished_utc": "2026-11-15T08:33:07+00:00",
+ "outputs": [
+  "data\\earth_grid.json"
+ ]
+}

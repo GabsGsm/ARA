@@ -1,0 +1,2253 @@
+{
+ "run_id": "2026-11-15T08-33Z-dfd0",
+ "started_utc": "2026-11-15T08:33:22+00:00",
+ "script": "enrich_context.py",
+ "code_version": "67100d6",
+ "params": {
+  "top": 20,
+  "points_per_cell": 5
+ },
+ "sources": [
+  {
+   "name": "Macrostrat API v2 /geologic_units/map (CC-BY 4.0)",
+   "url": "https://macrostrat.org/api/v2/geologic_units/map",
+   "product_id": null,
+   "doi": null,
+   "license": null,
+   "accessed_utc": "2026-11-15T08:33:22+00:00"
+  }
+ ],
+ "requests": [
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.71843&lng=-68.34271",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73192&lng=-68.35733",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73192&lng=-68.32809",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70494&lng=-68.35733",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70494&lng=-68.32809",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.71822&lng=-68.29402",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73171&lng=-68.30864",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73171&lng=-68.2794",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70473&lng=-68.30864",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70473&lng=-68.2794",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.718&lng=-68.24534",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73149&lng=-68.25996",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73149&lng=-68.23072",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70451&lng=-68.25996",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70451&lng=-68.23072",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.71776&lng=-68.19666",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73125&lng=-68.21128",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73125&lng=-68.18204",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70427&lng=-68.21128",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70427&lng=-68.18204",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.71751&lng=-68.14797",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.731&lng=-68.16259",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.731&lng=-68.13335",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70402&lng=-68.16259",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70402&lng=-68.13335",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.71724&lng=-68.09929",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73073&lng=-68.11391",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73073&lng=-68.08467",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70375&lng=-68.11391",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70375&lng=-68.08467",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.71696&lng=-68.05061",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73045&lng=-68.06523",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.73045&lng=-68.03599",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70347&lng=-68.06523",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.70347&lng=-68.03599",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.76316&lng=-68.24509",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.77665&lng=-68.25972",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.77665&lng=-68.23046",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74967&lng=-68.25972",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74967&lng=-68.23046",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.76267&lng=-68.14769",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.77616&lng=-68.16232",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.77616&lng=-68.13306",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74918&lng=-68.16232",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74918&lng=-68.13306",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.76241&lng=-68.09899",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.7759&lng=-68.11362",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.7759&lng=-68.08436",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74892&lng=-68.11362",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74892&lng=-68.08436",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.76212&lng=-68.0503",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.77561&lng=-68.06493",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.77561&lng=-68.03567",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74863&lng=-68.06493",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.74863&lng=-68.03567",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.80913&lng=-68.43971",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82262&lng=-68.45434",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82262&lng=-68.42508",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.79564&lng=-68.45434",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.79564&lng=-68.42508",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.80809&lng=-68.19613",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82158&lng=-68.21076",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82158&lng=-68.1815",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.7946&lng=-68.21076",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.7946&lng=-68.1815",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.80784&lng=-68.14741",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82133&lng=-68.16204",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82133&lng=-68.13278",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.79435&lng=-68.16204",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.79435&lng=-68.13278",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.80757&lng=-68.0987",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82106&lng=-68.11333",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.82106&lng=-68.08407",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.79408&lng=-68.11333",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.79408&lng=-68.08407",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.85245&lng=-68.04967",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.86594&lng=-68.06431",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.86594&lng=-68.03503",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.83896&lng=-68.06431",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.83896&lng=-68.03503",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.89978&lng=-68.53685",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.91327&lng=-68.55149",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.91327&lng=-68.52221",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.88629&lng=-68.55149",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.88629&lng=-68.52221",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.89888&lng=-68.29309",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.91237&lng=-68.30773",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.91237&lng=-68.27845",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.88539&lng=-68.30773",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.88539&lng=-68.27845",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.89842&lng=-68.1956",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.91191&lng=-68.21024",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.91191&lng=-68.18096",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.88493&lng=-68.21024",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.88493&lng=-68.18096",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.94494&lng=-68.53669",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.95843&lng=-68.55134",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.95843&lng=-68.52204",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.93145&lng=-68.55134",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.93145&lng=-68.52204",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.94479&lng=-68.48793",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.95828&lng=-68.50258",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.95828&lng=-68.47328",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.9313&lng=-68.50258",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.9313&lng=-68.47328",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.94425&lng=-68.34162",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.95774&lng=-68.35627",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.95774&lng=-68.32697",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.93076&lng=-68.35627",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.93076&lng=-68.32697",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.98996&lng=-68.48776",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.00345&lng=-68.50241",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.00345&lng=-68.47311",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.97647&lng=-68.50241",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.97647&lng=-68.47311",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.98942&lng=-68.34141",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.00291&lng=-68.35606",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.00291&lng=-68.32676",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.97593&lng=-68.35606",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-22.97593&lng=-68.32676",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.03528&lng=-68.53638",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.04877&lng=-68.55104",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.04877&lng=-68.52172",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.02179&lng=-68.55104",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.02179&lng=-68.52172",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.03513&lng=-68.48758",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.04862&lng=-68.50224",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.04862&lng=-68.47292",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.02164&lng=-68.50224",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.02164&lng=-68.47292",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.03458&lng=-68.34119",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.04807&lng=-68.35585",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.04807&lng=-68.32653",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.02109&lng=-68.35585",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.02109&lng=-68.32653",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.08058&lng=-68.58505",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.09407&lng=-68.59971",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.09407&lng=-68.57039",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.06709&lng=-68.59971",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.06709&lng=-68.57039",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.12561&lng=-68.53607",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.1391&lng=-68.55074",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.1391&lng=-68.5214",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.11212&lng=-68.55074",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.11212&lng=-68.5214",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.17091&lng=-68.58477",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.1844&lng=-68.59944",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.1844&lng=-68.5701",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.15742&lng=-68.59944",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.15742&lng=-68.5701",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.21607&lng=-68.58463",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.22956&lng=-68.59931",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.22956&lng=-68.56995",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.20258&lng=-68.59931",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=-23.20258&lng=-68.56995",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.66307&lng=-116.91608",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.64958&lng=-116.9329",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.64958&lng=-116.89926",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.67656&lng=-116.9329",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.67656&lng=-116.89926",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.66294&lng=-116.80418",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.64945&lng=-116.821",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.64945&lng=-116.78736",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.67643&lng=-116.821",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.67643&lng=-116.78736",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.618&lng=-117.08387",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60451&lng=-117.10068",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60451&lng=-117.06706",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63149&lng=-117.10068",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63149&lng=-117.06706",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.61794&lng=-116.86021",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60445&lng=-116.87702",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60445&lng=-116.8434",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63143&lng=-116.87702",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63143&lng=-116.8434",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.61786&lng=-116.80429",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60437&lng=-116.8211",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60437&lng=-116.78748",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63135&lng=-116.8211",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63135&lng=-116.78748",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.61776&lng=-116.74838",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60427&lng=-116.76519",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60427&lng=-116.73157",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63125&lng=-116.76519",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63125&lng=-116.73157",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.61747&lng=-116.63655",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60398&lng=-116.65336",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.60398&lng=-116.61974",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63096&lng=-116.65336",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.63096&lng=-116.61974",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.57295&lng=-116.97206",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.55946&lng=-116.98886",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.55946&lng=-116.95526",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58644&lng=-116.98886",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58644&lng=-116.95526",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.57279&lng=-116.80441",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.5593&lng=-116.82121",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.5593&lng=-116.78761",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58628&lng=-116.82121",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58628&lng=-116.78761",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.57268&lng=-116.74852",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.55919&lng=-116.76532",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.55919&lng=-116.73172",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58617&lng=-116.76532",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58617&lng=-116.73172",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.57255&lng=-116.69264",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.55906&lng=-116.70944",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.55906&lng=-116.67584",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58604&lng=-116.70944",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.58604&lng=-116.67584",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.52761&lng=-116.74867",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.51412&lng=-116.76546",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.51412&lng=-116.73188",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.5411&lng=-116.76546",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.5411&lng=-116.73188",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.52732&lng=-116.63697",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.51383&lng=-116.65376",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.51383&lng=-116.62018",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.54081&lng=-116.65376",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.54081&lng=-116.62018",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.48277&lng=-116.91627",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.46928&lng=-116.93305",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.46928&lng=-116.89949",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.49626&lng=-116.93305",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.49626&lng=-116.89949",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.48264&lng=-116.80463",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.46915&lng=-116.82141",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.46915&lng=-116.78785",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.49613&lng=-116.82141",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.49613&lng=-116.78785",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.48206&lng=-116.58136",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.46857&lng=-116.59814",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.46857&lng=-116.56458",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.49555&lng=-116.59814",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.49555&lng=-116.56458",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.43746&lng=-116.74896",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.42397&lng=-116.76573",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.42397&lng=-116.73219",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.45095&lng=-116.76573",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.45095&lng=-116.73219",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.43699&lng=-116.5816",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.4235&lng=-116.59837",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.4235&lng=-116.56483",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.45048&lng=-116.59837",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.45048&lng=-116.56483",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.39262&lng=-117.08363",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37913&lng=-117.10039",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37913&lng=-117.06687",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.40611&lng=-117.10039",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.40611&lng=-117.06687",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.39264&lng=-116.97212",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37915&lng=-116.98888",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37915&lng=-116.95536",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.40613&lng=-116.98888",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.40613&lng=-116.95536",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.39225&lng=-116.69335",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37876&lng=-116.71011",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37876&lng=-116.67659",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.40574&lng=-116.71011",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.40574&lng=-116.67659",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.39171&lng=-116.52609",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37822&lng=-116.54285",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.37822&lng=-116.50933",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.4052&lng=-116.54285",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.4052&lng=-116.50933",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.34754&lng=-117.08358",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33405&lng=-117.10033",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33405&lng=-117.06683",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36103&lng=-117.10033",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36103&lng=-117.06683",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.34757&lng=-116.97214",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33408&lng=-116.98889",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33408&lng=-116.95539",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36106&lng=-116.98889",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36106&lng=-116.95539",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.34741&lng=-116.80497",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33392&lng=-116.82172",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33392&lng=-116.78822",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.3609&lng=-116.82172",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.3609&lng=-116.78822",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.34718&lng=-116.69353",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33369&lng=-116.71028",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33369&lng=-116.67678",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36067&lng=-116.71028",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36067&lng=-116.67678",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.34702&lng=-116.63781",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33353&lng=-116.65456",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33353&lng=-116.62106",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36051&lng=-116.65456",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36051&lng=-116.62106",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.34684&lng=-116.58209",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33335&lng=-116.59884",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.33335&lng=-116.56534",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36033&lng=-116.59884",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.36033&lng=-116.56534",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.3021&lng=-116.69371",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.28861&lng=-116.71045",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.28861&lng=-116.67697",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.31559&lng=-116.71045",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.31559&lng=-116.67697",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.30176&lng=-116.58233",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.28827&lng=-116.59907",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.28827&lng=-116.56559",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.31525&lng=-116.59907",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.31525&lng=-116.56559",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.25687&lng=-116.63822",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.24338&lng=-116.65495",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.24338&lng=-116.62149",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.27036&lng=-116.65495",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.27036&lng=-116.62149",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.2114&lng=-116.52718",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.19791&lng=-116.5439",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.19791&lng=-116.51046",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.22489&lng=-116.5439",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=36.22489&lng=-116.51046",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.79372&lng=58.33264",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.78023&lng=58.31694",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.78023&lng=58.34834",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.80721&lng=58.31694",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.80721&lng=58.34834",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.79317&lng=58.38488",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.77968&lng=58.36918",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.77968&lng=58.40058",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.80666&lng=58.36918",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.80666&lng=58.40058",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.70453&lng=58.22699",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.69104&lng=58.2113",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.69104&lng=58.24268",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.71802&lng=58.2113",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.71802&lng=58.24268",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.70239&lng=58.43579",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.6889&lng=58.4201",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.6889&lng=58.45148",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.71588&lng=58.4201",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.71588&lng=58.45148",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.66037&lng=58.12206",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.64688&lng=58.10638",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.64688&lng=58.13774",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.67386&lng=58.10638",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.67386&lng=58.13774",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.39095&lng=57.96284",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.37746&lng=57.9472",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.37746&lng=57.97848",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.40444&lng=57.9472",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=30.40444&lng=57.97848",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.03552&lng=-113.67382",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02203&lng=-113.68973",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02203&lng=-113.65791",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.04901&lng=-113.68973",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.04901&lng=-113.65791",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.03981&lng=-113.46221",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02632&lng=-113.47812",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02632&lng=-113.4463",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.0533&lng=-113.47812",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.0533&lng=-113.4463",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.04083&lng=-113.4093",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02734&lng=-113.42521",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02734&lng=-113.39339",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.05432&lng=-113.42521",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.05432&lng=-113.39339",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.04183&lng=-113.35639",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02834&lng=-113.3723",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.02834&lng=-113.34048",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.05532&lng=-113.3723",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.05532&lng=-113.34048",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.04375&lng=-113.25055",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.03026&lng=-113.26646",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.03026&lng=-113.23464",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.05724&lng=-113.26646",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.05724&lng=-113.23464",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.99265&lng=-113.56677",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.97916&lng=-113.58268",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.97916&lng=-113.55086",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.00614&lng=-113.58268",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=32.00614&lng=-113.55086",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.95069&lng=-113.40694",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.9372&lng=-113.42284",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.9372&lng=-113.39104",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.96418&lng=-113.42284",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.96418&lng=-113.39104",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.90252&lng=-113.56426",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.88903&lng=-113.58015",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.88903&lng=-113.54837",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.91601&lng=-113.58015",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.91601&lng=-113.54837",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.90461&lng=-113.4586",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.89112&lng=-113.47449",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.89112&lng=-113.44271",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.9181&lng=-113.47449",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.9181&lng=-113.44271",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.85416&lng=-113.7214",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.84067&lng=-113.73728",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.84067&lng=-113.70552",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.86765&lng=-113.73728",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.86765&lng=-113.70552",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.85954&lng=-113.45741",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.84605&lng=-113.47329",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.84605&lng=-113.44153",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.87303&lng=-113.47329",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.87303&lng=-113.44153",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.81022&lng=-113.66731",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.79673&lng=-113.68318",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.79673&lng=-113.65144",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.82371&lng=-113.68318",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.82371&lng=-113.65144",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.81344&lng=-113.50899",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.79995&lng=-113.52486",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.79995&lng=-113.49312",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.82693&lng=-113.52486",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.82693&lng=-113.49312",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.76941&lng=-113.45502",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.75592&lng=-113.47089",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.75592&lng=-113.43915",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.7829&lng=-113.47089",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.7829&lng=-113.43915",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.72822&lng=-113.24289",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.71473&lng=-113.25875",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.71473&lng=-113.22703",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.74171&lng=-113.25875",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.74171&lng=-113.22703",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.67504&lng=-113.66343",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.66155&lng=-113.67928",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.66155&lng=-113.64758",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.68853&lng=-113.67928",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.68853&lng=-113.64758",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.67613&lng=-113.61074",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.66264&lng=-113.62659",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.66264&lng=-113.59489",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.68962&lng=-113.62659",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.68962&lng=-113.59489",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.63106&lng=-113.60948",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.61757&lng=-113.62532",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.61757&lng=-113.59364",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.64455&lng=-113.62532",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.64455&lng=-113.59364",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.63213&lng=-113.55681",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.61864&lng=-113.57265",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.61864&lng=-113.54097",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.64562&lng=-113.57265",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.64562&lng=-113.54097",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.58706&lng=-113.55558",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.57357&lng=-113.57142",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.57357&lng=-113.53974",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.60055&lng=-113.57142",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://macrostrat.org/api/v2/geologic_units/map?lat=31.60055&lng=-113.53974",
+   "status": 200,
+   "n": null
+  }
+ ],
+ "quality": {},
+ "notes": [],
+ "finished_utc": "2026-11-15T08:35:58+00:00",
+ "outputs": [
+  "data/earth_grid.json"
+ ]
+}
