@@ -11,6 +11,10 @@
 .vh-viewer { position: relative; height: min(62vh, 560px); background: radial-gradient(ellipse at 50% 30%, rgb(60 44 36 / .9), rgb(8 12 16) 70%); }
 .vh-canvas { position: absolute; inset: 0; }
 .vh-canvas canvas { width: 100% !important; height: 100% !important; display: block; cursor: grab; }
+.vh-zoom { position: absolute; z-index: 2; top: 12px; right: 12px; display: flex; gap: 5px; }
+.vh-zoom button { min-width: 34px; height: 34px; padding: 0 8px; border: 1px solid var(--color-line); border-radius: 9px; background: rgb(2 16 22 / .78); color: var(--color-ink); cursor: pointer; font: 600 16px var(--font-body); }
+.vh-zoom button:hover { border-color: var(--color-gold); color: var(--color-gold-3); }
+.vh-zoom button:last-child { font-size: 11px; }
 .vh-status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; padding: 8px 14px; border-radius: 999px; background: rgb(2 16 22 / .85); font-size: 13px; }
 .vh-hint { position: absolute; bottom: 8px; left: 0; right: 0; margin: 0; text-align: center; font: 500 11px ui-monospace, Consolas, monospace; color: var(--color-muted); }
 .vh-sizes { display: grid; gap: 5px; padding: 14px 18px 16px; }

@@ -7,7 +7,10 @@
   box-shadow: 0 20px 60px rgb(0 0 0 / .45);
 }
 .t3-stage.twin { grid-template-columns: 1fr 1fr; }
+.t3-stage.focused { grid-template-columns: 1fr; }
 .t3-pane { position: relative; min-width: 0; min-height: 0; }
+.t3-pane-hidden { display: none; }
+.t3-pane.t3-walking .t3-tag { display: none; }
 .t3-canvas { position: absolute; inset: 0; }
 .t3-canvas canvas.terrain-canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
 .terrain-labels { position: absolute; inset: 0; pointer-events: none; }
@@ -132,6 +135,12 @@
 .t3-caption, .t3-walk, .t3-profile { position: absolute; left: 50%; transform: translateX(-50%); z-index: 7; width: min(640px, calc(100% - 660px)); min-width: 320px; }
 .t3-caption { bottom: 62px; padding: 14px 18px; }
 .t3-walk { top: 96px; padding: 12px 16px; font-size: 14px; }
+.t3-walk-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+.t3-walk-controls span { color: var(--color-muted); font-size: 12px; }
+.t3-walk-controls button, .t3-walk-back { border: 1px solid var(--color-line); border-radius: 9px; padding: 6px 9px; background: rgb(255 255 255 / .04); color: var(--color-ink); cursor: pointer; font-size: 12px; }
+.t3-walk-controls button[aria-pressed=true], .t3-walk-back { border-color: var(--color-gold); color: var(--color-gold-3); background: rgb(242 181 58 / .12); }
+.t3-walk-controls button:hover, .t3-walk-back:hover { border-color: var(--color-gold); }
+.t3-walk-back { margin-top: 8px; }
 .t3-walk kbd { font: 500 11px ui-monospace, Consolas, monospace; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--color-line); background: rgb(255 255 255 / .06); }
 .t3-profile { bottom: 62px; padding: 12px 16px; }
 

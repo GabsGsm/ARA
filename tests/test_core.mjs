@@ -113,6 +113,9 @@ console.log("core.js: todos os testes passaram");
   const rock = { id: "edge", x: 1.35, z: 0, d: 0.5, h: 0.3 };
   const clear = step(startState(spec, { u: 0.5, v: 0.5 }), spec, { throttle: 1, steer: 0 }, 0.05, makeEnv(rock));
   assert.equal(clear.wheel, 0);
+  const chassis = step(startState(spec, { u: 0.5, v: 0.5 }), spec, { throttle: 1, steer: 0 }, 0.05,
+    makeEnv({ ...rock, id: "center", x: 0, z: 0 }));
+  assert.equal(chassis.wheel, 0, "rock contact with the chassis alone must not count as wheel damage");
   const contact = step(startState(spec, { u: 0.5, v: 0.5 }), spec, { throttle: 1, steer: 0 }, 0.05, makeEnv({ ...rock, x: 0.8 }));
   assert.ok(contact.wheel > 0);
 }

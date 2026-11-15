@@ -41,7 +41,7 @@ function TouchControls({ view }) {
   );
 }
 
-const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, settings, walking, onCamera, onPick, onSite, onLoaded, onWalk, onJump, onWalkLock, onUser }, ref) {
+const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, settings, walking, focusHidden = false, onCamera, onPick, onSite, onLoaded, onWalk, onJump, onWalkLock, onUser }, ref) {
   const box = useRef(null);
   const view = useRef(null);
   const [scene, setScene] = useState(null);
@@ -97,7 +97,7 @@ const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, 
 
   const meta = scene?.meta;
   return (
-    <div className={`t3-pane t3-${meta?.body ?? "none"}`}>
+    <div className={`t3-pane t3-${meta?.body ?? "none"}${walking ? " t3-walking" : ""}${focusHidden ? " t3-pane-hidden" : ""}`}>
       <div ref={box} className="t3-canvas" />
       <div className="t3-tag">
         <span className="t3-body">{T(BODY_TAG[meta?.body] ?? "")}{meta?.kind === "live" ? T(" · teste ao vivo", " · live test") : ""}</span>
