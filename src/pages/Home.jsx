@@ -115,9 +115,6 @@ export default function Home() {
         </div>
       </div>
       <img className="horizon" src={horizon} alt="" aria-hidden="true" />
-      <Link className="scroll-cue" to="/explorar" aria-label="Ir para Explorar">
-        <span className="mouse"><span /></span><span className="chev" /><span className="chev" />
-      </Link>
     </section>
   );
 }

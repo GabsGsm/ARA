@@ -397,6 +397,35 @@ reflectedLight.directSpecular *= vShadow;
     this.dirty = true;
   }
 
+  /** Coloca o veículo em (u, v) com rumo, arfagem e rolagem, e leva a câmera de perseguição junto. */
+  poseVehicle(st, dt = 0.016) {
+    const v = this.vehicle;
+    const h = (heightAt(this.data, st.u, st.v) - this.mid) * this.exag;
+    const x = (st.u - 0.5) * this.S, z = (st.v - 0.5) * this.S;
+    if (v) {
+      v.position.set(x, h, z);
+      v.rotation.set(0, 0, 0);
+      v.rotateY(Math.PI - st.heading + (this._vehYaw ?? 0));
+      v.rotateX((-(st.pitch ?? 0) * Math.PI) / 180);
+      v.rotateZ(((st.roll ?? 0) * Math.PI) / 180);
+    }
+    const len = this._vehReq?.length ?? 3;
+    const kind = this.chaseKind || "atras";
+    const D = kind === "alto" ? Math.max(60, len * 25) : kind === "perto" ? Math.max(4, len * 2.2) : Math.max(10, len * 5);
+    const H = kind === "alto" ? D * 0.9 : D * 0.42;
+    const dx = Math.sin(st.heading), dz = -Math.cos(st.heading);
+    let cx = x - dx * D, cz = z - dz * D;
+    const half = this.S / 2;
+    cx = Math.max(-half, Math.min(half, cx)); cz = Math.max(-half, Math.min(half, cz));
+    const groundC = (heightAt(this.data, cx / this.S + 0.5, cz / this.S + 0.5) - this.mid) * this.exag;
+    const want = new THREE.Vector3(cx, Math.max(h + H, groundC + 1.5), cz);
+    if (!this._chase) this._chase = want.clone();
+    this._chase.lerp(want, Math.min(1, dt * 3));
+    this.camera.position.copy(this._chase);
+    this.camera.lookAt(x + dx * len, h + len * 0.3, z + dz * len);
+    this.dirty = true;
+  }
+
   placeVehicle() {
     const v = this.vehicle, s = this._vehReq;
     if (!v || !s) return;
@@ -471,6 +500,21 @@ reflectedLight.directSpecular *= vShadow;
     if (!this.data) return; // a página chama de novo quando a cena carregar
     if (mode === this.mode && !(mode === "walk" && start)) return;
     this.mode = mode;
+    if (this._ambBase != null && mode !== "drive") { this.ambient.intensity = this._ambBase; this._ambBase = null; }
+    if (mode === "drive") {
+      this.cancelFly();
+      // realce de visualização para dirigir em regiões escuras (ex.: polo sul lunar); não altera a física
+      this._ambBase = this.ambient.intensity;
+      this.ambient.intensity = Math.max(this._ambBase, this.data?.meta.body === "moon" ? 1.2 : 0.35);
+      this.controls.enabled = false;
+      if (this.pointerLock.isLocked) this.pointerLock.unlock();
+      this.overlays.visible = true;
+      this.labels.domElement.style.display = "";
+      this.camera.near = 0.3; this.camera.updateProjectionMatrix();
+      this._chase = null;
+      this.dirty = true;
+      return;
+    }
     if (mode === "walk") {
       this.cancelFly();
       this.controls.enabled = false;
@@ -542,7 +586,19 @@ reflectedLight.directSpecular *= vShadow;
     if (p) this.cb.onPick?.(p);
   }
 
+  /** Modo direção: fn(input, dtReal) → { u, v, heading, pitch, roll } chamado a cada quadro. */
+  setDriver(fn) { this.driver = fn; }
+  setChaseView(kind) { this.chaseKind = kind; this.dirty = true; }
+
   key(e) {
+    if (this.mode === "drive") {
+      const tag = e.target?.tagName;
+      if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+      this.keys[e.code] = e.type === "keydown";
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
+      if (e.type === "keydown" && e.code === "KeyC") this.chaseKind = this.chaseKind === "alto" ? "perto" : this.chaseKind === "perto" ? "atras" : "alto";
+      return;
+    }
     if (this.mode !== "walk") return;
     const down = e.type === "keydown";
     this.keys[e.code] = down;
@@ -573,6 +629,15 @@ reflectedLight.directSpecular *= vShadow;
       }
       this.cb.onWalk?.({ u, v, h: heightAt(this.data, u, v), slope: slopeAt(this.data, u, v), ...uvToLatLon(this.data, u, v) });
       this.dirty = true;
+    } else if (this.mode === "drive" && this.data) {
+      const k = this.keys, j = this.joy || { x: 0, y: 0 };
+      const input = {
+        throttle: (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0) - j.y,
+        steer: (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0) + j.x,
+        brake: !!k.Space,
+      };
+      const st = this.driver?.(input, dt);
+      if (st) this.poseVehicle(st, dt);
     } else if (this.controls.enabled) {
       this.controls.update();
     }

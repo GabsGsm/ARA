@@ -14,6 +14,8 @@ import { useAraData } from "./hooks/useAraData.jsx";
 const Lab3D = lazy(() => import("./pages/Lab3D.jsx"));
 const Field = lazy(() => import("./pages/Field.jsx"));
 const Vehicles = lazy(() => import("./pages/Vehicles.jsx"));
+const Mission = lazy(() => import("./pages/Mission.jsx"));
+const DataLab = lazy(() => import("./pages/DataLab.jsx"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -47,6 +49,8 @@ export default function App() {
             <Route path="/analises" element={<Analyses />} />
             <Route path="/3d" element={<Suspense fallback={<p className="note p-8" role="status">Carregando o laboratório 3D…</p>}><Lab3D /></Suspense>} />
             <Route path="/campo" element={<Suspense fallback={<p className="note p-8" role="status">Carregando o modo de campo…</p>}><Field /></Suspense>} />
+            <Route path="/laboratorio" element={<Suspense fallback={<p className="note p-8" role="status">Carregando o laboratório…</p>}><DataLab /></Suspense>} />
+            <Route path="/missao" element={<Suspense fallback={<p className="note p-8" role="status">Carregando a missão…</p>}><Mission /></Suspense>} />
             <Route path="/veiculos" element={<Suspense fallback={<p className="note p-8" role="status">Carregando os veículos…</p>}><Vehicles /></Suspense>} />
             <Route path="/sobre" element={<About />} />
             <Route path="*" element={<Navigate to="/" replace />} />
