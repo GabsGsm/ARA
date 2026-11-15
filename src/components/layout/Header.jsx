@@ -1,7 +1,9 @@
-import { useState } from "react";
+// Topo: logo + nome, links das páginas e o menu (☰) com acessibilidade e o link do código.
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import BrandMark from "./BrandMark.jsx";
+import logo from "../../assets/img/ara-logo.webp";
 import { useHighContrast } from "../../hooks/useHighContrast.js";
+import { useMotion } from "../../hooks/useMotion.jsx";
 
 const LINKS = [
   { to: "/", label: "Início", end: true },
@@ -9,40 +11,47 @@ const LINKS = [
   { to: "/analises", label: "Análises" },
   { to: "/sobre", label: "Sobre" },
 ];
+const REPO = "https://github.com/GabsGsm/ARA";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [hc, toggleHc] = useHighContrast();
-  const linkCls = ({ isActive }) =>
-    `relative py-1.5 text-base no-underline ${isActive ? "nav-active text-gold" : "text-ink hover:text-gold-2"}`;
+  const { calm, toggleCalm } = useMotion();
+  const navRef = useRef(null);
+
+  // fecha o menu ao clicar fora ou apertar Esc
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e) => { if (!navRef.current?.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("click", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("click", onClick); document.removeEventListener("keydown", onKey); };
+  }, [open]);
 
   return (
-    <header className="sticky top-3.5 z-[1000] mx-3 mt-3.5 flex items-center justify-between gap-4 rounded-[18px] border border-line bg-petrol-950/75 px-4 py-2.5 backdrop-blur-lg sm:mx-[clamp(12px,2vw,30px)] sm:px-6">
-      <Link to="/" className="flex items-center gap-4 text-ink no-underline" aria-label="ARA, página inicial">
-        <BrandMark />
-        <span className="hidden flex-col border-l border-line pl-4 lg:flex">
-          <strong className="font-display text-[26px] font-normal leading-none tracking-[0.08em]">ARA</strong>
-          <small className="mt-1.5 font-display text-[10px] uppercase tracking-[0.4em] text-ink-2">Analog Research &amp; Analysis</small>
-        </span>
+    <header className="topbar">
+      <Link className="brand" to="/" aria-label="ARA, página inicial">
+        <span className="brand-logo"><img src={logo} alt="" width="720" height="295" /></span>
+        <span className="brand-text"><strong>ARA</strong><small>Analog Research &amp; Analysis</small></span>
       </Link>
-
-      <nav aria-label="Principal" className="relative">
-        <button type="button" className="cursor-pointer p-2 md:hidden" aria-expanded={open} aria-controls="navLinks"
-                aria-label={open ? "Fechar menu" : "Abrir menu"} onClick={() => setOpen((v) => !v)}>
-          {[0, 1, 2].map((i) => <span key={i} className="my-[7px] block h-0.5 w-8 rounded bg-ink" />)}
-        </button>
-        <ul id="navLinks"
-            className={`${open ? "flex" : "hidden"} absolute right-0 top-14 m-0 list-none flex-col items-start gap-3.5 rounded-[18px] border border-line bg-petrol-950/95 px-6 py-4
-                        md:static md:flex md:flex-row md:items-center md:gap-[clamp(14px,3vw,46px)] md:border-0 md:bg-transparent md:p-0`}>
+      <nav className="nav" aria-label="Principal" ref={navRef}>
+        <ul id="navLinks" className={open ? "open" : undefined}>
           {LINKS.map((l) => (
-            <li key={l.to}><NavLink to={l.to} end={l.end} className={linkCls} onClick={() => setOpen(false)}>{l.label}</NavLink></li>
+            <li key={l.to}><NavLink to={l.to} end={l.end} onClick={() => setOpen(false)}>{l.label}</NavLink></li>
           ))}
-          <li>
-            <button type="button" aria-pressed={hc} onClick={toggleHc} className="cursor-pointer text-[13px] text-muted hover:text-ink">
-              Alto contraste
+          <li className="nav-extra">
+            <button className="link-btn" type="button" aria-pressed={hc} onClick={toggleHc}>Alto contraste</button>
+            <button className="link-btn" type="button" aria-pressed={calm} onClick={toggleCalm}>
+              {calm ? "Retomar animações" : "Pausar animações"}
             </button>
+            <a className="link-btn" href={REPO} target="_blank" rel="noopener noreferrer">Código no GitHub ↗</a>
           </li>
         </ul>
+        <button className="nav-toggle" type="button" aria-expanded={open} aria-controls="navLinks"
+                aria-label={open ? "Fechar menu" : "Abrir menu"} onClick={() => setOpen((v) => !v)}>
+          <span /><span /><span />
+        </button>
       </nav>
     </header>
   );

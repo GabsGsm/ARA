@@ -1,24 +1,27 @@
 /* ARA — tema Tailwind v4 + estilos próprios.
-   Tokens do design (página inicial aprovada em 15/11): azul-petróleo -> verde-sálvia, dourado de destaque.
+   Tokens do design (cores medidas na arte de referência, versão da Alessandra em 15/11):
+   azul-petróleo #041c28 -> verde-sálvia #819886 -> creme #f1deb3, dourado #f2b53a de destaque.
+   Estilos da página inicial, do topo e das animações ficam em home.css.
    Mudar uma cor aqui muda o site inteiro. */
 @import "tailwindcss";
 
 @theme {
-  --color-petrol-950: #071d24;
-  --color-petrol-900: #0b2b33;
-  --color-petrol-800: #123a40;
-  --color-sage: #8fa98f;
-  --color-sage-glow: #c9d3a8;
+  --color-petrol-950: #041c28;
+  --color-petrol-900: #062b34;
+  --color-petrol-800: #0d333c;
+  --color-sage: #819886;
+  --color-sage-glow: #f1deb3;
   --color-gold: #f2b53a;
   --color-gold-2: #f7c75a;
-  --color-ink: #f4f1e8;
-  --color-ink-2: #d5ddd8;
+  --color-gold-3: #ffe3a0;
+  --color-ink: #ffffff;
+  --color-ink-2: #e6ece8;
   --color-muted: #a9bbb7;
   --color-ok: #7fd6b4;
   --color-warn: #f2c35a;
   --color-bad: #ef8f80;
   --color-none: #9aaab0;
-  --color-line: rgb(255 255 255 / 0.22);
+  --color-line: rgb(255 255 255 / 0.26);
   --color-line-2: rgb(255 255 255 / 0.12);
   --font-display: "Michroma", "Eurostile", "Arial Black", sans-serif;
   --font-body: "Lexend", "Segoe UI", Arial, sans-serif;
@@ -26,14 +29,14 @@
 }
 
 @layer base {
-  html { background: var(--color-petrol-900); scroll-behavior: smooth; }
+  html { background: var(--color-petrol-950); scroll-behavior: smooth; overflow-x: hidden; }
   body { @apply min-h-screen overflow-x-hidden font-body text-[15px] leading-relaxed text-ink; }
   body::before {
-    content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    content: ""; position: fixed; inset: 0; z-index: -3; pointer-events: none;
     background:
-      radial-gradient(1200px 700px at 105% 105%, rgb(201 211 168 / .55), transparent 60%),
-      radial-gradient(900px 600px at 80% 20%, rgb(143 169 143 / .18), transparent 60%),
-      linear-gradient(160deg, var(--color-petrol-950) 0%, var(--color-petrol-900) 45%, var(--color-petrol-800) 100%);
+      radial-gradient(ellipse 62% 78% at 100% 100%, #ecdcb0 0%, #c8c4a0 14%, #a7b096 27%, #85998a 41%, rgb(95 125 113 / .7) 57%, rgb(40 75 76 / 0) 80%),
+      radial-gradient(ellipse 34% 62% at 100% 46%, rgb(135 160 140 / .8), rgb(120 150 132 / 0) 75%),
+      linear-gradient(118deg, #041c28 0%, #062b34 26%, #0a3039 46%, #183f43 63%, #3a5d5a 80%, #5f7d74 100%);
   }
   a { color: var(--color-gold-2); }
   :focus-visible { outline: 3px solid var(--color-gold-2); outline-offset: 3px; border-radius: 6px; }
@@ -42,8 +45,12 @@
 
 /* Componentes reutilizáveis (usados via className) */
 @layer components {
-  .card { @apply rounded-[var(--radius-card)] border border-line p-5 backdrop-blur-md;
-    background: linear-gradient(180deg, rgb(14 44 52 / .72), rgb(8 32 40 / .55)); }
+  .card { @apply relative rounded-[var(--radius-card)] border border-line p-5 backdrop-blur-md;
+    background: linear-gradient(180deg, rgb(10 40 48 / .75), rgb(6 30 38 / .55));
+    box-shadow: 0 14px 40px rgb(0 0 0 / .22); transition: border-color .3s, box-shadow .3s; }
+  .card::before { content: ""; position: absolute; top: -1px; left: 24px; right: 24px; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgb(255 215 122 / .8), transparent); }
+  .card:hover { border-color: rgb(242 181 58 / .45); box-shadow: 0 14px 40px rgb(0 0 0 / .22), 0 0 28px rgb(242 181 58 / .12); }
   .eyebrow { @apply mb-3 font-display text-xs uppercase tracking-[0.2em] text-gold-2; }
   .display { @apply m-0 font-display uppercase leading-[1.08] tracking-wide; }
   .lead { @apply m-0 max-w-xl text-ink-2; font-size: clamp(16px, 1.4vw, 20px); }
@@ -54,44 +61,6 @@
   .data-table th, .data-table td { @apply border-b border-line-2 px-1.5 py-2 text-left align-top; }
   .data-table th { @apply font-medium text-ink-2; }
 }
-
-/* ---------- Início: globos, órbita, moldura, horizonte ---------- */
-.planet {
-  --tex: none;
-  display: block; aspect-ratio: 1; border-radius: 50%;
-  background-image: radial-gradient(circle at 70% 70%, rgb(0 0 0 / .55), transparent 55%), var(--tex), var(--fallback);
-  background-size: cover, 130% 100%, cover; background-position: center, 50% 50%, center;
-  box-shadow: inset -40px -30px 80px rgb(0 0 0 / .55), inset 18px 14px 40px rgb(255 255 255 / .12), 0 0 60px rgb(0 0 0 / .35);
-  transition: transform .4s;
-}
-.planet-mars { --fallback: radial-gradient(circle at 35% 30%, #f0a86a, #c2622c 45%, #6d2d14 85%); }
-.planet-moon { --fallback: radial-gradient(circle at 35% 30%, #eceae3, #a8a7a2 50%, #55575a 90%); filter: grayscale(1) contrast(1.05); }
-.group:hover .planet { transform: scale(1.03) rotate(-2deg); }
-.orbit-glow { filter: drop-shadow(0 0 6px rgb(242 181 58 / .6)); }
-.pill-gold { box-shadow: 0 0 22px rgb(242 181 58 / .35), inset 0 0 14px rgb(242 181 58 / .12); }
-.text-glow { text-shadow: 0 0 30px rgb(242 181 58 / .25); }
-.nav-active::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 3px; border-radius: 3px;
-  background: var(--color-gold); box-shadow: 0 0 12px rgb(242 181 58 / .7);
-}
-.frame-corners { position: relative; border-radius: 28px; }
-.frame-corners::before, .frame-corners::after {
-  content: ""; position: absolute; inset: 0; border-radius: 28px; pointer-events: none; border: 1px solid transparent;
-}
-.frame-corners::before { border-top-color: var(--color-line); border-left-color: var(--color-line);
-  mask: linear-gradient(135deg, #000 0 14%, transparent 22% 100%); }
-.frame-corners::after { border-color: var(--color-line); border-left-color: transparent;
-  mask: linear-gradient(315deg, #000 0 10%, transparent 16% 84%, #000 90%); }
-.horizon {
-  position: absolute; left: -15%; right: -15%; bottom: -170px; height: 260px; z-index: -1; border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  background:
-    radial-gradient(ellipse at 30% 10%, rgb(255 255 255 / .10), transparent 40%),
-    radial-gradient(ellipse at 70% 0%, rgb(255 255 255 / .07), transparent 35%),
-    radial-gradient(ellipse at 50% 0%, #4a5352 0%, #263030 45%, #0d1619 80%);
-  box-shadow: 0 -10px 70px rgb(201 211 168 / .28);
-}
-.scroll-dot { animation: cue 1.6s infinite; }
-@keyframes cue { 0% { opacity: 0; transform: translateY(0); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(12px); } }
 
 /* ---------- Leaflet no tema ---------- */
 .leaflet-container { background: #0a1d22; font-family: var(--font-body); }
@@ -105,6 +74,6 @@ html.hc {
 }
 html.hc body::before { background: #000; }
 html.hc .card { background: #000; }
-html.hc .planet-moon { filter: none; }
 
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+

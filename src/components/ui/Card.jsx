@@ -11,8 +11,8 @@ export default function Card({ title, titleId, as: Tag = "section", children, cl
 export function PageHeader({ title, lead, children }) {
   return (
     <header className="mb-6">
-      <h1 className="display text-[clamp(26px,3vw,40px)]">{title}</h1>
-      {lead && <p className="lead mt-2.5">{lead}</p>}
+      <h1 className="display text-[clamp(26px,3vw,42px)] after:mt-3.5 after:block after:h-1 after:w-[52px] after:rounded after:bg-gold after:shadow-[0_0_12px_rgb(242_181_58/.7)] after:content-['']">{title}</h1>
+      {lead && <p className="lead mt-3.5">{lead}</p>}
       {children}
     </header>
   );
