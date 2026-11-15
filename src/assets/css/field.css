@@ -1,0 +1,48 @@
+/* ARA — Field Explorer (mobile first) */
+.fx-start { max-width: 860px; margin: 0 auto; padding: 48px clamp(16px, 4vw, 40px); text-align: center; }
+.fx-start .display { font-size: clamp(28px, 4vw, 52px); }
+.fx-start .lead { margin: 14px auto 0; }
+.fx-actions { display: grid; gap: 12px; margin: 28px 0 18px; }
+.fx-big { display: grid; gap: 4px; padding: 18px 20px; border-radius: 18px; border: 1.5px solid var(--color-line); background: rgb(4 28 40 / .6); color: var(--color-ink);
+  cursor: pointer; text-align: left; transition: border-color .2s, transform .2s; }
+.fx-big b { font: 400 15px var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+.fx-big small { color: var(--color-muted); font-size: 13px; }
+.fx-big:hover { border-color: var(--color-gold); transform: translateY(-1px); }
+.fx-big.gold { border-color: var(--color-gold); background: rgb(242 181 58 / .12); box-shadow: 0 0 22px rgb(242 181 58 / .25); }
+.fx-page { position: relative; height: calc(100vh - clamp(96px, 7vw, 120px)); min-height: 520px; margin: 12px clamp(8px, 1.4vw, 22px) 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--color-line); }
+.fx-map { position: absolute; inset: 0; }
+.fx-demo { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 900; margin: 0; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  background: rgb(242 195 90 / .92); color: #1d1606; max-width: calc(100% - 24px); text-align: center; }
+.fx-hud { position: absolute; top: 50px; left: 12px; z-index: 800; display: grid; gap: 4px; padding: 10px 12px; border-radius: 12px; background: rgb(2 16 22 / .82);
+  border: 1px solid var(--color-line-2); font: 500 12px ui-monospace, Consolas, monospace; color: var(--color-ink-2); }
+.fx-ctrl { position: absolute; top: 50px; right: 12px; z-index: 800; display: grid; gap: 6px; }
+.fx-ctrl button { min-width: 120px; min-height: 42px; border-radius: 12px; border: 1px solid var(--color-line); background: rgb(2 16 22 / .82); color: var(--color-ink); font: 500 13px var(--font-body); cursor: pointer; }
+.fx-ctrl button:hover, .fx-ctrl button[aria-pressed=true] { border-color: var(--color-gold); color: var(--color-gold-3); }
+.fx-tip { position: absolute; bottom: 52%; left: 50%; transform: translateX(-50%); z-index: 800; padding: 8px 14px; border-radius: 999px; background: rgb(2 16 22 / .85); font-size: 13px; }
+.fx-me span { display: block; width: 22px; height: 22px; border-radius: 50%; background: #59e0ff; border: 3px solid #fff; box-shadow: 0 0 0 6px rgb(89 224 255 / .25); transition: transform .3s; }
+.fx-sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 850; max-height: 26%; transition: max-height .35s ease; background: rgb(4 22 30 / .96);
+  border-top: 1px solid var(--color-line); border-radius: 18px 18px 0 0; display: flex; flex-direction: column; }
+.fx-sheet.open { max-height: 62%; }
+.fx-grip { border: 0; background: none; color: var(--color-gold-2); padding: 8px; cursor: pointer; font: 500 12px var(--font-body); }
+.fx-sheet-body { overflow-y: auto; padding: 0 18px 18px; }
+.fx-q { margin: 14px 0 6px; font-size: 14px; font-weight: 600; color: var(--color-ink); }
+.fx-notes { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; font-size: 13px; }
+.fx-notes li { border: 1px solid var(--color-line-2); border-radius: 10px; padding: 8px 10px; }
+.fx-notes small { display: block; color: var(--color-muted); font-size: 11px; }
+.fx-notes p { margin: 4px 0 0; color: var(--color-ink-2); }
+@media (min-width: 1000px) {
+  .fx-sheet, .fx-sheet.open { left: auto; top: 0; width: 420px; max-height: none; border-radius: 0; border-top: 0; border-left: 1px solid var(--color-line); }
+  .fx-grip { display: none; }
+  .fx-sheet-body { padding-top: 16px; }
+  .fx-ctrl { right: 432px; }
+  .fx-demo { left: calc(50% - 210px); }
+}
+.calm .fx-sheet, .calm .fx-me span { transition: none; }
+@media (max-width: 999px) {
+  .fx-demo { font-size: 11px; padding: 4px 10px; white-space: nowrap; }
+  .fx-long { display: none; }
+  .fx-hud { top: 44px; font-size: 11px; padding: 8px 10px; }
+  .fx-ctrl { top: auto; bottom: calc(26% + 10px); right: 10px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 70%; }
+  .fx-sheet.open ~ * .fx-ctrl, .fx-ctrl { transition: bottom .35s; }
+  .fx-ctrl button { min-width: 0; min-height: 40px; padding: 0 12px; }
+}

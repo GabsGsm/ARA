@@ -148,3 +148,24 @@
 @media (max-width: 1280px) { .dv-grid { grid-template-columns: 300px minmax(0, 1fr); } .dv-res { grid-column: 1 / -1; } }
 @media (max-width: 860px) { .dv-grid { grid-template-columns: 1fr; } .dv-mapbox { height: 360px; } }
 .calm .dv-steps li.wait span { animation: none; }
+
+/* Mineral Explorer */
+.ex-modes { max-width: 720px; }
+.mx-grid { display: grid; grid-template-columns: 290px minmax(0, 1fr) 340px; gap: 18px; align-items: start; }
+.mx-mapbox { height: 560px; border-radius: 16px; overflow: hidden; border: 1px solid var(--color-line-2); background: #2a1a10; }
+.mx-pixel { image-rendering: pixelated; transition: opacity .4s; }
+.mx-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mx-legend label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.mx-legend small { display: block; margin-left: 46px; font-size: 11px; color: var(--color-muted); }
+.mx-sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; flex: none; margin-right: 6px; vertical-align: -2px; border: 1px solid rgb(255 255 255 / .3); }
+.mx-ramp { height: 12px; border-radius: 6px; margin-top: 4px; }
+.mx-pass { margin: 0; display: grid; gap: 8px; font-size: 13px; }
+.mx-pass dt { font: 400 10px var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--color-gold-2); }
+.mx-pass dd { margin: 2px 0 0; color: var(--color-ink-2); }
+.mx-pass ul { margin: 0; padding-left: 16px; }
+.leaflet-tooltip.mx-tip { background: rgb(4 24 32 / .85); color: var(--color-gold-3); border: 1px solid var(--color-gold); font-size: 11px; padding: 1px 6px; box-shadow: none; }
+.leaflet-tooltip.mx-tip::before { display: none; }
+@media (max-width: 1280px) { .mx-grid { grid-template-columns: 260px minmax(0, 1fr); } .mx-right { grid-column: 1 / -1; } }
+@media (max-width: 860px) { .mx-grid { grid-template-columns: 1fr; } .mx-mapbox { height: 380px; } }
+.mx-left [role=group] { flex-wrap: wrap; }
+.mx-left [role=group] button { flex: 1 1 auto; padding: 7px 10px; }

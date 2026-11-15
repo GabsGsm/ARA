@@ -8,6 +8,7 @@ import ResultsTable from "../components/explore/ResultsTable.jsx";
 import ExportButton from "../components/explore/ExportButton.jsx";
 import AnalogDetails from "../components/explore/AnalogDetails.jsx";
 import DiscoverPanel from "../components/discover/DiscoverPanel.jsx";
+import MineralExplorer from "../components/minerals/MineralExplorer.jsx";
 import EvidencePanel from "../components/evidence/EvidencePanel.jsx";
 import RobustnessMatrix from "../components/evidence/RobustnessMatrix.jsx";
 import { cellExtra, useEvidence } from "../hooks/useEvidence.js";
@@ -17,7 +18,7 @@ import { useRanking } from "../hooks/useRanking.js";
 import { BODY_FROM_PARAM, PARAM_FROM_BODY, fmt } from "../lib/format.js";
 
 const VIEWS = [{ value: "map", label: "Mapa" }, { value: "table", label: "Tabela" }];
-const MODES = [{ value: "catalogo", label: "Catálogo" }, { value: "descobrir", label: "Descobrir novo local" }];
+const MODES = [{ value: "catalogo", label: "Catálogo" }, { value: "descobrir", label: "Descobrir novo local" }, { value: "minerais", label: "Minerais" }];
 
 export default function Explore() {
   const data = useAraData();
@@ -76,7 +77,7 @@ export default function Explore() {
 
       <div className="ex-modes"><Segmented asTabs label="Modo" options={MODES} value={mode} onChange={setMode} /></div>
 
-      {mode === "descobrir" ? <DiscoverPanel /> : <>
+      {mode === "descobrir" ? <DiscoverPanel /> : mode === "minerais" ? <MineralExplorer /> : <>
       <FilterBar ex={ex} onBody={onBody} />
 
       <div className="ex-row">
