@@ -74,6 +74,31 @@ export function loadGLB(url, onProgress) {
   return cache.get(url).then((s) => s.clone(true));
 }
 
+// Alturas oficiais (m), usadas para a escala ficar certa ao lado da pessoa de 1,75 m. A maior medida horizontal
+// inclui braço e mastro e encolhia os rovers. Fontes: NASA (fichas das missões) e NSSDC.
+export const HEIGHTS = {
+  sojourner: 0.30,     // Mars Pathfinder: 65 × 48 × 30 cm
+  mer: 1.5,            // Spirit/Opportunity: 1,6 m × 2,3 m × 1,5 m
+  curiosity: 2.2,      // 2,9 m × 2,7 m × 2,2 m
+  perseverance: 2.2,   // 3 m × 2,7 m × 2,2 m
+  ingenuity: 0.49,     // 0,49 m de altura, rotores de 1,2 m
+  lrv: 1.14,           // carro lunar: 3,1 m de comprimento, 1,14 m de altura (NSSDC)
+  lunar_module: 7.04,  // Módulo Lunar: 7,04 m de altura
+  astronaut: 1.9,      // astronauta em traje de EVA
+};
+
+/** Escala pela altura oficial quando conhecida; senão pela maior medida horizontal. */
+export function fitModel(obj, key, length) {
+  if (!HEIGHTS[key]) return fitToLength(obj, length);
+  const box = new THREE.Box3().setFromObject(obj);
+  const size = box.getSize(new THREE.Vector3());
+  obj.scale.multiplyScalar(HEIGHTS[key] / Math.max(size.y, 1e-6));
+  const b2 = new THREE.Box3().setFromObject(obj), c = b2.getCenter(new THREE.Vector3());
+  obj.position.x -= c.x; obj.position.z -= c.z; obj.position.y -= b2.min.y;
+  const g = new THREE.Group(); g.add(obj);
+  return g;
+}
+
 /** Ajusta o modelo para ter `length` metros na maior dimensão horizontal, apoiado no chão (y = 0) e centrado. */
 export function fitToLength(obj, length) {
   const box = new THREE.Box3().setFromObject(obj);

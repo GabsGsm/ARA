@@ -32,7 +32,10 @@ export default function LiveEarthPicker({ busy, progress, error, onTest, active,
   const [lon, setLon] = useState("");
   const [name, setName] = useState("");
   const [map, setMap] = useState(false);
-  const ok = lat !== "" && lon !== "" && Math.abs(Number(lat)) <= 85 && Math.abs(Number(lon)) <= 180;
+  // aceita vírgula ou ponto decimal ("36,42" ou "36.42")
+  const num = (v) => (String(v).trim() === "" ? NaN : Number(String(v).trim().replace(",", ".")));
+  const la = num(lat), lo = num(lon);
+  const ok = Number.isFinite(la) && Number.isFinite(lo) && Math.abs(la) <= 85 && Math.abs(lo) <= 180;
   const pick = (la, lo, nm = "") => { setLat(la.toFixed(4)); setLon((((lo + 540) % 360) - 180).toFixed(4)); setName(nm); };
   return (
     <div className="t3-live">
@@ -44,19 +47,19 @@ export default function LiveEarthPicker({ busy, progress, error, onTest, active,
       </select>
       <div className="mt-2 grid grid-cols-2 gap-2">
         <label className="t3-field"><span>Latitude</span><input inputMode="decimal" value={lat} onChange={(e) => { setLat(e.target.value); setName(""); }} placeholder="36,42" /></label>
-        <label className="t3-field"><span>Longitude</span><input inputMode="decimal" value={lon} onChange={(e) => { setLon(e.target.value); setName(""); }} placeholder="-116,81" /></label>
+        <label className="t3-field"><span>Longitude</span><input inputMode="decimal" value={lon} aria-invalid={lon !== "" && !ok} onChange={(e) => { setLon(e.target.value); setName(""); }} placeholder="-116,81" /></label>
       </div>
       <div className="t3-btns">
         <button type="button" aria-expanded={map} onClick={() => setMap((v) => !v)}>{map ? T("Fechar mapa", "Close map") : T("Escolher no mapa", "Pick on map")}</button>
         <button type="button" className="gold" disabled={!ok || busy}
-                onClick={() => onTest(Number(lat), Number(lon), name || `Ponto ${Number(lat).toFixed(3)}°, ${Number(lon).toFixed(3)}°`)}>Testar</button>
+                onClick={() => onTest(la, lo, name || T(`Ponto ${la.toFixed(3)}°, ${lo.toFixed(3)}°`, `Point ${la.toFixed(3)}°, ${lo.toFixed(3)}°`))}>{T("Testar", "Test")}</button>
       </div>
       {map && (
         <div className="t3-minimap">
-          <MapContainer center={[lat ? Number(lat) : 20, lon ? Number(lon) : 0]} zoom={lat ? 8 : 2} worldCopyJump style={{ height: "100%" }}>
+          <MapContainer center={ok ? [la, lo] : [20, 0]} zoom={ok ? 8 : 2} worldCopyJump style={{ height: "100%" }}>
             <TileLayer url={ESRI} attribution="Esri, Maxar, Earthstar Geographics" />
             <ClickToPick onPick={(la, lo) => pick(la, lo)} />
-            {ok && <Marker position={[Number(lat), Number(lon)]} icon={pin} />}
+            {ok && <Marker position={[la, lo]} icon={pin} />}
           </MapContainer>
         </div>
       )}

@@ -24,7 +24,8 @@ function MapSync({ results, focus, fitTick }) {
   }, [map, idsKey, fitTick]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const r = focus && results.find((x) => x.cell.id === focus.id);
-    if (r) map.flyTo([r.cell.lat, r.cell.lon], CELL_ZOOM, { duration: 1.4 });
+    // enquadra a célula com folga (não enche a tela de amarelo) e anima rápido para não travar
+    if (r) map.flyToBounds(core.cellBounds(r.cell), { padding: [70, 70], maxZoom: CELL_ZOOM, duration: 0.8 });
   }, [map, focus]); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 }
@@ -39,17 +40,17 @@ export default function EarthMap({ results, selected, focus, onPick }) {
   const sorted = useMemo(() => [...results].reverse(), [results]); // 1º desenhado por cima
   return (
     <div className="relative mt-3">
-      <MapContainer center={[0, 0]} zoom={2} worldCopyJump className="h-[430px] rounded-2xl border border-line-2 max-md:h-[320px]"
+      <MapContainer center={[0, 0]} zoom={2} worldCopyJump preferCanvas className="h-[430px] rounded-2xl border border-line-2 max-md:h-[320px]"
                     aria-label={tr("Mapa das melhores células da Terra", "Map of the best Earth cells")}>
-        <TileLayer url={ESRI} maxZoom={17} attribution={tr("Imagens © Esri", "Imagery © Esri")} />
-        {gibs && <TileLayer url={GIBS} maxNativeZoom={9} maxZoom={17} opacity={0.85} attribution="NASA GIBS / MODIS Terra" />}
+        <TileLayer url={ESRI} maxZoom={17} keepBuffer={4} updateWhenZooming={false} attribution={tr("Imagens © Esri", "Imagery © Esri")} />
+        {gibs && <TileLayer url={GIBS} maxNativeZoom={9} maxZoom={17} opacity={0.85} updateWhenZooming={false} attribution="NASA GIBS / MODIS Terra" />}
         {sorted.map((r) => {
           const on = r.cell.id === selected;
           const color = on ? "#f7c75a" : "#f2b53a";
           const click = { click: () => onPick(r.cell.id) };
           return [
             <Rectangle key={`${r.cell.id}-box`} bounds={core.cellBounds(r.cell)} eventHandlers={click}
-                       pathOptions={{ color, weight: on ? 3 : 1.5, fillOpacity: on ? 0.3 : 0.1 }} />,
+                       pathOptions={{ color, weight: on ? 3 : 1.5, fillOpacity: on ? 0.08 : 0.06 }} />,
             // marcador visível mesmo com o mapa afastado (5 km some na escala do mundo)
             <CircleMarker key={`${r.cell.id}-pt`} center={[r.cell.lat, r.cell.lon]} radius={on ? 9 : 6} eventHandlers={click}
                           pathOptions={{ color: "#041c28", weight: 2, fillColor: color, fillOpacity: on ? 1 : 0.8 }}>

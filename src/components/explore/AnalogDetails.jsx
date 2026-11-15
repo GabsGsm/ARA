@@ -1,7 +1,7 @@
 // Detalhes do análogo selecionado, em abas: Resumo · Comparação · Limitações · Fontes.
 // Nada some do layout antigo: a tabela completa e as notas ficam em "Comparação"; método e
 // limites em "Limitações"; fontes, mapa de contexto do Trek e rastreio em "Fontes".
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as core from "../../lib/core.js";
 import { useAraData } from "../../hooks/useAraData.jsx";
 import { useTr } from "../../hooks/useSettings.jsx";
@@ -22,11 +22,12 @@ const BODY_PHYS = {
   moon: { g: 0.165, get gText() { return `${fmt(0.17, 2)} g`; }, get atm() { return T("praticamente vácuo", "practically vacuum"); } },
 };
 
-export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
+export default function AnalogDetails({ ex, siteVec, result, extraTabs = [], initialTab = null }) {
   const data = useAraData();
   const stabilityText = useStabilityText();
   const tr = useTr();
-  const [tab, setTab] = useState("resumo");
+  const [tab, setTab] = useState(initialTab || "resumo");
+  useEffect(() => { if (initialTab) setTab(initialTab); }, [initialTab]);
   const tabs = [...TABS, ...extraTabs.map((t) => ({ id: t.id, label: t.label }))];
   if (!result || !ex.siteId) {
     return <section className="card ex-details"><p className="note m-0">{tr("Selecione um candidato para ver os detalhes.")}</p></section>;
@@ -154,7 +155,7 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
               <p className="m-0 break-all font-mono text-[11px] text-muted">{(data.grid.run_ids ?? []).join(" · ")}</p>
             </div>
             <div>
-              <h4 className="eyebrow mb-2">{T("Mapa de contexto (NASA Trek)", "Context map (NASA Trek)")}</h4>
+              <h4 className="eyebrow mb-2">{site.body === "moon" ? T("Mapa de contexto (NASA LOLA)", "Context map (NASA LOLA)") : T("Mapa de contexto (NASA Trek)", "Context map (NASA Trek)")}</h4>
               <TrekMap site={site} layer={data.config.planet_maps?.[site.body]} />
               <p className="note mt-2">{T(site.why)}</p>
             </div>

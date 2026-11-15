@@ -10,7 +10,7 @@ export default function ClimateCalendar({ climate }) {
   const p = climate?.params;
   if (!p?.T2M) return <p className="note">{T("Sem climatologia para este ponto.", "No climatology for this point.")}</p>;
   const rain = p.PRECTOTCORR.monthly.map((v, i) => v * DAYS[i]);
-  const T = p.T2M.monthly, Tx = p.T2M_MAX?.monthly ?? T, Tn = p.T2M_MIN?.monthly ?? T;
+  const Tm = p.T2M.monthly, Tx = p.T2M_MAX?.monthly ?? Tm, Tn = p.T2M_MIN?.monthly ?? Tm;
   const W = 340, H = 150, L = 30, R = 30, Tp = 10, B = 22, cw = (W - L - R) / 12;
   const rMax = Math.max(10, ...rain);
   const tMin = Math.min(...Tn) - 2, tMax = Math.max(...Tx) + 2;
@@ -27,7 +27,7 @@ export default function ClimateCalendar({ climate }) {
         })}
         <path d={path(Tx)} fill="none" stroke="#ef8f80" strokeWidth="1.2" strokeDasharray="3 3" />
         <path d={path(Tn)} fill="none" stroke="#8fb8d8" strokeWidth="1.2" strokeDasharray="3 3" />
-        <path d={path(T)} fill="none" stroke="#f7c75a" strokeWidth="2" />
+        <path d={path(Tm)} fill="none" stroke="#f7c75a" strokeWidth="2" />
         {M.map((m, i) => <text key={i} x={L + cw * (i + 0.5)} y={H - 6} textAnchor="middle" fontSize="10" fill="#a9bbb7">{m}</text>)}
         <text x={L - 4} y={Tp + 8} textAnchor="end" fontSize="9" fill="#f7c75a">{fmt(tMax, 0)}°</text>
         <text x={L - 4} y={H - B} textAnchor="end" fontSize="9" fill="#f7c75a">{fmt(tMin, 0)}°</text>

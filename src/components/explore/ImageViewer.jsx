@@ -10,6 +10,7 @@ export default function ImageViewer({ src, alt, caption, overlay, onClose }) {
   const drag = useRef(null);
   const pinch = useRef(null);
   const closeBtn = useRef(null);
+  const dialog = useRef(null);
 
   const zoomAt = useCallback((factor, cx, cy) => {
     setView((v) => {
@@ -23,7 +24,17 @@ export default function ImageViewer({ src, alt, caption, overlay, onClose }) {
   }, []);
 
   useEffect(() => {
+    const opener = document.activeElement;   // devolve o foco a quem abriu o zoom
     const onKey = (e) => {
+      if (e.key === "Tab" && dialog.current) {  // o foco fica dentro do diálogo
+        const f = [...dialog.current.querySelectorAll("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])")].filter((x) => !x.disabled);
+        if (f.length) {
+          const first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+          else if (!dialog.current.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+        }
+      }
       if (e.key === "Escape") onClose();
       if (e.key === "+" || e.key === "=") zoomAt(1.4);
       if (e.key === "-") zoomAt(1 / 1.4);
@@ -33,7 +44,7 @@ export default function ImageViewer({ src, alt, caption, overlay, onClose }) {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeBtn.current?.focus();
-    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = prev; if (opener && typeof opener.focus === "function") opener.focus(); };
   }, [onClose, zoomAt]);
 
   const onWheel = (e) => { e.preventDefault(); zoomAt(e.deltaY < 0 ? 1.18 : 1 / 1.18, e.clientX, e.clientY); };
@@ -64,7 +75,7 @@ export default function ImageViewer({ src, alt, caption, overlay, onClose }) {
 
   // portal no <body>: a animação de entrada da página usa transform, que prenderia o position: fixed
   return createPortal(
-    <div className="ex-viewer" role="dialog" aria-modal="true" aria-label={alt}>
+    <div ref={dialog} className="ex-viewer" role="dialog" aria-modal="true" aria-label={alt}>
       <div className="ex-viewer-bar">
         <p className="m-0 min-w-0 flex-1 truncate text-[13px] text-ink-2">{caption}</p>
         <div className="flex gap-1.5">

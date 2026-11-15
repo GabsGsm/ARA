@@ -35,6 +35,15 @@ export default function Explore() {
     if (b && b !== ex.body) ex.setBody(b);
   }, [params]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ?site=<id> abre direto naquele local (links do 3D e de outras páginas); ?aba=<id> abre a aba dos detalhes
+  useEffect(() => {
+    const id = params.get("site"), s = id && data.siteById(id);
+    if (!s) return;
+    if (s.body !== ex.body) ex.setBody(s.body);
+    ex.setSiteId(id);
+  }, [params, data]); // eslint-disable-line react-hooks/exhaustive-deps
+  const tabParam = params.get("aba");
+
   // ao trocar de local ou de variante, seleciona o 1º lugar; senão mantém a escolha se ela ainda estiver no ranking
   const lastKey = useRef(null);
   useEffect(() => {
@@ -120,7 +129,7 @@ export default function Explore() {
         </section>
       </div>
 
-      <AnalogDetails ex={ex} siteVec={siteVec} result={selected} extraTabs={extraTabs} />
+      <AnalogDetails ex={ex} siteVec={siteVec} result={selected} extraTabs={extraTabs} initialTab={tabParam} />
       </>}
 
       <p className="sr-only" aria-live="polite">

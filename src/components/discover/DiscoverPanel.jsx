@@ -73,6 +73,8 @@ export default function DiscoverPanel() {
 
   const analyze = async () => {
     if (!point) return;
+    // no celular os resultados ficam abaixo do mapa: leva a pessoa até eles
+    requestAnimationFrame(() => document.querySelector(".dv-res")?.scrollIntoView({ behavior: "smooth", block: "start" }));
     const status = Object.fromEntries(STEPS().map(([k]) => [k, "wait"]));
     const res = {};
     const update = () => setRun({ status: { ...status }, res: { ...res } });
@@ -109,6 +111,10 @@ export default function DiscoverPanel() {
   const sourcesMeta = Object.values(live).filter(Boolean).map((r) => r.meta);
   const box = point ? core.cellBounds(point) : null;
 
+  // aceita vírgula ou ponto decimal ("36,42" ou "36.42")
+  const toNum = (v) => (String(v).trim() === "" ? NaN : Number(String(v).trim().replace(",", ".")));
+  const numLat = toNum(latTxt), numLon = toNum(lonTxt);
+  const coordsOk = Number.isFinite(numLat) && Number.isFinite(numLon) && Math.abs(numLat) <= 85 && Math.abs(numLon) <= 180;
   return (
     <div className="dv-grid">
       {/* ---------- painel esquerdo ---------- */}
@@ -131,8 +137,8 @@ export default function DiscoverPanel() {
           <label className="t3-field"><span>Latitude</span><input className="field" inputMode="decimal" value={latTxt} onChange={(e) => setLatTxt(e.target.value)} /></label>
           <label className="t3-field"><span>Longitude</span><input className="field" inputMode="decimal" value={lonTxt} onChange={(e) => setLonTxt(e.target.value)} /></label>
         </div>
-        <button type="button" className="dv-btn mt-2 w-full" disabled={!(Math.abs(+latTxt) <= 85 && Math.abs(+lonTxt) <= 180 && latTxt !== "" && lonTxt !== "")}
-                onClick={() => pick(+latTxt, +lonTxt)}>{T("Usar coordenadas", "Use coordinates")}</button>
+        <button type="button" className="dv-btn mt-2 w-full" disabled={!coordsOk}
+                onClick={() => pick(numLat, numLon)}>{T("Usar coordenadas", "Use coordinates")}</button>
         <select className="field mt-2" value="" aria-label={T("Análogos famosos", "Famous analogs")} onChange={(e) => { const f = famous()[+e.target.value]; if (f) pick(f.lat, f.lon, f.name); }}>
           <option value="">{T("Ou um análogo famoso (NASA/ESA)…", "Or a famous analog (NASA/ESA)…")}</option>
           {famous().map((f, i) => <option key={f.name} value={i}>{f.name}</option>)}
@@ -150,12 +156,9 @@ export default function DiscoverPanel() {
             <option value="custom">{T("Personalizado")}</option>
           </select>
         </label>
-        <label className="t3-field mt-2"><span>{T("Tamanho da área", "Area size")}</span>
-          <select className="field" value="5" onChange={() => {}}>
-            <option value="5">{T("5 × 5 km (mesma do catálogo)", "5 × 5 km (same as the catalogue)")}</option>
-            <option value="10" disabled>{T("10 × 10 km — em validação", "10 × 10 km — under validation")}</option>
-          </select>
-        </label>
+        <p className="t3-field mt-2"><span>{T("Tamanho da área", "Area size")}</span>
+          <b className="text-[13px]">{T("5 × 5 km (tamanho fixo nesta versão, o mesmo do catálogo)", "5 × 5 km (fixed size in this version, same as the catalogue)")}</b>
+        </p>
         <button type="button" className="dv-go" disabled={!point || run?.status?.terrain === "wait"} onClick={analyze}>{T("Analisar este local", "Analyse this place")}</button>
         {!point && <p className="note">{T("Clique no mapa, busque um lugar ou digite coordenadas.", "Click the map, search a place or type coordinates.")}</p>}
       </aside>
@@ -182,6 +185,7 @@ export default function DiscoverPanel() {
             {inCatalog && <> · <span className="text-gold-2">{T(`dentro da célula ${inCatalog.id} do catálogo`, `inside catalogue cell ${inCatalog.id}`)}</span></>}
           </p>
         )}
+        {point && <button type="button" className="dv-go dv-go-map" disabled={run?.status?.terrain === "wait"} onClick={analyze}>{T("Analisar este local", "Analyse this place")}</button>}
       </section>
 
       {/* ---------- resultados ---------- */}

@@ -130,7 +130,9 @@ export default function DataLab() {
   const [view, setView] = useState("sombra");
   const [opt, setOpt] = useState({ res: 0, noise: 0, gaps: 0, smooth: 0 });
 
-  useEffect(() => { loadIndex().then((ix) => setIndex(ix.scenes)); }, []);
+  const [loadErr, setLoadErr] = useState(null);   // null | "index" | "scene"
+  const [retry, setRetry] = useState(0);
+  useEffect(() => { loadIndex().then((ix) => { setIndex(ix.scenes); setLoadErr((e) => (e === "index" ? null : e)); }).catch(() => setLoadErr("index")); }, [retry]);
   const missions = useMemo(() => data.catalog.sites.filter((s) => s.body !== "earth" && data.sites[s.id]?.terrain), [data]);
   const earthScenes = useMemo(() => index.filter((s) => s.body === "earth" && s.stats_inner?.at_100m), [index]);
   const mission = data.sites[siteId]?.terrain;
@@ -141,10 +143,10 @@ export default function DataLab() {
   useEffect(() => { if (ranked.length && !ranked.some((r) => r.s.id === earthId)) setEarthId(ranked[0].s.id); }, [ranked]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!earthId) return;
-    let alive = true; setScene(null);
-    loadScene(earthId).then((s) => alive && setScene(s));
+    let alive = true; setScene(null); setLoadErr((e) => (e === "scene" ? null : e));
+    loadScene(earthId).then((s) => alive && setScene(s)).catch(() => alive && setLoadErr("scene"));
     return () => { alive = false; };
-  }, [earthId]);
+  }, [earthId, retry]);
 
   const step = STEPS[stepI];
   useEffect(() => { if (!free) setView(step.view); }, [stepI, free]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -306,6 +308,12 @@ export default function DataLab() {
           <div className="dl-pair">
             <figure className="dl-fig">
               <figcaption><b>Original</b> · {tr("dado real, pixel de", "real data, pixel")} {fmt(base?.r0 ?? 0, 0)} m</figcaption>
+              {loadErr && (
+                <p role="alert" className="note" style={{ color: "var(--color-bad)" }}>
+                  {loadErr === "index" ? tr("Não foi possível carregar a lista de cenas.", "Could not load the scene list.") : tr("Não foi possível carregar esta cena.", "Could not load this scene.")}{" "}
+                  <button type="button" className="dl-btn" onClick={() => setRetry((n) => n + 1)}>{tr("Tentar de novo", "Try again")}</button>
+                </p>
+              )}
               {base && fields ? <Canvas field={fields.a.f} n={base.n} view={view} opts={fields.a.o} imageSrc={base.imageSrc} k={1} label={`Original: ${tr(...VIEWS.find((v) => v.id === view).label)} — ${earth?.name}`} /> : <div className="dl-canvas dl-wait">{tr("Carregando…", "Loading…")}</div>}
             </figure>
             <figure className="dl-fig">

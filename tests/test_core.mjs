@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { unpackGrid, rank, distance, contributions, explain, scalesFrom, normalizeWeights, cellsForVariant } from "../src/lib/core.js";
 import { localizeData, setLang, T } from "../src/lib/i18n.js";
-import { ROVERS, startState, steerForWarp, step, withinTargetRadius } from "../src/lib/mission/rover.js";
+import { MAX_SCREEN_SPEED, ROVERS, effectiveWarp, startState, steerForWarp, step, withinTargetRadius } from "../src/lib/mission/rover.js";
 
 const root = new URL("../", import.meta.url);
 const read = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));
@@ -86,16 +86,16 @@ console.log("core.js: todos os testes passaram");
   assert.equal(T(caveat), caveat);
 }
 
-// 8) o warp acelera o deslocamento, mas não deixa a direção girar sem controle
+// 8) o warp acelera o deslocamento, mas o giro aparente e a velocidade na tela continuam controláveis
 {
   const spec = ROVERS.perseverance;
-  const scene = { meta: { size_m: 100 }, body: { g: 3.721 }, n: 4, heights: new Float32Array(16) };
-  const env = { scene, soft: () => 0.3, sunlit: () => true, hits: new Set(), rocks: () => [] };
-  const state = startState(spec, { u: 0.5, v: 0.5 });
-  const slow = step(state, spec, { throttle: 0, steer: 1 }, 9, env);
-  const fast = step(state, spec, { throttle: 0, steer: steerForWarp(1, 60) }, 180, env);
-  assert.ok(Math.abs(fast.heading - slow.heading) < 1e-12);
-  assert.equal(steerForWarp(1, 1000), 0.003);
+  for (const W of [1, 10, 60, 300, 1000]) {
+    const Weff = effectiveWarp(W, spec.vmax);
+    assert.ok(Weff * spec.vmax <= MAX_SCREEN_SPEED + 1e-9, `velocidade na tela no warp ${W}`);
+    assert.ok(Math.abs(steerForWarp(1, Weff, 0.1)) * 0.1 * Weff <= 1.2 + 1e-9, `giro aparente no warp ${W}`);
+  }
+  assert.equal(effectiveWarp(10, spec.vmax), 10);
+  assert.ok(effectiveWarp(1000, spec.vmax) < 1000);
 }
 
 // 9) só considera a chegada quando o percurso cruza a vizinhança curta do destino

@@ -211,3 +211,4 @@
 .t3-trav-grid > div { display: grid; gap: 3px; padding: 8px 10px; border-radius: 10px; background: rgb(255 255 255 / .03); border: 1px solid var(--color-line-2); }
 .t3-trav-grid span { color: var(--color-ink-2); }
 @media (max-width: 1100px) { .t3-trav { width: calc(100% - 40px); } .t3-trav-grid { grid-template-columns: 1fr; } }
+.t3-retry { pointer-events: auto; border: 1px solid var(--color-gold); border-radius: 999px; padding: 7px 14px; background: rgb(242 181 58 / .12); color: var(--color-gold-3); cursor: pointer; font-size: 13px; }
