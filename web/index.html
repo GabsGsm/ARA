@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Lexend:wght@300;400;500;600&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-<link rel="preload" as="image" href="img/mars.webp">
-<link rel="preload" as="image" href="img/moon.webp">
+<link rel="preload" as="image" href="img/mars-tex.jpg">
+<link rel="preload" as="image" href="img/moon-tex.jpg">
 <link rel="icon" href="img/ara-logo.webp">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -18,7 +18,6 @@
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 
 <canvas id="sky" class="sky" aria-hidden="true"></canvas>
-<div class="aurora" aria-hidden="true"><span></span><span></span></div>
 
 <header class="topbar">
   <a class="brand" href="#inicio" aria-label="ARA, página inicial">
@@ -50,85 +49,85 @@
 
       <div class="hero-copy">
         <h1 id="heroTitle" class="display hero-title">
-          <span class="line" style="--d:.15s">Explore</span>
-          <span class="line" style="--d:.3s">beyond</span>
-          <span class="line gold-text" style="--d:.45s">Earth.</span>
+          <span class="line" style="--d:.1s">Explore</span>
+          <span class="line" style="--d:.22s">beyond</span>
+          <span class="line gold-text" style="--d:.34s">Earth.</span>
         </h1>
         <span class="rule" aria-hidden="true"></span>
-        <p class="lead reveal" style="--d:.7s">Encontre na Terra ambientes semelhantes aos de Marte e da Lua.</p>
+        <p class="lead reveal" style="--d:.55s">Encontre na Terra ambientes<br>semelhantes aos de Marte e da Lua.</p>
         <ul class="features">
-          <li class="reveal" style="--d:.85s;--o:0s"><svg viewBox="0 0 40 26" aria-hidden="true"><path d="M2 24 L13 7 L20 17 L25 11 L38 24 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M7 18 C12 15 17 19 22 16 S31 15 34 18" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".8"/></svg>Análise de terrenos</li>
-          <li class="reveal" style="--d:1s;--o:-2s"><svg viewBox="0 0 32 30" aria-hidden="true"><path d="M16 3 L29 9.5 L16 16 L3 9.5 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M3 15 L16 21.5 L29 15 M3 20.5 L16 27 L29 20.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>Dados geoespaciais</li>
-          <li class="reveal" style="--d:1.15s;--o:-4s"><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="7" y="7" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="11.5" y="11.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 2v5 M15 2v5 M19 2v5 M11 23v5 M15 23v5 M19 23v5 M2 11h5 M2 15h5 M2 19h5 M23 11h5 M23 15h5 M23 19h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Inteligência artificial</li>
+          <li class="reveal" style="--d:.7s"><svg viewBox="0 0 46 30" aria-hidden="true"><path d="M2 27 L16 6 L24 17 L30 10 L44 27 Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M8 21 C14 17 20 22 26 18 S36 17 40 21" fill="none" stroke="currentColor" stroke-width="2"/></svg>Análise de terrenos</li>
+          <li class="reveal" style="--d:.8s"><svg viewBox="0 0 34 32" aria-hidden="true"><path d="M17 3 L31 10 L17 17 L3 10 Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M3 16 L17 23 L31 16 M3 22 L17 29 L31 22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg>Dados geoespaciais</li>
+          <li class="reveal" style="--d:.9s"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2.6"/><rect x="12" y="12" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v5 M16 2v5 M20 2v5 M12 25v5 M16 25v5 M20 25v5 M2 12h5 M2 16h5 M2 20h5 M25 12h5 M25 16h5 M25 20h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Inteligência artificial</li>
         </ul>
       </div>
 
+      <!-- Palco no mesmo sistema de coordenadas da arte de referência (1600 × 900):
+           a caixa vai de x 450→1530 e y 140→730. Tudo dentro escala junto. -->
       <div class="stage">
-        <svg class="orbit back" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+        <svg class="orbit back" viewBox="450 140 1080 590" aria-hidden="true">
           <defs>
-            <linearGradient id="orbGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#f2b53a" stop-opacity=".25"/><stop offset=".45" stop-color="#ffd77a"/><stop offset="1" stop-color="#f2b53a" stop-opacity=".6"/>
+            <linearGradient id="orbBack" gradientUnits="userSpaceOnUse" x1="440" y1="0" x2="1570" y2="0">
+              <stop offset="0" stop-color="#f2b53a" stop-opacity=".9"/><stop offset=".4" stop-color="#f2b53a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd166"/>
             </linearGradient>
           </defs>
-          <g transform="rotate(-13 500 330)">
-            <ellipse cx="500" cy="330" rx="470" ry="165" fill="none" stroke="url(#orbGrad)" stroke-width="2" vector-effect="non-scaling-stroke" opacity=".7"/>
-          </g>
-          <g class="orbit-dash"><ellipse cx="500" cy="320" rx="440" ry="215" fill="none" stroke="#f7d38a" stroke-width="1.2" stroke-dasharray="2 12" vector-effect="non-scaling-stroke" opacity=".4"/></g>
+          <ellipse cx="1001" cy="384" rx="563" ry="148" transform="rotate(-16.6 1001 384)" fill="none" stroke="url(#orbBack)" stroke-width="2"/>
+          <!-- arcos finos em volta de Marte -->
+          <path d="M555.9 438.1 A242 242 0 0 1 788.6 175.1" class="arc faint"/>
+          <path d="M801.2 175 A242 242 0 0 1 899.3 197.7" class="arc gold"/>
+          <path d="M1029.1 332.5 A247 247 0 0 1 1020.9 521.4" class="arc faint dash"/>
+          <!-- arcos finos em volta da Lua -->
+          <path d="M1095.5 272.5 A202 202 0 0 1 1221 223.1" class="arc white"/>
+          <path d="M1179.1 621 A202 202 0 0 1 1087.7 570.3" class="arc gold"/>
+          <path d="M1414.7 337.9 A206 206 0 0 1 1385.8 557.4" class="arc faint dash"/>
         </svg>
 
         <a class="planet-card mars" href="#explorar?corpo=marte" aria-label="Explorar Marte">
-          <span class="planet-float">
-            <span class="halo" aria-hidden="true"></span>
-            <span class="moonlet back" aria-hidden="true"><i></i></span>
-            <img class="planet-img" src="img/mars.webp" alt="" width="1000" height="1000">
-            <span class="sheen" aria-hidden="true"></span>
-            <span class="moonlet front" aria-hidden="true"><i></i></span>
+          <span class="planet" style="--x:582;--y:202;--w:430">
+            <span class="atmo" aria-hidden="true"></span>
+            <canvas class="globe" data-tex="img/mars-tex.jpg" data-light="-0.6,-0.55" data-period="80" data-dark=".8"></canvas>
+            <span class="flare" aria-hidden="true"></span>
           </span>
-          <span class="pill gold glow"><svg viewBox="0 0 40 26" aria-hidden="true"><path d="M2 24 L13 7 L20 17 L25 11 L38 24 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M8 18 l5-6 4 5" fill="none" stroke="currentColor" stroke-width="2"/></svg>Marte<i aria-hidden="true">→</i></span>
+          <span class="pill gold glow" style="--x:608;--y:664;--w:335"><svg viewBox="0 0 46 30" aria-hidden="true"><path d="M2 27 L16 6 L24 17 L30 10 L44 27 Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M9 20 l7-8 5 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>Marte<i aria-hidden="true">⟶</i></span>
         </a>
         <a class="planet-card moon" href="#explorar?corpo=lua" aria-label="Explorar a Lua">
-          <span class="planet-float">
-            <span class="halo" aria-hidden="true"></span>
-            <span class="moonlet back" aria-hidden="true"><i></i></span>
-            <img class="planet-img" src="img/moon.webp" alt="" width="1000" height="1000">
-            <span class="sheen" aria-hidden="true"></span>
-            <span class="moonlet front" aria-hidden="true"><i></i></span>
+          <span class="planet" style="--x:1051;--y:248;--w:354">
+            <span class="atmo" aria-hidden="true"></span>
+            <canvas class="globe" data-tex="img/moon-tex.jpg" data-light="0.55,-0.45" data-period="100" data-dark=".5"></canvas>
           </span>
-          <span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 2.5 a9.5 9.5 0 1 0 7 15.5 a7.5 7.5 0 1 1 -7 -15.5z" fill="currentColor"/></svg>Lua<i aria-hidden="true">→</i></span>
+          <span class="pill" style="--x:1055;--y:664;--w:320"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 2.5 a9.5 9.5 0 1 0 7 15.5 a7.5 7.5 0 1 1 -7 -15.5z" fill="currentColor"/></svg>Lua<i aria-hidden="true">⟶</i></span>
         </a>
 
-        <svg class="orbit front" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+        <svg class="orbit front" viewBox="450 140 1080 590" aria-hidden="true">
           <defs>
-            <radialGradient id="cometGlow"><stop offset="0" stop-color="#fff8e1"/><stop offset=".35" stop-color="#ffd166" stop-opacity=".9"/><stop offset="1" stop-color="#f2b53a" stop-opacity="0"/></radialGradient>
-            <path id="orbPath" d="M30 330 A470 165 0 1 0 970 330 A470 165 0 1 0 30 330" transform="rotate(-13 500 330)"/>
+            <linearGradient id="orbFront" gradientUnits="userSpaceOnUse" x1="440" y1="0" x2="1570" y2="0">
+              <stop offset="0" stop-color="#f7c75a"/><stop offset=".45" stop-color="#ffd77a"/><stop offset="1" stop-color="#ffe3a0"/>
+            </linearGradient>
+            <radialGradient id="glowDot"><stop offset="0" stop-color="#fffaf0"/><stop offset=".3" stop-color="#ffd166" stop-opacity=".85"/><stop offset="1" stop-color="#f2b53a" stop-opacity="0"/></radialGradient>
+            <path id="orbPath" d="M438 384 A563 148 0 1 0 1564 384 A563 148 0 1 0 438 384" transform="rotate(-16.6 1001 384)"/>
+            <!-- esconde o cometa quando ele passa por trás de Marte (metade de cima do disco) -->
+            <mask id="behindMars" maskUnits="userSpaceOnUse" x="400" y="100" width="1200" height="700">
+              <rect x="400" y="100" width="1200" height="700" fill="#fff"/>
+              <path d="M582 417 A215 215 0 0 1 1012 417 L1012 470 L582 500 Z" fill="#000"/>
+            </mask>
           </defs>
-          <g transform="rotate(-13 500 330)">
-            <path d="M30 330 A470 165 0 0 0 970 330" fill="none" stroke="url(#orbGrad)" stroke-width="2.4" vector-effect="non-scaling-stroke"/>
-          </g>
-          <g class="comet">
-            <circle r="18" fill="url(#cometGlow)"><animateMotion dur="14s" repeatCount="indefinite"><mpath href="#orbPath"/></animateMotion></circle>
-            <circle r="3.4" fill="#fffaf0"><animateMotion dur="14s" repeatCount="indefinite"><mpath href="#orbPath"/></animateMotion></circle>
-          </g>
-          <g class="comet">
-            <circle r="11" fill="url(#cometGlow)"><animateMotion dur="14s" begin="-7s" repeatCount="indefinite"><mpath href="#orbPath"/></animateMotion></circle>
-            <circle r="2.2" fill="#fffaf0"><animateMotion dur="14s" begin="-7s" repeatCount="indefinite"><mpath href="#orbPath"/></animateMotion></circle>
+          <path d="M438 384 A563 148 0 0 0 1564 384" transform="rotate(-16.6 1001 384)" fill="none" stroke="url(#orbFront)" stroke-width="2.2"/>
+          <circle class="cross" cx="980" cy="542" r="20" fill="url(#glowDot)"/>
+          <g mask="url(#behindMars)">
+            <circle r="14" fill="url(#glowDot)"><animateMotion dur="22s" repeatCount="indefinite"><mpath href="#orbPath"/></animateMotion></circle>
           </g>
         </svg>
 
-        <svg class="sparkles" viewBox="0 0 1000 600" aria-hidden="true">
-          <defs><path id="spark" d="M0 -20 C2 -4 4 -2 20 0 C4 2 2 4 0 20 C-2 4 -4 2 -20 0 C-4 -2 -2 -4 0 -20Z"/></defs>
-          <g transform="translate(905 60)"><use href="#spark" class="tw" style="--s:1.4;--t:3.2s;--d:0s"/></g>
-          <g transform="translate(60 520)"><use href="#spark" class="tw" style="--s:1.05;--t:2.6s;--d:.8s"/></g>
-          <g transform="translate(455 40)"><use href="#spark" class="tw" style="--s:.55;--t:2.2s;--d:1.4s"/></g>
-          <g transform="translate(985 320)"><use href="#spark" class="tw" style="--s:.5;--t:2.9s;--d:.3s"/></g>
-          <g transform="translate(300 585)"><use href="#spark" class="tw" style="--s:.45;--t:2.4s;--d:1.9s"/></g>
-          <g transform="translate(640 110)"><use href="#spark" class="tw" style="--s:.4;--t:3.6s;--d:2.4s"/></g>
+        <svg class="sparkles" viewBox="450 140 1080 590" aria-hidden="true">
+          <defs><path id="spark" d="M0 -24 C2.2 -5 5 -2.2 24 0 C5 2.2 2.2 5 0 24 C-2.2 5 -5 2.2 -24 0 C-5 -2.2 -2.2 -5 0 -24Z"/></defs>
+          <g transform="translate(1408 202)"><use href="#spark" class="tw" style="--s:1.05;--t:4s"/></g>
+          <g transform="translate(527 605)"><use href="#spark" class="tw" style="--s:.78;--t:3.4s;--d:1.2s"/></g>
         </svg>
       </div>
 
-      <a class="scroll-cue" href="#explorar" aria-label="Ir para Explorar"><span class="mouse"><span></span></span><span class="chev"></span><span class="chev"></span></a>
     </div>
     <img class="horizon" src="img/horizon.webp" alt="" aria-hidden="true">
+    <a class="scroll-cue" href="#explorar" aria-label="Ir para Explorar"><span class="mouse"><span></span></span><span class="chev"></span><span class="chev"></span></a>
   </section>
 
 <!-- ============ EXPLORAR ============ -->
