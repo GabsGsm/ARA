@@ -38,6 +38,27 @@ The **3D Lab** (`#/3d`) puts a fixed planetary site and its Earth analog side by
 
 ![The whole Jezero crater (60 km), the four ARA sectors as clickable boxes and the Perseverance traverse](docs/img/lab3d-jezero.jpg)
 
+## Explore: catalogue, discover, minerals — and the evidence behind each analog
+
+The **Explorar** page has three modes.
+
+- **Catálogo** — the 522-cell ranking (unchanged), now with filters on top, map + top candidates side by side and a details panel with tabs: *Resumo* (zoomable DEM image), *Comparação*, *Limitações*, *Fontes*, **Evidências** and **Robustez**.
+- **Descobrir novo local (ARA Anywhere)** — pick any point on Earth (map, place search via Nominatim, coordinates or a famous NASA/ESA analog). The browser fetches, live and step by step: AWS Terrain Tiles (the same three ARA measures at 100 m in a 5 km cell), Macrostrat geology, NASA POWER monthly climatology, SoilGrids 0–5 cm texture with q05–q95 uncertainty and JRC surface-water history 1984–2021. The result is labelled **exploratory** and never mixed into the official ranking; it can be opened side by side in 3D.
+- **Minerais** — Mars: CRISM + CaSSIS mineral units of Jezero's western rim (Valantinas et al. 2026), filterable by class, and the **THEMIS 2026 thermal-inertia** map (Huang 2026, MC-13) with the upper-limit quality band, histograms and per-sector values (they reproduce the team's delivery exactly: 292.8 / 236.2 / 244.7 / 249.9 J m⁻² K⁻¹ s⁻½). Earth: Macrostrat geology with a unit sheet on click. Moon: per-target evidence (LOLA, illumination, Diviner, M3) keeping unit, material, spectral signature, hydrogen and ice as separate categories.
+
+**Evidence engine** (`src/lib/evidence/engine.js`, data from `pipeline/build_evidence.py` → `data/evidence/`): for every candidate and mission purpose (geomorphology, rover navigation, mineralogical instrument, geological training) each piece of evidence is *supporting*, *contradictory*, *unknown* or *context*, with origin (observed, derived, model estimate, contextual), source, resolution, period, rule and caveats. On top of it:
+
+- **O que o ranking não mostra? (Analog Mirage)** — flags candidates whose relief passes the ranking but whose land cover, flood history or climate contradict the purpose (e.g. for Jezero 01 the #2 cell, Pinacate, is flagged; #1 Death Valley is not).
+- **O que falta saber? (Next Best Measurement)** — a transparent purpose × evidence matrix splitting *what we know*, *what is missing* and *the next test to run* (e.g. sampling + granulometry + bevameter before a rover test). Rules, not probabilities.
+- **Robustez** — position of the top candidates in 12 defined scenarios (3 weight sets × 4 data-quality versions).
+- **Analog Passport** — JSON export with identification, target, characterization, interpretation, provenance and conclusion.
+
+Earth evidence for the 522 cells: ESA WorldCover 2021 (10 m), ISRIC SoilGrids 2.0 (250 m, model estimate), Macrostrat, NASA POWER (~0.5°, regional context) and JRC Global Surface Water (30 m). Mineral spectroscopy of Earth (NASA EMIT) is **not** integrated yet: it requires a NASA Earthdata login.
+
+## Campo (Field Explorer)
+
+`#/campo` turns a phone into a field companion: *use my location* (GPS via `watchPosition`, only while the session is active), *pick a point on the map* or *demonstration* (a clearly labelled simulated walk on real coordinates in Death Valley). It shows accuracy, a filtered track (fixes worse than 50 m or implying > 8 m/s are discarded), distance, Macrostrat geology re-queried only after 400 m, on-demand relief characterization against any of the 8 targets, missing data for the purpose, and **field notes** kept only on the device (exportable as JSON). Location is never sent anywhere except as the single point queried to the public data services.
+
 ## Method
 
 For each 5 × 5 km window (100 m/pixel): mean slope (`np.gradient`), mean roughness (local standard deviation in a 3 × 3 window = 300 m) and relief (max − min). Similarity:
@@ -99,6 +120,8 @@ python pipeline/build_catalog.py
 python pipeline/stability.py
 python pipeline/enrich_context.py --top 50
 python pipeline/build_simulation.py --mars-tif jezero_01=.../jezero_01_dem_100m.tif
+python pipeline/build_evidence.py           # WorldCover, SoilGrids, Macrostrat, POWER, JRC for the 522 cells -> data/evidence/
+python pipeline/build_minerals.py           # CRISM units + THEMIS 2026 thermal inertia of Jezero -> data/minerals/
 python pipeline/build_terrain3d.py          # 3D scenes -> data/terrain/ (reads only the needed windows from the public servers)
 ```
 
