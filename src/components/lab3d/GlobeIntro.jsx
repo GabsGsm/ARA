@@ -41,7 +41,7 @@ export default function GlobeIntro({ body, lat, lon, name, onDone, slow = false 
       scene.add(atm);
     }
     const sun = new THREE.DirectionalLight(0xffffff, 2.4);
-    scene.add(sun, new THREE.AmbientLight(0xffffff, body === "moon" ? 0.08 : 0.25));
+    scene.add(sun, new THREE.AmbientLight(0xffffff, body === "moon" ? 0.22 : 0.25));
     // estrelas
     const N = 1500, p = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) { const v = new THREE.Vector3().randomDirection().multiplyScalar(40); p.set([v.x, v.y, v.z], i * 3); }

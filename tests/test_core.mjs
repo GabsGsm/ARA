@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { unpackGrid, rank, distance, contributions, explain, scalesFrom, normalizeWeights, cellsForVariant } from "../src/lib/core.js";
 import { localizeData, setLang, T } from "../src/lib/i18n.js";
+import { ROVERS, startState, steerForWarp, step, withinTargetRadius } from "../src/lib/mission/rover.js";
 
 const root = new URL("../", import.meta.url);
 const read = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));
@@ -83,4 +84,35 @@ console.log("core.js: todos os testes passaram");
   assert.equal(localizeData({ caveats: [caveat] }).caveats[0], "Water detected by Landsat between 1984 and 2021; does not cover after 2021 or soil moisture.");
   setLang("pt");
   assert.equal(T(caveat), caveat);
+}
+
+// 8) o warp acelera o deslocamento, mas não deixa a direção girar sem controle
+{
+  const spec = ROVERS.perseverance;
+  const scene = { meta: { size_m: 100 }, body: { g: 3.721 }, n: 4, heights: new Float32Array(16) };
+  const env = { scene, soft: () => 0.3, sunlit: () => true, hits: new Set(), rocks: () => [] };
+  const state = startState(spec, { u: 0.5, v: 0.5 });
+  const slow = step(state, spec, { throttle: 0, steer: 1 }, 9, env);
+  const fast = step(state, spec, { throttle: 0, steer: steerForWarp(1, 60) }, 180, env);
+  assert.ok(Math.abs(fast.heading - slow.heading) < 1e-12);
+  assert.equal(steerForWarp(1, 1000), 0.003);
+}
+
+// 9) só considera a chegada quando o percurso cruza a vizinhança curta do destino
+{
+  const target = { u: 0.5, v: 0.5 };
+  assert.equal(withinTargetRadius({ u: 0.4, v: 0.5 }, { u: 0.6, v: 0.5 }, target, 2, 100), true);
+  assert.equal(withinTargetRadius({ u: 0.4, v: 0.5 }, { u: 0.45, v: 0.5 }, target, 2, 100), false);
+}
+
+// 10) pedras ao lado do LRV não causam desgaste; contato real continua contando
+{
+  const spec = ROVERS.lrv;
+  const scene = { meta: { size_m: 100 }, body: { g: 1.62 }, n: 4, heights: new Float32Array(16) };
+  const makeEnv = (rock) => ({ scene, soft: () => 0.3, sunlit: () => true, hits: new Set(), rocks: () => [rock] });
+  const rock = { id: "edge", x: 1.35, z: 0, d: 0.5, h: 0.3 };
+  const clear = step(startState(spec, { u: 0.5, v: 0.5 }), spec, { throttle: 1, steer: 0 }, 0.05, makeEnv(rock));
+  assert.equal(clear.wheel, 0);
+  const contact = step(startState(spec, { u: 0.5, v: 0.5 }), spec, { throttle: 1, steer: 0 }, 0.05, makeEnv({ ...rock, x: 0.8 }));
+  assert.ok(contact.wheel > 0);
 }

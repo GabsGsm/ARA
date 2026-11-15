@@ -99,8 +99,7 @@ export default class TerrainView {
     this.S = S;
     this.mid = (meta.height.min + meta.height.max) / 2;
     if (this.mesh) { this.scene.remove(this.mesh); this.mesh.geometry.dispose(); this.mesh.material.map?.dispose(); this.mesh.material.dispose(); }
-    this.overlays.clear();
-    this.labels.domElement.innerHTML = "";
+    this.clearOverlays();
 
     const geo = new THREE.PlaneGeometry(S, S, n - 1, n - 1);
     geo.rotateX(-Math.PI / 2);
@@ -262,6 +261,42 @@ reflectedLight.directSpecular *= vShadow;
     return l;
   }
 
+  corridor(points, width, color, lift) {
+    if (points.length < 2) return;
+    const centers = points.map((p) => this.uvToWorld(p.u, p.v, lift));
+    const positions = [], indices = [], half = width / 2;
+    for (let i = 0; i < centers.length; i++) {
+      const before = centers[Math.max(0, i - 1)], after = centers[Math.min(centers.length - 1, i + 1)];
+      const dx = after.x - before.x, dz = after.z - before.z, length = Math.hypot(dx, dz) || 1;
+      const ox = (-dz / length) * half, oz = (dx / length) * half, point = points[i];
+      const left = this.uvToWorld(point.u + ox / this.S, point.v + oz / this.S, lift);
+      const right = this.uvToWorld(point.u - ox / this.S, point.v - oz / this.S, lift);
+      positions.push(left.x, left.y, left.z, right.x, right.y, right.z);
+      if (i > 0) {
+        const a = (i - 1) * 2, b = i * 2;
+        indices.push(a, a + 1, b, a + 1, b + 1, b);
+      }
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.renderOrder = 1;
+    this.overlays.add(mesh);
+  }
+
+  clearOverlays() {
+    for (const object of this.overlays.children) {
+      object.geometry?.dispose();
+      const materials = Array.isArray(object.material) ? object.material : [object.material];
+      for (const material of materials) material?.dispose();
+    }
+    this.overlays.clear();
+    this.labels.domElement.innerHTML = "";
+  }
+
   squareUV(cu, cv, half, lift) {
     const pts = [], k = 60;
     const corners = [[cu - half, cv - half], [cu + half, cv - half], [cu + half, cv + half], [cu - half, cv + half], [cu - half, cv - half]];
@@ -286,8 +321,7 @@ reflectedLight.directSpecular *= vShadow;
 
   buildOverlays() {
     // os objetos ficam num grupo com escala y = exagero: posições em altura real
-    this.overlays.clear();
-    this.labels.domElement.innerHTML = "";
+    this.clearOverlays();
     const { meta } = this.data;
     const lift = this.S / 1500;
     this.cellLine = null;
@@ -320,7 +354,9 @@ reflectedLight.directSpecular *= vShadow;
     if (this.profilePts) this.drawProfile(...this.profilePts);
     for (const r of this.routes || []) {
       if (!r?.pts?.length) continue;
-      this.line(r.pts.map((p) => this.uvToWorld(p.u, p.v, this.S / 700)), r.color ?? 0x59e0ff, 1);
+      const lift = Math.max(0.5, Math.min(2, this.S / 5000));
+      if (r.corridorWidth > 0) this.corridor(r.pts, r.corridorWidth, r.color ?? 0x59e0ff, lift);
+      this.line(r.pts.map((p) => this.uvToWorld(p.u, p.v, r.corridorWidth > 0 ? lift + 0.05 : this.S / 700)), r.color ?? 0x59e0ff, 1);
       if (r.label) this.label(r.label, r.pts[0].u, r.pts[0].v, "pin");
     }
     this.dirty = true;
@@ -501,6 +537,22 @@ reflectedLight.directSpecular *= vShadow;
 
   cancelFly() { this._fly = null; this._flying = false; }
 
+  focusOnVehicle({ u, v, length }, ms = 2600) {
+    if (!this.data || !this.S) return Promise.resolve();
+    const S = this.S, e = Math.max(this.exag, 0.1);
+    const resolution = this.data.meta.color?.native_res_m ?? this.data.meta.height.native_res_m ?? 1;
+    const d = Math.max(100, length * 35, resolution * 80);
+    const targetHeight = (heightAt(this.data, u, v) - this.mid) / S;
+    const x = u - 0.5 + (d * 0.6) / S, z = v - 0.5 + d / S;
+    const cameraU = Math.max(0.001, Math.min(0.999, x + 0.5));
+    const cameraV = Math.max(0.001, Math.min(0.999, z + 0.5));
+    const cameraGround = (heightAt(this.data, cameraU, cameraV) - this.mid) / S;
+    const cameraY = Math.max(targetHeight + (d * 0.7) / S, cameraGround + 12 / (S * e));
+    const targetY = targetHeight + Math.max(1, length * 0.3) / (S * e);
+    this.controls.minDistance = Math.max(1, length * 1.2);
+    return this.flyTo({ p: [x, cameraY, z], t: [u - 0.5, targetY, v - 0.5] }, ms);
+  }
+
   /** Descida orbital até a vista inicial (usada ao fim da animação do globo). */
   descend() {
     if (!this.S || this.mode === "walk") return;
@@ -620,7 +672,7 @@ reflectedLight.directSpecular *= vShadow;
     if (!this.rockK || !this.data) return;
     if (this._rockAt && Math.hypot(this._rockAt[0] - x, this._rockAt[1] - z) < 6) return;
     this._rockAt = [x, z];
-    const list = rocksNear(x, z, 45, this.rockK).filter((r) => r.d >= 0.25 || Math.hypot(r.x - x, r.z - z) < 18);
+    const list = rocksNear(x, z, 45, this.rockK).filter((r) => r.d >= 0.6 || (r.d >= 0.35 && Math.hypot(r.x - x, r.z - z) < 10));
     const max = Math.min(list.length, 12000);
     if (!this.rockMesh || this.rockMesh.count < max || this.rockMesh.instanceMatrix.count < max) {
       if (this.rockMesh) { this.scene.remove(this.rockMesh); this.rockMesh.geometry.dispose(); this.rockMesh.material.dispose(); }
@@ -658,7 +710,7 @@ reflectedLight.directSpecular *= vShadow;
     const down = e.type === "keydown";
     this.keys[e.code] = down;
     if (down && e.code === "Space") this.jump();
-    if (["Space", "ArrowUp", "ArrowDown", "KeyW", "KeyS"].includes(e.code) && this.pointerLock.isLocked) e.preventDefault();
+    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyS", "KeyD"].includes(e.code) && this.pointerLock.isLocked) e.preventDefault();
   }
 
   tick() {
@@ -667,8 +719,10 @@ reflectedLight.directSpecular *= vShadow;
     if (this.mode === "walk" && this.data) {
       const k = this.keys, speed = (k.ShiftLeft || k.ShiftRight || this.running) ? RUN : WALK;
       const j = this.joy || { x: 0, y: 0 };
-      const fwd = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0) - j.y;
-      const side = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0) + j.x;
+      let fwd = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0) - j.y;
+      let side = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0) + j.x;
+      const inputLength = Math.hypot(fwd, side);
+      if (inputLength > 1) { fwd /= inputLength; side /= inputLength; }
       if (fwd) this.pointerLock.moveForward(fwd * speed * dt);
       if (side) this.pointerLock.moveRight(side * speed * dt);
       const p = this.camera.position, half = this.S / 2 - 1;

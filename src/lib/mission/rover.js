@@ -58,6 +58,27 @@ export function startState(spec, at) {
     sink: 0, wheel: 0, slip: 0, pitch: 0, roll: 0, status: "ok", events: [], track: [{ u: at.u, v: at.v }], sinkRisk: 0 };
 }
 
+export function steerForWarp(steer, warp) {
+  const safeWarp = Math.max(1, warp);
+  // Cap steering response at three simulation seconds per real second.
+  return steer * Math.min(safeWarp, 3) / safeWarp;
+}
+
+export function withinTargetRadius(previous, current, target, radius, size) {
+  const du = current.u - previous.u, dv = current.v - previous.v;
+  const lengthSquared = du * du + dv * dv;
+  const t = lengthSquared ? Math.max(0, Math.min(1, ((target.u - previous.u) * du + (target.v - previous.v) * dv) / lengthSquared)) : 0;
+  return Math.hypot(previous.u + t * du - target.u, previous.v + t * dv - target.v) * size <= radius;
+}
+
+function rockIntersectsRover(rock, x, z, heading, spec) {
+  const dx = rock.x - x, dz = rock.z - z;
+  const forward = Math.sin(heading) * dx - Math.cos(heading) * dz;
+  const lateral = Math.cos(heading) * dx + Math.sin(heading) * dz;
+  const radius = rock.d / 2;
+  return Math.abs(forward) <= spec.len / 2 + radius && Math.abs(lateral) <= spec.width / 2 + radius;
+}
+
 /**
  * Um passo da simulação. input = { throttle −1..1, steer −1..1 }. dt em segundos de missão.
  * env = { scene, soft(u,v) → 0..1, sunlit(u,v) → bool, sunElev (graus) }
@@ -68,7 +89,7 @@ export function step(st, spec, input, dt, env) {
   const s = { ...st };
   s.t += dt;
   // virar no lugar (rocker-bogie gira no próprio eixo; o LRV tinha esterçamento nas 4 rodas)
-  const turnRate = spec.vmax > 1 ? 0.5 : 0.12; // rad/s
+  const turnRate = spec.vmax > 1 ? 0.12 : 0.08; // rad/s
   s.heading += (input.steer || 0) * turnRate * dt;
   const dir = { x: Math.sin(s.heading), z: -Math.cos(s.heading) };
   // geometria local: inclinação na direção do movimento e lateral (pontos a ±meio comprimento)
@@ -100,7 +121,9 @@ export function step(st, spec, input, dt, env) {
     // pedras menores que o pixel (campo estatístico Golombek & Rapp): passar por cima, raspar ou ser bloqueado
     const nu = s.u + (dir.x * v * dt) / S, nv = s.v + (dir.z * v * dt) / S;
     const x = (nu - 0.5) * S, z = (nv - 0.5) * S, lim = spec.rockerBogie ? 2 * spec.wheelR : spec.clearance;
-    for (const rk of env.rocks(x, z, spec.len * 0.45)) {
+    const searchRadius = Math.hypot(spec.len / 2, spec.width / 2) + 1.5;
+    for (const rk of env.rocks(x, z, searchRadius)) {
+      if (!rockIntersectsRover(rk, x, z, s.heading, spec)) continue;
       const ahead = (rk.x - x) * dir.x + (rk.z - z) * dir.z;
       if (rk.h > lim && ahead * Math.sign(v) > -0.2) { s.blocked = rk; break; }
       if (!env.hits.has(rk.id) && rk.h > spec.wheelR * 0.6) {
