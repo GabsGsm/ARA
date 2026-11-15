@@ -1,4 +1,5 @@
 import { STATUS_LABEL } from "../../lib/format.js";
+import { useTr } from "../../hooks/useSettings.jsx";
 
 const TONE = {
   analog: "bg-ok/15 text-ok",
@@ -8,9 +9,10 @@ const TONE = {
 };
 
 export default function StatusChip({ status, children }) {
+  const tr = useTr();
   return (
     <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold ${TONE[status] ?? TONE.no_data}`}>
-      {children ?? STATUS_LABEL[status]}
+      {children ?? tr(STATUS_LABEL[status])}
     </span>
   );
 }

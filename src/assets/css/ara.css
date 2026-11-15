@@ -77,3 +77,34 @@ html.hc .card { background: #000; }
 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
+
+/* ---------- Configurações ---------- */
+.st-title { margin: 0 0 6px; font: 400 clamp(22px, 2.4vw, 34px) var(--font-display); letter-spacing: .04em; }
+.st-card { margin-top: 14px; padding: 6px 18px 10px; }
+.st-h { margin: 12px 0 4px; font: 400 11px var(--font-display); letter-spacing: .2em; text-transform: uppercase; color: var(--color-gold-2); }
+.st-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px; padding: 11px 0; border-top: 1px solid var(--color-line-2); }
+.st-row:first-of-type { border-top: 0; }
+.st-row b { display: block; font-weight: 500; }
+.st-row small { display: block; font-size: 12px; color: var(--color-muted); max-width: 480px; }
+.st-ctl { display: flex; align-items: center; gap: 8px; }
+.st-seg { display: flex; border: 1px solid var(--color-line); border-radius: 999px; overflow: hidden; }
+.st-seg button { border: 0; background: transparent; color: var(--color-ink-2); padding: 6px 13px; font: 500 13px var(--font-body); cursor: pointer; }
+.st-seg button[aria-checked=true], .st-seg button[aria-pressed=true] { background: rgb(242 181 58 / .22); color: var(--color-gold-3); }
+.st-switch { position: relative; width: 46px; height: 26px; border-radius: 999px; border: 1px solid var(--color-line); background: rgb(255 255 255 / .08); cursor: pointer; }
+.st-switch span { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--color-ink-2); transition: transform .2s; }
+.st-switch[aria-checked=true] { background: rgb(242 181 58 / .35); border-color: var(--color-gold); }
+.st-switch[aria-checked=true] span { transform: translateX(20px); background: var(--color-gold-2); }
+.st-test, .st-reset { border: 1px solid var(--color-line); background: none; color: var(--color-ink); border-radius: 999px; padding: 5px 12px; font: 500 12px var(--font-body); cursor: pointer; }
+.st-reset { margin-top: 16px; }
+.st-keys { margin: 4px 0 10px; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; color: var(--color-ink-2); }
+.st-keys kbd { padding: 1px 6px; border-radius: 4px; border: 1px solid var(--color-line); font: 500 12px ui-monospace, Consolas, monospace; color: var(--color-gold-3); }
+
+/* leitura facilitada */
+html.easy-read body { letter-spacing: .04em; word-spacing: .12em; line-height: 1.7; }
+html.easy-read p, html.easy-read li { line-height: 1.75; }
+/* links sublinhados */
+html.links-underline a { text-decoration: underline !important; text-underline-offset: 3px; }
+/* paleta segura para daltonismo (azul = bom, laranja = ruim) */
+html.cb-safe { --color-ok: #3b9cff; --color-bad: #ff8c1a; }
+html.cb-safe .ms-bar em { background: #3b9cff; }
+html.cb-safe .ms-bar.bad em { background: #ff8c1a; }

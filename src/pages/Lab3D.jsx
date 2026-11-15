@@ -3,6 +3,7 @@
 // tour guiado e caminhada com a gravidade de cada corpo.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { useTr } from "../hooks/useSettings.jsx";
 import TerrainPane from "../components/lab3d/TerrainPane.jsx";
 import ProfileChart from "../components/lab3d/ProfileChart.jsx";
 import TwinTraversePanel from "../components/lab3d/TwinTraversePanel.jsx";
@@ -46,10 +47,11 @@ const TOUR = [
 ];
 
 function Seg({ options, value, onChange, label }) {
+  const tr = useTr();
   return (
-    <div role="group" aria-label={label} className="t3-seg">
+    <div role="group" aria-label={tr(label)} className="t3-seg">
       {options.map((o) => (
-        <button key={o.value} type="button" aria-pressed={o.value === value} onClick={() => onChange(o.value)}>{o.label}</button>
+        <button key={o.value} type="button" aria-pressed={o.value === value} onClick={() => onChange(o.value)}>{tr(o.label)}</button>
       ))}
     </div>
   );
@@ -63,6 +65,7 @@ function Toggle({ on, onChange, children }) {
 
 export default function Lab3D() {
   const data = useAraData();
+  const tr = useTr();
   const [params, setParams] = useSearchParams();
   const [index, setIndex] = useState(null);
   const [err, setErr] = useState(null);
@@ -373,7 +376,7 @@ export default function Lab3D() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Seg label="Navegação" options={NAV} value={nav} onChange={setNav} />
-            {twin && <Toggle on={sync} onChange={setSync}>Câmeras juntas</Toggle>}
+            {twin && <Toggle on={sync} onChange={setSync}>{tr("Câmeras juntas")}</Toggle>}
           </div>
         </div>
 
@@ -382,7 +385,7 @@ export default function Lab3D() {
           <button type="button" className="t3-collapse" onClick={() => setPanels((p) => ({ ...p, left: !p.left }))}
                   aria-label={panels.left ? "Recolher painel" : "Abrir painel"}>{panels.left ? "‹" : "›"}</button>
           <div className="t3-scroll">
-            <h2 className="t3-h">Sítio planetário</h2>
+            <h2 className="t3-h">{tr("Sítio planetário")}</h2>
             <div className="t3-list" role="radiogroup" aria-label="Sítio">
               {planets.map((s) => (
                 <button key={s.id} type="button" role="radio" aria-checked={s.id === siteId} onClick={() => setSite(s.id)}>
@@ -394,7 +397,7 @@ export default function Lab3D() {
 
             {!isOverview && (
               <>
-                <h2 className="t3-h">Análogo na Terra</h2>
+                <h2 className="t3-h">{tr("Análogo na Terra")}</h2>
                 {missing3d && <p className="t3-note mb-2">“{missing3d}” ainda não tem cena 3D. Mostrando o melhor análogo que tem relevo 3D gerado.</p>}
                 <div className="t3-list" role="radiogroup" aria-label="Análogo">
                   {ranking.map((r) => (
@@ -414,7 +417,7 @@ export default function Lab3D() {
 
             {!isOverview && !isWalk && (
               <>
-                <h2 className="t3-h">Testar qualquer lugar da Terra</h2>
+                <h2 className="t3-h">{tr("Testar qualquer lugar da Terra")}</h2>
                 <LiveEarthPicker busy={live.busy} progress={live.progress} error={live.error} onTest={testLive}
                                  active={Boolean(live.scene)} onClear={() => setLive((l) => ({ ...l, scene: null }))} />
               </>
@@ -422,7 +425,7 @@ export default function Lab3D() {
 
             {dims.length > 0 && (
               <>
-                <h2 className="t3-h">{live.scene ? "Este ponto seria análogo?" : "Por que é análogo"}</h2>
+                <h2 className="t3-h">{tr(live.scene ? "Este ponto seria análogo?" : "Por que é análogo")}</h2>
                 <table className="t3-table">
                   <thead><tr><th>Medida</th><th>{BODIES[planetBody].label}</th><th>Terra</th><th /></tr></thead>
                   <tbody>
@@ -452,7 +455,7 @@ export default function Lab3D() {
           <button type="button" className="t3-collapse" onClick={() => setPanels((p) => ({ ...p, right: !p.right }))}
                   aria-label={panels.right ? "Recolher painel" : "Abrir painel"}>{panels.right ? "›" : "‹"}</button>
           <div className="t3-scroll">
-            <h2 className="t3-h">Camada</h2>
+            <h2 className="t3-h">{tr("Camada")}</h2>
             <Seg label="Camada" options={planetBody === "moon" ? [...LAYERS, { value: "operacoes", label: "Janela operacional" }] : LAYERS} value={settings.layer} onChange={(v) => setSettings((s) => ({ ...s, layer: v }))} />
             {settings.layer === "operacoes" && planetBody === "moon" && (
               <div className="t3-ops">
@@ -461,9 +464,9 @@ export default function Lab3D() {
                   <span style={{ "--c": "#f58033" }}>1 de 3</span><span style={{ "--c": "#bf262e" }}>nenhum</span>
                 </div>
                 <p className="t3-note">Critérios da Artemis III: luz do Sol, Terra acima do horizonte para comunicação direta e declividade &lt; 10° para pouso. Agora: <b>{ops.left?.all == null ? "…" : `${fmt(ops.left.all * 100, 1)}%`}</b> da cena atende aos três; Terra visível em {ops.left?.earth == null ? "…" : `${fmt(ops.left.earth * 100, 0)}%`}{ops.left?.earthSky ? ` (Terra a ${fmt(ops.left.earthSky.elevation, 1)}° de altura, azimute ${fmt(ops.left.earthSky.azimuth, 0)}°)` : ""}.</p>
-                <label className="t3-range"><span>Libração em latitude <b>{fmt(lib.lat, 1)}°</b></span>
+                <label className="t3-range"><span>{tr("Libração em latitude")} <b>{fmt(lib.lat, 1)}°</b></span>
                   <input type="range" min="-6.7" max="6.7" step="0.1" value={lib.lat} onChange={(e) => setLib((l) => ({ ...l, lat: Number(e.target.value) }))} /></label>
-                <label className="t3-range"><span>Libração em longitude <b>{fmt(lib.lon, 1)}°</b></span>
+                <label className="t3-range"><span>{tr("Libração em longitude")} <b>{fmt(lib.lon, 1)}°</b></span>
                   <input type="range" min="-7.9" max="7.9" step="0.1" value={lib.lon} onChange={(e) => setLib((l) => ({ ...l, lon: Number(e.target.value) }))} /></label>
                 <p className="t3-note">A libração muda a posição da Terra no céu lunar ao longo do mês: perto do polo sul ela sobe e desce alguns graus, e o relevo pode escondê-la — é por isso que a comunicação direta entra na escolha do local.</p>
               </div>
@@ -476,17 +479,17 @@ export default function Lab3D() {
             )}
             {settings.layer === "altitude" && L && <p className="t3-note">{fmt(L.height.min, 0)} a {fmt(L.height.max, 0)} m{R ? ` · Terra ${fmt(R.height.min, 0)} a ${fmt(R.height.max, 0)} m` : ""}</p>}
             <div className="t3-toggles">
-              <Toggle on={settings.contours} onChange={(v) => setSettings((s) => ({ ...s, contours: v }))}>Curvas de nível</Toggle>
+              <Toggle on={settings.contours} onChange={(v) => setSettings((s) => ({ ...s, contours: v }))}>{tr("Curvas de nível")}</Toggle>
               {settings.contours && (
                 <select className="t3-select" value={settings.step} aria-label="Intervalo das curvas"
                         onChange={(e) => setSettings((s) => ({ ...s, step: Number(e.target.value) }))}>
                   {[10, 25, 50, 100, 250].map((v) => <option key={v} value={v}>a cada {v} m</option>)}
                 </select>
               )}
-              <Toggle on={settings.cell} onChange={(v) => setSettings((s) => ({ ...s, cell: v }))}>Célula de 5 km</Toggle>
-              <Toggle on={settings.labels} onChange={(v) => setSettings((s) => ({ ...s, labels: v }))}>Rótulos</Toggle>
-              {planetBody === "mars" && <Toggle on={settings.path} onChange={(v) => setSettings((s) => ({ ...s, path: v }))}>Trajeto do Perseverance</Toggle>}
-              {L?.minerals && <Toggle on={settings.minerals} onChange={(v) => setSettings((s) => ({ ...s, minerals: v, layer: v ? "imagem" : s.layer }))}>Minerais (CRISM)</Toggle>}
+              <Toggle on={settings.cell} onChange={(v) => setSettings((s) => ({ ...s, cell: v }))}>{tr("Célula de 5 km")}</Toggle>
+              <Toggle on={settings.labels} onChange={(v) => setSettings((s) => ({ ...s, labels: v }))}>{tr("Rótulos")}</Toggle>
+              {planetBody === "mars" && <Toggle on={settings.path} onChange={(v) => setSettings((s) => ({ ...s, path: v }))}>{tr("Trajeto do Perseverance")}</Toggle>}
+              {L?.minerals && <Toggle on={settings.minerals} onChange={(v) => setSettings((s) => ({ ...s, minerals: v, layer: v ? "imagem" : s.layer }))}>{tr("Minerais (CRISM)")}</Toggle>}
             </div>
             {settings.minerals && L?.minerals && (
               <div className="t3-minlegend">
@@ -497,13 +500,13 @@ export default function Lab3D() {
               </div>
             )}
             <label className="t3-range">
-              <span>Exagero vertical <b>{fmt(settings.exag, 1)}×</b></span>
+              <span>{tr("Exagero vertical")} <b>{fmt(settings.exag, 1)}×</b></span>
               <input type="range" min="1" max="6" step="0.5" value={settings.exag} onChange={(e) => setSettings((s) => ({ ...s, exag: Number(e.target.value) }))} />
             </label>
 
-            <h2 className="t3-h">Sol e sombras</h2>
+            <h2 className="t3-h">{tr("Sol e sombras")}</h2>
             <label className="t3-range">
-              <span>Hora solar local <b>{fmtHour(hour)}</b></span>
+              <span>{tr("Hora solar local")} <b>{fmtHour(hour)}</b></span>
               <input type="range" min="0" max="24" step="0.05" value={hour} onChange={(e) => setHour(Number(e.target.value))} />
             </label>
             <label className="t3-range">
@@ -518,9 +521,9 @@ export default function Lab3D() {
               </label>
             )}
             <div className="t3-btns">
-              <button type="button" onClick={() => scenes.left && setHour(nowHour(scenes.left.meta.body, scenes.left.meta.lon))}>Agora</button>
-              <button type="button" onClick={() => setHour(12)}>Meio-dia</button>
-              <button type="button" onClick={() => setHour(sunL?.day?.rise ? sunL.day.rise + 0.4 : 7)}>Sol baixo</button>
+              <button type="button" onClick={() => scenes.left && setHour(nowHour(scenes.left.meta.body, scenes.left.meta.lon))}>{tr("Agora")}</button>
+              <button type="button" onClick={() => setHour(12)}>{tr("Meio-dia")}</button>
+              <button type="button" onClick={() => setHour(sunL?.day?.rise ? sunL.day.rise + 0.4 : 7)}>{tr("Sol baixo")}</button>
             </div>
             <dl className="t3-sun">
               {[["left", L, sunL], ["right", R, sunR]].filter(([, m]) => m).map(([side, m, sp]) => (
@@ -536,23 +539,23 @@ export default function Lab3D() {
 
             {VEHICLES[planetBody] && !isOverview && (
               <>
-                <h2 className="t3-h">Veículo em escala real</h2>
+                <h2 className="t3-h">{tr("Veículo em escala real")}</h2>
                 <select className="t3-select" value={vehicle} aria-label="Veículo na cena" onChange={(e) => setVehicle(e.target.value)}>
-                  <option value="">Nenhum</option>
+                  <option value="">{tr("Nenhum")}</option>
                   {VEHICLES[planetBody].map(([k, label, len]) => <option key={k} value={k}>{label} · {fmt(len, len < 2 ? 2 : 1)} m</option>)}
                 </select>
-                {vehicle && <div className="t3-btns"><button type="button" onClick={goToVehicle}>Ir até o veículo</button><Link to="/veiculos" className="t3-linkbtn">Ficha dos veículos</Link></div>}
+                {vehicle && <div className="t3-btns"><button type="button" onClick={goToVehicle}>{tr("Ir até o veículo")}</button><Link to="/veiculos" className="t3-linkbtn">{tr("Ficha dos veículos")}</Link></div>}
                 {vehicle && <p className="t3-note">Modelos 3D oficiais da NASA (domínio público) carregados de science.nasa.gov; Sojourner e carro lunar são simplificados com as dimensões reais.</p>}
               </>
             )}
 
-            <h2 className="t3-h">Ferramentas</h2>
+            <h2 className="t3-h">{tr("Ferramentas")}</h2>
             <div className="t3-btns">
-              <button type="button" aria-pressed={tool === "profile"} onClick={() => { setTool((t) => (t === "profile" ? null : "profile")); setPts([]); setTrav(null); }}>Perfil A→B</button>
-              {!isOverview && <button type="button" className="gold" aria-pressed={tool === "travessia"} onClick={() => { setTool((t) => (t === "travessia" ? null : "travessia")); setTrav(null); setPts([]); }}>Travessia gêmea</button>}
-              <button type="button" onClick={download}>Salvar imagem</button>
-              <button type="button" onClick={() => { left.current?.view?.resetView(); right.current?.view?.resetView(); }}>Recentrar</button>
-              <button type="button" onClick={() => setShowSources((v) => !v)} aria-expanded={showSources}>Fontes dos dados</button>
+              <button type="button" aria-pressed={tool === "profile"} onClick={() => { setTool((t) => (t === "profile" ? null : "profile")); setPts([]); setTrav(null); }}>{tr("Perfil A→B")}</button>
+              {!isOverview && <button type="button" className="gold" aria-pressed={tool === "travessia"} onClick={() => { setTool((t) => (t === "travessia" ? null : "travessia")); setTrav(null); setPts([]); }}>{tr("Travessia gêmea")}</button>}
+              <button type="button" onClick={download}>{tr("Salvar imagem")}</button>
+              <button type="button" onClick={() => { left.current?.view?.resetView(); right.current?.view?.resetView(); }}>{tr("Recentrar")}</button>
+              <button type="button" onClick={() => setShowSources((v) => !v)} aria-expanded={showSources}>{tr("Fontes dos dados")}</button>
             </div>
             {tool === "travessia" && (
               <div className="mt-2">
@@ -570,7 +573,7 @@ export default function Lab3D() {
                 ))}
               </ul>
             )}
-            <p className="t3-note mt-4"><Link to="/explorar">← Voltar ao ranking (Explorar)</Link></p>
+            <p className="t3-note mt-4"><Link to="/explorar">{tr("← Voltar ao ranking (Explorar)")}</Link></p>
           </div>
         </aside>
 
@@ -583,10 +586,10 @@ export default function Lab3D() {
             </div>
             <p className="m-0 text-[14px]">{tour.text(L?.name ?? "", R?.name, reliefTxt)}</p>
             <div className="t3-btns mt-2">
-              <button type="button" disabled={tourStep === 0} onClick={() => setTourStep((s) => s - 1)}>← Anterior</button>
+              <button type="button" disabled={tourStep === 0} onClick={() => setTourStep((s) => s - 1)}>{tr("← Anterior")}</button>
               {tourStep < TOUR.length - 1
-                ? <button type="button" className="gold" onClick={() => setTourStep((s) => s + 1)}>Próximo →</button>
-                : <button type="button" className="gold" onClick={() => setNav("orbit")}>Explorar livre</button>}
+                ? <button type="button" className="gold" onClick={() => setTourStep((s) => s + 1)}>{tr("Próximo →")}</button>
+                : <button type="button" className="gold" onClick={() => setNav("orbit")}>{tr("Explorar livre")}</button>}
             </div>
           </div>
         )}

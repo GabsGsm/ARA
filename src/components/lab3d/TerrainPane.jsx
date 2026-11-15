@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import TerrainView from "../../lib/terrain3d/TerrainView.js";
 import { loadScene } from "../../lib/terrain3d/data.js";
+import { useTr } from "../../hooks/useSettings.jsx";
 import { fmt } from "../../lib/format.js";
 
 const BODY_TAG = { mars: "Marte", moon: "Lua", earth: "Terra" };
@@ -45,6 +46,7 @@ const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, 
   const [scene, setScene] = useState(null);
   const [status, setStatus] = useState("loading");
   const [hover, setHover] = useState(null);
+  const tr = useTr();
   const cbs = useRef({});
   cbs.current = { onCamera, onPick, onSite, onWalk, onJump, onWalkLock, onUser };
 
@@ -101,7 +103,7 @@ const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, 
         <strong>{meta?.name ?? "…"}</strong>
         {meta && <small>{fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} × {fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} km · relevo {fmt(meta.height.native_res_m, meta.height.native_res_m < 5 ? 1 : 0)} m{meta.color ? ` · imagem ${fmt(meta.color.native_res_m, meta.color.native_res_m < 2 ? 2 : 0)} m` : " · sem imagem: luz e sombra calculadas"}</small>}
       </div>
-      {status === "loading" && <div className="t3-loading" role="status"><span className="t3-spinner" />Carregando relevo real…</div>}
+      {status === "loading" && <div className="t3-loading" role="status"><span className="t3-spinner" />{tr("Carregando relevo real…")}</div>}
       {status === "error" && <div className="t3-loading" role="alert">Não consegui carregar esta cena. Rode <code>python pipeline/build_terrain3d.py</code>.</div>}
       {walking && coarse() && <TouchControls view={() => view.current} />}
       <div className="t3-readout" aria-live="off">

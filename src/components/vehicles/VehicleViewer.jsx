@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLB, PROCEDURAL, fitToLength, loadGLB } from "../../lib/terrain3d/models.js";
+import { useTr } from "../../hooks/useSettings.jsx";
 
 function person() {
   const m = new THREE.MeshStandardMaterial({ color: 0x8fa6b8, roughness: 0.8, transparent: true, opacity: 0.55 });
@@ -16,6 +17,7 @@ export default function VehicleViewer({ vehicle, calm }) {
   const host = useRef(null);
   const st = useRef(null);
   const [status, setStatus] = useState("");
+  const tr = useTr();
 
   useEffect(() => {
     const el = host.current;
@@ -50,8 +52,8 @@ export default function VehicleViewer({ vehicle, calm }) {
     if (!s || !vehicle) return;
     let alive = true;
     s.holder.clear();
-    setStatus("Carregando modelo…");
-    const load = PROCEDURAL[vehicle.key] ? Promise.resolve(PROCEDURAL[vehicle.key]()) : loadGLB(GLB[vehicle.key], (f) => alive && setStatus(`Carregando modelo… ${Math.round(f * 100)}%`));
+    setStatus(tr("Carregando modelo…", "Loading model…"));
+    const load = PROCEDURAL[vehicle.key] ? Promise.resolve(PROCEDURAL[vehicle.key]()) : loadGLB(GLB[vehicle.key], (f) => alive && setStatus(`${tr("Carregando modelo…", "Loading model…")} ${Math.round(f * 100)}%`));
     load.then((obj) => {
       if (!alive) return;
       const g = fitToLength(obj, vehicle.len);
@@ -64,15 +66,15 @@ export default function VehicleViewer({ vehicle, calm }) {
       s.controls.target.set(0.3, Math.min(size.y, 1.75) / 2, 0);
       s.controls.minDistance = big * 0.6; s.controls.maxDistance = big * 6;
       setStatus("");
-    }).catch(() => alive && setStatus("Não foi possível baixar o modelo da NASA agora."));
+    }).catch(() => alive && setStatus(tr("Não foi possível baixar o modelo da NASA agora.", "Could not download the NASA model right now.")));
     return () => { alive = false; };
   }, [vehicle]);
 
   return (
     <div className="vh-viewer">
-      <div ref={host} className="vh-canvas" aria-label={`Modelo 3D: ${vehicle?.name}`} role="img" />
+      <div ref={host} className="vh-canvas" aria-label={`${tr("Modelo 3D", "3D model")}: ${vehicle?.name}`} role="img" />
       {status && <p className="vh-status" role="status">{status}</p>}
-      <p className="vh-hint">Arraste para girar · role para aproximar · silhueta = pessoa de 1,75 m</p>
+      <p className="vh-hint">{tr("Arraste para girar · role para aproximar · silhueta = pessoa de 1,75 m", "Drag to rotate · scroll to zoom · silhouette = 1.75 m person")}</p>
     </div>
   );
 }

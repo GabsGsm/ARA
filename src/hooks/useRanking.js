@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import * as core from "../lib/core.js";
 import { useAraData } from "./useAraData.jsx";
+import { useSettings } from "./useSettings.jsx";
 
 export function useRanking(siteId, weights, variant = "base", topN) {
   const data = useAraData();
@@ -18,11 +19,12 @@ export function useRanking(siteId, weights, variant = "base", topN) {
 
 /** Texto de estabilidade de uma célula para um local, ou null. */
 export function useStabilityText() {
+  const { lang } = useSettings();
   const data = useAraData();
   return (siteId, cellId) => {
     const s = data.stability?.sites?.[siteId]?.[cellId];
     if (!s) return null;
     const pct = (v) => Math.round(v).toLocaleString("pt-BR");
-    return `${pct(s.topk_pct)}% das vezes no top ${data.stability.method.top_k} · ${pct(s.top1_pct)}% em 1º`;
+    return lang === "en" ? `top ${data.stability.method.top_k} in ${pct(s.topk_pct)}% of draws · #1 in ${pct(s.top1_pct)}%` : `${pct(s.topk_pct)}% das vezes no top ${data.stability.method.top_k} · ${pct(s.top1_pct)}% em 1º`;
   };
 }

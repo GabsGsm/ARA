@@ -9,6 +9,7 @@ import Analyses from "./pages/Analyses.jsx";
 import About from "./pages/About.jsx";
 
 import { useAraData } from "./hooks/useAraData.jsx";
+import { useTr } from "./hooks/useSettings.jsx";
 
 // o 3D (three.js) só é baixado quando alguém abre a página
 const Lab3D = lazy(() => import("./pages/Lab3D.jsx"));
@@ -16,6 +17,7 @@ const Field = lazy(() => import("./pages/Field.jsx"));
 const Vehicles = lazy(() => import("./pages/Vehicles.jsx"));
 const Mission = lazy(() => import("./pages/Mission.jsx"));
 const DataLab = lazy(() => import("./pages/DataLab.jsx"));
+const Settings = lazy(() => import("./pages/Settings.jsx"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -26,16 +28,17 @@ function ScrollToTop() {
 export default function App() {
   const data = useAraData();
   const { pathname } = useLocation();
+  const tr = useTr();
   return (
     <>
       <a href="#conteudo" className="skip" onClick={(e) => { e.preventDefault(); document.getElementById("conteudo")?.focus(); }}>
-        Pular para o conteúdo
+        {tr("Pular para o conteúdo", "Skip to content")}
       </a>
       <Sky />
       <Header />
       <ScrollToTop />
       <main id="conteudo" tabIndex={-1} className="outline-none">
-        {data.status === "loading" && <p className="note p-8" role="status">Carregando dados…</p>}
+        {data.status === "loading" && <p className="note p-8" role="status">{tr("Carregando dados…", "Loading data…")}</p>}
         {data.status === "error" && (
           <p role="alert" className="m-5 rounded-2xl border border-bad bg-bad/10 px-4 py-3">
             {data.error}. Rode <code>npm run dev</code> na raiz do projeto (ele serve a pasta <code>data/</code>).
@@ -49,6 +52,7 @@ export default function App() {
             <Route path="/analises" element={<Analyses />} />
             <Route path="/3d" element={<Suspense fallback={<p className="note p-8" role="status">Carregando o laboratório 3D…</p>}><Lab3D /></Suspense>} />
             <Route path="/campo" element={<Suspense fallback={<p className="note p-8" role="status">Carregando o modo de campo…</p>}><Field /></Suspense>} />
+            <Route path="/configuracoes" element={<Suspense fallback={null}><Settings /></Suspense>} />
             <Route path="/laboratorio" element={<Suspense fallback={<p className="note p-8" role="status">Carregando o laboratório…</p>}><DataLab /></Suspense>} />
             <Route path="/missao" element={<Suspense fallback={<p className="note p-8" role="status">Carregando a missão…</p>}><Mission /></Suspense>} />
             <Route path="/veiculos" element={<Suspense fallback={<p className="note p-8" role="status">Carregando os veículos…</p>}><Vehicles /></Suspense>} />

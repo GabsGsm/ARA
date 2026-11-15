@@ -1,8 +1,11 @@
 // Cartão de vidro com título opcional no estilo "eyebrow".
+import { useTr } from "../../hooks/useSettings.jsx";
+
 export default function Card({ title, titleId, as: Tag = "section", children, className = "", ...rest }) {
+  const tr = useTr();
   return (
     <Tag className={`card ${className}`} aria-labelledby={title ? titleId : undefined} {...rest}>
-      {title && <h2 id={titleId} className="eyebrow">{title}</h2>}
+      {title && <h2 id={titleId} className="eyebrow">{typeof title === "string" ? tr(title) : title}</h2>}
       {children}
     </Tag>
   );

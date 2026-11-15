@@ -6,6 +6,7 @@ import GlobeCanvas from "../components/home/GlobeCanvas.jsx";
 import marsTex from "../assets/img/mars-tex.jpg";
 import moonTex from "../assets/img/moon-tex.jpg";
 import horizon from "../assets/img/horizon.webp";
+import { useTr } from "../hooks/useSettings.jsx";
 
 const at = (x, y, w) => ({ "--x": x, "--y": y, "--w": w });
 
@@ -67,6 +68,7 @@ function Sparkles() {
 }
 
 export default function Home() {
+  const tr = useTr();
   return (
     <section className="home" aria-labelledby="heroTitle">
       <div className="hero">
@@ -80,13 +82,13 @@ export default function Home() {
             <span className="line gold-text" style={{ "--d": ".34s" }}>Earth.</span>
           </h1>
           <span className="rule" aria-hidden="true" />
-          <p className="lead reveal" style={{ "--d": ".55s" }}>Encontre na Terra ambientes<br />semelhantes aos de Marte e da Lua.</p>
+          <p className="lead reveal" style={{ "--d": ".55s" }}>{tr("Encontre na Terra ambientes", "Find places on Earth")}<br />{tr("semelhantes aos de Marte e da Lua.", "that resemble Mars and the Moon.")}</p>
           <FeatureList />
         </div>
 
         <div className="stage">
           <Orbits />
-          <Link className="planet-card mars" to="/explorar?corpo=marte" aria-label="Explorar Marte">
+          <Link className="planet-card mars" to="/explorar?corpo=marte" aria-label={tr("Explorar Marte", "Explore Mars")}>
             <span className="planet" style={at(582, 202, 430)}>
               <span className="atmo" aria-hidden="true" />
               <GlobeCanvas texture={marsTex} light="-0.6,-0.55" period={80} dark={0.8} />
@@ -97,17 +99,17 @@ export default function Home() {
                 <path d="M2 27 L16 6 L24 17 L30 10 L44 27 Z" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinejoin="round" />
                 <path d="M9 20 l7-8 5 6" fill="none" stroke="currentColor" strokeWidth="2.2" />
               </svg>
-              Marte<i aria-hidden="true">⟶</i>
+              {tr("Marte", "Mars")}<i aria-hidden="true">⟶</i>
             </span>
           </Link>
-          <Link className="planet-card moon" to="/explorar?corpo=lua" aria-label="Explorar a Lua">
+          <Link className="planet-card moon" to="/explorar?corpo=lua" aria-label={tr("Explorar a Lua", "Explore the Moon")}>
             <span className="planet" style={at(1051, 248, 354)}>
               <span className="atmo" aria-hidden="true" />
               <GlobeCanvas texture={moonTex} light="0.55,-0.45" period={100} dark={0.5} />
             </span>
             <span className="pill" style={at(1055, 664, 320)}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 2.5 a9.5 9.5 0 1 0 7 15.5 a7.5 7.5 0 1 1 -7 -15.5z" fill="currentColor" /></svg>
-              Lua<i aria-hidden="true">⟶</i>
+              {tr("Lua", "Moon")}<i aria-hidden="true">⟶</i>
             </span>
           </Link>
           <FrontOrbit />
