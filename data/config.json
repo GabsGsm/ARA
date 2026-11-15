@@ -12,6 +12,14 @@
   "thresholds": { "good": 0.15, "weak": 0.40 },
   "stability": { "draws": 2000, "seed": 42, "distribution": "Dirichlet(1,1,1)", "top_k": 10 },
   "top_n": 10,
+  "planet_maps": {
+    "mars": {
+      "url": "https://trek.nasa.gov/tiles/Mars/EQ/Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+      "max_native_zoom": 7,
+      "attribution": "NASA Mars Trek WMTS · Viking MDIM 2.1 colour mosaic (232 m)",
+      "note": "Higher-resolution Mars Trek layers can be swapped in after checking their WMTSCapabilities.xml"
+    }
+  },
   "earth_limits": [
     { "dimension": "Gravity", "text": "Earth gravity is 6x the Moon's and 2.6x Mars'. Mobility and dust behaviour differ." },
     { "dimension": "Atmosphere", "text": "The Moon has no atmosphere and Mars has less than 1% of Earth's surface pressure. Earth sites cannot reproduce this." },

@@ -30,6 +30,8 @@ Stability: 2,000 random weight vectors, Dirichlet(1,1,1), seed 42 — sensitivit
 | Jezero Western Rim Mineral Maps v1.0 (CRISM) | Mars mineralogy context | Valantinas et al. (2026), Zenodo 10.5281/zenodo.22257754, CC BY 4.0 |
 | LRO LOLA polar DEM (LDEM_80S_*MPP_ADJ) | Moon terrain | NASA Goddard PGDA (Barker et al.) |
 | Artemis III candidate landing regions | Moon site list | NASA (Oct 2024) |
+| Down Selected Artemis III Candidate Landing Site Navigational Grids | Moon site centres | USGS, McClernan (2024), doi:10.5066/P1MEQ6UK, CC0 |
+| Mars Trek WMTS (Viking MDIM 2.1 colour mosaic) | Mars context map | NASA Solar System Treks |
 | Mapzen Terrain Tiles (z12) | Earth terrain grid | AWS Open Data |
 | Macrostrat API v2 | Earth lithology context | macrostrat.org (CC BY 4.0) |
 | GIBS (MODIS true colour) | Map layer | NASA GIBS |
@@ -38,7 +40,7 @@ Stability: 2,000 random weight vectors, Dirichlet(1,1,1), seed 42 — sensitivit
 ## Repository
 
 ```
-pipeline/   Python, run offline (terrain.py, build_earth_grid.py, build_moon_sites.py, build_catalog.py, stability.py, build_simulation.py, enrich_context.py)
+pipeline/   Python, run offline (terrain.py, moon_regions_from_usgs.py, build_earth_grid.py, build_moon_sites.py, build_catalog.py, stability.py, build_simulation.py, enrich_context.py)
 data/       JSON outputs read by the app (+ runs/ trace logs)
 web/        static app (GitHub Pages)
 mock/       Prototype 1 (HTML v7.3 + Colab notebook), reference only
@@ -51,7 +53,8 @@ tests/      python tests/test_pipeline.py · node tests/test_core.mjs
 pip install -r pipeline/requirements.txt
 python pipeline/convert_mock.py            # Prototype 1 data -> data/ (example grid)
 python pipeline/build_earth_grid.py --region atacama
-python pipeline/build_moon_sites.py --dem LDEM_80S_40MPP_ADJ.TIF   # after filling lat/lon in pipeline/moon_sites.json
+python pipeline/moon_regions_from_usgs.py --folder <USGS data release>   # fills Moon site centres
+python pipeline/build_moon_sites.py --dem LDEM_80S_40MPP_ADJ.TIF
 python pipeline/build_catalog.py
 python pipeline/stability.py
 python pipeline/enrich_context.py --top 50

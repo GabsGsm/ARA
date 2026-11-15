@@ -118,6 +118,29 @@ def test_simulation_variants():
     assert out["gap_30"]["valid_pct"] == 70.0
 
 
+def test_usgs_region_center_on_synthetic_shapefile():
+    import geopandas as gpd
+    from shapely.geometry import box
+    from pyproj import CRS, Transformer
+    from moon_regions_from_usgs import pick_shapefile, region_center
+    crs = CRS.from_proj4("+proj=stere +lat_0=-90 +lon_0=0 +k=1 +x_0=0 +y_0=0 +R=1737400 +units=m +no_defs")
+    to_xy = Transformer.from_crs(crs.geodetic_crs, crs, always_xy=True)
+    x, y = to_xy.transform(-5.0, -86.0)  # centro conhecido
+    cells = [box(x - 7500 + i * 1000, y - 7500 + j * 1000, x - 6500 + i * 1000, y - 6500 + j * 1000)
+             for i in range(15) for j in range(15)]
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp) / "Mons_Mouton" / "1km"
+        d.mkdir(parents=True)
+        gpd.GeoDataFrame(geometry=cells, crs=crs).to_file(d / "Mons_Mouton_1km_grid.shp")
+        d2 = Path(tmp) / "Mons_Mouton_Plateau" / "1km"
+        d2.mkdir(parents=True)
+        gpd.GeoDataFrame(geometry=cells[:1], crs=crs).to_file(d2 / "Mons_Mouton_Plateau_UL_1km.shp")
+        paths = pick_shapefile(Path(tmp), "Mons Mouton")
+        assert len(paths) == 1 and "Plateau" not in str(paths[0])
+        lat, lon, w, h = region_center(paths)
+    assert abs(lat + 86.0) < 1e-3 and abs(lon + 5.0) < 1e-2 and w == 15.0
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

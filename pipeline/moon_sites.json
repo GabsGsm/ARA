@@ -1,15 +1,69 @@
 {
-  "_comment": "Regiões candidatas do Artemis III (NASA, out. 2024). Cada região tem ~15 x 15 km; escolher o centro de um recorte de 5 x 5 km dentro dela (QGIS: abrir o hillshade LOLA + a imagem das regiões da NASA) e preencher lat/lon. Sites com lat/lon null são ignorados pelo build_moon_sites.py. Marcar mvp=true nos 2 a 4 escolhidos.",
-  "source": "https://www.nasa.gov/?p=748006",
-  "sites": [
-    { "id": "moon_mons_mouton",         "name": "Mons Mouton",         "lat": null, "lon": null, "mvp": true },
-    { "id": "moon_mons_mouton_plateau", "name": "Mons Mouton Plateau", "lat": null, "lon": null, "mvp": false },
-    { "id": "moon_malapert_massif",     "name": "Malapert Massif",     "lat": null, "lon": null, "mvp": true },
-    { "id": "moon_haworth",             "name": "Haworth",             "lat": null, "lon": null, "mvp": true },
-    { "id": "moon_peak_near_cabeus_b",  "name": "Peak near Cabeus B",  "lat": null, "lon": null, "mvp": false },
-    { "id": "moon_nobile_rim_1",        "name": "Nobile Rim 1",        "lat": null, "lon": null, "mvp": false },
-    { "id": "moon_nobile_rim_2",        "name": "Nobile Rim 2",        "lat": null, "lon": null, "mvp": false },
-    { "id": "moon_de_gerlache_rim_2",   "name": "de Gerlache Rim 2",   "lat": null, "lon": null, "mvp": false },
-    { "id": "moon_slater_plain",        "name": "Slater Plain",        "lat": null, "lon": null, "mvp": false }
-  ]
+ "_comment": "Regiões candidatas do Artemis III (NASA, out. 2024). lat/lon = centro do recorte de 5 x 5 km. Preencher automaticamente com: python pipeline/moon_regions_from_usgs.py --folder <data release USGS 10.5066/P1MEQ6UK> (centro da região oficial). Ajustar à mão só se o centro cair em sombra permanente. Marcar mvp=true nos 2 a 4 escolhidos.",
+ "source": "https://www.nasa.gov/?p=748006",
+ "sites": [
+  {
+   "id": "moon_mons_mouton",
+   "name": "Mons Mouton",
+   "lat": null,
+   "lon": null,
+   "mvp": true
+  },
+  {
+   "id": "moon_mons_mouton_plateau",
+   "name": "Mons Mouton Plateau",
+   "lat": null,
+   "lon": null,
+   "mvp": false
+  },
+  {
+   "id": "moon_malapert_massif",
+   "name": "Malapert Massif",
+   "lat": null,
+   "lon": null,
+   "mvp": true
+  },
+  {
+   "id": "moon_haworth",
+   "name": "Haworth",
+   "lat": null,
+   "lon": null,
+   "mvp": true
+  },
+  {
+   "id": "moon_peak_near_cabeus_b",
+   "name": "Peak near Cabeus B",
+   "lat": null,
+   "lon": null,
+   "mvp": false
+  },
+  {
+   "id": "moon_nobile_rim_1",
+   "name": "Nobile Rim 1",
+   "lat": null,
+   "lon": null,
+   "mvp": false
+  },
+  {
+   "id": "moon_nobile_rim_2",
+   "name": "Nobile Rim 2",
+   "lat": null,
+   "lon": null,
+   "mvp": false
+  },
+  {
+   "id": "moon_de_gerlache_rim_2",
+   "name": "de Gerlache Rim 2",
+   "lat": null,
+   "lon": null,
+   "mvp": false
+  },
+  {
+   "id": "moon_slater_plain",
+   "name": "Slater Plain",
+   "lat": null,
+   "lon": null,
+   "mvp": false
+  }
+ ]
 }

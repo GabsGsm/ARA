@@ -5,5 +5,6 @@ pyproj
 mercantile
 requests
 pillow
+geopandas   # só para moon_regions_from_usgs.py
 # opcional (Macrostrat já usa requests; NASADEM na fase 2):
 # earthaccess

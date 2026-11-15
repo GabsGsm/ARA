@@ -66,8 +66,23 @@ function renderFigure() {
   }
   const t = D.sites[s.id]?.terrain;
   const alt = `${s.name}: 5 × 5 km site. Mean slope ${fmt(t?.slope_mean_deg)}°, mean roughness ${fmt(t?.roughness_mean_m)} m, relief ${fmt(t?.relief_m, 0)} m.`;
+  const trek = D.config.planet_maps?.[s.body];
   fig.innerHTML = `<div class="frame">${img.src ? `<img src="${esc(img.src)}" alt="${esc(alt)}" onerror="this.replaceWith(Object.assign(document.createElement('p'),{className:'note',textContent:'Image pending'}))">` : ""}${box}</div>
-    <figcaption>${esc(img.caption || "")}<br>${esc(s.why)}</figcaption>`;
+    <figcaption>${esc(img.caption || "")}<br>${esc(s.why)}</figcaption>
+    ${trek && s.bbox ? `<div id="trekMap" class="trek-map" role="img" aria-label="${esc(`Context map of ${s.name} from NASA Trek`)}"></div><small class="note">${esc(trek.attribution)}</small>` : ""}`;
+  renderTrekMap(s, trek);
+}
+
+// Mapa de contexto planetário: NASA Trek WMTS (equiretangular = L.CRS.EPSG4326 no Leaflet)
+let trekMap = null;
+function renderTrekMap(site, trek) {
+  if (trekMap) { trekMap.remove(); trekMap = null; }
+  if (!trek || !site.bbox || !window.L || !$("#trekMap")) return;
+  const [w, s, e, n] = site.bbox;
+  trekMap = L.map("trekMap", { crs: L.CRS.EPSG4326, attributionControl: false, zoomControl: true });
+  L.tileLayer(trek.url, { maxNativeZoom: trek.max_native_zoom, maxZoom: 12, noWrap: true }).addTo(trekMap);
+  L.rectangle([[s, w], [n, e]], { color: "#ffd3ad", weight: 2, fillOpacity: 0.15 }).addTo(trekMap);
+  trekMap.setView([(s + n) / 2, (w + e) / 2], 8);
 }
 
 function renderCriteria() {
