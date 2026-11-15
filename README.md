@@ -10,7 +10,7 @@ NASA Space Apps Challenge 2026 · Challenge: *Identify Earth locations analogous
 - **Dynamic Earth search:** a grid of 5 × 5 km Earth cells is ranked by terrain similarity. Users choose what the analog is *for* (default, rover mobility, landscape) or set their own weights, and the ranking updates instantly.
 - **Analogous / not analogous:** every match shows per-dimension verdicts (slope, roughness, relief, temperature, mineralogy) plus the limits no Earth site can reproduce (gravity, atmosphere, radiation).
 - **Data-quality simulation:** recomputes the same cells with lower resolution, missing data or elevation noise to show how much a conclusion depends on the data. Simulated results are always labelled.
-- **Traceability:** every pipeline run writes `data/runs/<run_id>.json` with parameters, sources and requests.
+- **Traceability:** every pipeline run writes `data/runs/<run_id>.json` with parameters, sources and requests. 
 
 ## 3D Lab — the twin view
 
