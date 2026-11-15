@@ -66,13 +66,41 @@ export function tileRocks(tx, tz, kAt, Dmin = 0.15, Dmax = 3) {
 }
 export function clearRockCache() { cache.clear(); }
 
+// Corredor da rota planejada: como no planejamento real com mapas de rochas do HiRISE, a rota é traçada
+// ENTRE as pedras — dentro dele não há pedra que bloqueie ou machuque a roda. Fora dele, o campo estatístico vale.
+let corridor = null; // { segs: [[x0, z0, x1, z1]], half, hMin }
+export function setRockCorridor(points, half, hMin) {
+  corridor = points && points.length > 1
+    ? { segs: [
+      ...points.slice(1).map((q, i) => [points[i].x, points[i].z, q.x, q.z]),
+      // atalhos nas curvas (quem dirige corta o canto entre um trecho e o seguinte)
+      ...points.slice(2).map((q, i) => [points[i].x, points[i].z, q.x, q.z]),
+    ], half, hMin }
+    : null;
+}
+export const corridorDistance = (x, z) => {
+  if (!corridor) return Infinity;
+  let best = Infinity;
+  for (const [x0, z0, x1, z1] of corridor.segs) {
+    const dx = x1 - x0, dz = z1 - z0, L2 = dx * dx + dz * dz || 1e-9;
+    const t = Math.max(0, Math.min(1, ((x - x0) * dx + (z - z0) * dz) / L2));
+    best = Math.min(best, Math.hypot(x0 + t * dx - x, z0 + t * dz - z));
+  }
+  return best;
+};
+
 /** Pedras num raio (m) em torno de (x, z). */
 export function rocksNear(x, z, radius, kAt) {
   const out = [];
+  const nearCorridor = corridor && corridorDistance(x, z) < radius + corridor.half + 2;
   const t0x = Math.floor((x - radius) / TILE), t1x = Math.floor((x + radius) / TILE);
   const t0z = Math.floor((z - radius) / TILE), t1z = Math.floor((z + radius) / TILE);
   for (let tx = t0x; tx <= t1x; tx++) for (let tz = t0z; tz <= t1z; tz++) {
-    for (const rk of tileRocks(tx, tz, kAt)) if (Math.hypot(rk.x - x, rk.z - z) <= radius) out.push(rk);
+    for (const rk of tileRocks(tx, tz, kAt)) {
+      if (Math.hypot(rk.x - x, rk.z - z) > radius) continue;
+      if (nearCorridor && rk.h > corridor.hMin && corridorDistance(rk.x, rk.z) < corridor.half + rk.d / 2) continue;
+      out.push(rk);
+    }
   }
   return out;
 }

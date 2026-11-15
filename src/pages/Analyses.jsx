@@ -1,6 +1,7 @@
 import * as core from "../lib/core.js";
 import Card, { PageHeader } from "../components/ui/Card.jsx";
 import StatusChip from "../components/ui/StatusChip.jsx";
+import { groupName, useML } from "../components/explore/MLProfile.jsx";
 import { useAraData } from "../hooks/useAraData.jsx";
 import { useExplorer } from "../hooks/useExplorer.jsx";
 import { BODY_LABEL, dataUrl, fmt } from "../lib/format.js";
@@ -22,6 +23,7 @@ function TopList({ rows, cellName }) {
 
 export default function Analyses() {
   const data = useAraData();
+  const ml = useML();
   const { siteId: chosen } = useExplorer();
   const siteId = chosen || data.catalog.sites.find((s) => data.hasTerrain(s.id))?.id;
   if (!siteId) return <p className="note p-8">{T("Sem locais com atributos.", "No sites with attributes.")}</p>;
@@ -94,6 +96,15 @@ export default function Analyses() {
             {T("Uma dimensão é", "A dimension is")} <strong>{T("análoga", "analogous")}</strong> {T("quando |local − célula| / escala ≤", "when |site − cell| / scale ≤")} {fmt(config.thresholds.good, 2)}, <strong>{T("parcial", "partial")}</strong> {T("até", "up to")} {fmt(config.thresholds.weak, 2)} {T("e", "and")} <strong>{T("não análoga", "not analogous")}</strong> {T("acima disso.", "above that.")}
           </p>
         </Card>
+
+        {ml && (
+          <Card as="article" title={T("Expansão da Terra e perfis por ML", "Earth expansion and ML profiles")} titleId="anML">
+            <p className="text-[13px] text-ink-2">{T(`A grade passou de 522 para ${data.cells.length} células com Holuhraun (Islândia), Mauna Kea (Havaí) e Erg Chebbi (Saara). Um K-Means não supervisionado agrupa ${ml.training_cells} células por perfil de relevo — é contexto experimental: o ranking continua sendo a distância ponderada.`, `The grid grew from 522 to ${data.cells.length} cells with Holuhraun (Iceland), Mauna Kea (Hawaii) and Erg Chebbi (Sahara). An unsupervised K-Means groups ${ml.training_cells} cells by relief profile — experimental context: the ranking is still the weighted distance.`)}</p>
+            <table className="data-table"><thead><tr><th>{T("Modelo", "Model")}</th><th>k</th><th>Silhouette</th><th>{T("Grupos (menor/maior)", "Groups (min/max)")}</th></tr></thead>
+              <tbody>{ml.metrics.filter((m) => m.k <= 4).map((m) => <tr key={m.model + m.k}><th scope="row">{m.model.replace("_atributos", T(" atributos", " attributes"))}</th><td>{m.k}</td><td>{fmt(m.silhouette, 2)}</td><td>{m.min} / {m.max}</td></tr>)}</tbody></table>
+            <p className="note">{T("Grupo do local analisado", "Group of the analysed site")}: {ml.planet[siteId] ? groupName(ml.models["3_atributos"], ml.planet[siteId]["3_atributos"].group) : "—"} ({T("3 atributos", "3 attributes")}). {T("Os IDs dos grupos são arbitrários; silhouette e ARI não comprovam equivalência geológica. Estabilidade e variantes simuladas ainda cobrem só as 522 células originais.", "Group IDs are arbitrary; silhouette and ARI do not prove geological equivalence. Stability and simulated variants still cover only the original 522 cells.")}</p>
+          </Card>
+        )}
 
         <Card as="article" title={T("Onde a analogia sempre falha", "Where the analogy always fails")} titleId="an6">
           <ul className="m-0 pl-5">{config.earth_limits.map((l) => <li key={l.dimension}><strong>{l.dimension}:</strong> {l.text}</li>)}</ul>

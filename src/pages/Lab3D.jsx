@@ -609,11 +609,11 @@ export default function Lab3D() {
               <button type="button" onClick={() => setWalkSolo((v) => !v)}>{focusedWalk ? T("Voltar à comparação", "Back to comparison") : T("Ampliar lado escolhido", "Expand selected side")}</button>
             </div>}
             {!locked
-              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {gB.label}.</b> {T("Clique no relevo escolhido para começar.", "Click the selected terrain to start.")} <kbd>W A S D</kbd> {T("ou", "or")} <kbd>↑ ↓ ← →</kbd> {T("anda", "walk")}, <kbd>Shift</kbd> {T("corre", "run")}, <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}, <kbd>Esc</kbd> {T("solta o mouse.", "releases the mouse.")}</p>
-              : <p className="m-0">{T("Andando", "Walking")} · <kbd>W A S D</kbd> {T("ou", "or")} <kbd>↑ ↓ ← →</kbd> {T("para andar", "to walk")} · <kbd>Esc</kbd> {T("para soltar o mouse", "to release the mouse")}</p>}
+              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {gB.label}.</b> <kbd>W</kbd>/<kbd>↑</kbd> {T("anda", "walk")} · <kbd>A D</kbd>/<kbd>← →</kbd> {T("vira", "turn")} · <kbd>Q E</kbd> {T("de lado", "sidestep")} · <kbd>Shift</kbd> {T("corre", "run")} · <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}. {T("Clique no relevo para olhar com o mouse.", "Click the terrain to look around with the mouse.")}</p>
+              : <p className="m-0">{T("Olhando com o mouse", "Mouse look on")} · <kbd>W A S D</kbd> {T("anda", "walk")} · <kbd>Esc</kbd> {T("solta o mouse", "releases the mouse")}</p>}
             {walkInfo && <p className="m-0 mt-1 text-[13px]">{T("Altitude", "Altitude")} {fmt(walkInfo.h, 0)} m · {T("declividade sob os pés", "slope underfoot")} {fmt(walkInfo.slope, 1)}°</p>}
             <p className="m-0 mt-1 text-[13px]">
-              {T("Mesmo impulso de pulo (2,5 m/s):", "Same jump impulse (2.5 m/s):")} <b>{fmt(jumpH(gB.g), 2)} m {T("em", "on")} {gB.label}</b> · {fmt(jumpH(9.807), 2)} m {T("na Terra", "on Earth")}
+              {T("Mesmo impulso de pulo (2,5 m/s):", "Same jump impulse (2.5 m/s):")} <b>{fmt(jumpH(gB.g), 2)} m {T("em", "on")} {gB.label}</b>{walkBody !== "earth" && <> · {fmt(jumpH(9.807), 2)} m {T("na Terra", "on Earth")}</>}
               {jump != null && <> · {T("seu último pulo", "your last jump")}: <b>{fmt(jump, 2)} m</b></>}
             </p>
             <button type="button" className="t3-walk-back" onClick={() => setNav("orbit")}>{T("Voltar à órbita", "Back to orbit")}</button>

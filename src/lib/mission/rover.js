@@ -100,7 +100,9 @@ export function step(st, spec, input, dt, env) {
   const s = { ...st };
   s.t += dt;
   // virar no lugar (rocker-bogie gira no próprio eixo; o LRV tinha esterçamento nas 4 rodas)
-  const turnRate = spec.vmax > 1 ? 0.12 : 0.08; // rad/s
+  // rocker-bogie gira no próprio eixo devagar; o LRV tinha esterçamento nas 4 rodas (raio mínimo ≈ 3,1 m, NSSDC):
+  // a 13 km/h, 0,6 rad/s dá um raio de ~6 m — dirigível por uma pessoa e coerente com o veículo real
+  const turnRate = spec.vmax > 1 ? 0.6 : 0.1; // rad/s
   s.heading += (input.steer || 0) * turnRate * dt;
   const dir = { x: Math.sin(s.heading), z: -Math.cos(s.heading) };
   // geometria local: inclinação na direção do movimento e lateral (pontos a ±meio comprimento)

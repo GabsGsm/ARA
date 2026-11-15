@@ -1,0 +1,16 @@
+{
+  "README.md": "e9d825d5e724e47dbd92ba9ed1b32c62d57c65eda1b32f465f03f9ded41756ff",
+  "auditoria_ml_518_710.csv": "39a50f6b86b4b5247bfc31627dacb78ec817ee91445f161716d957af15508930",
+  "celulas_ml_710.csv": "d683f2e0bbb852993f3a5d90c7bb000d94acf69f93768144a650be6f45d9d4e6",
+  "comparacao_ranking_518_710.csv": "c6070f44cd9463e0a906d333cea37fcd196af8b3e5429a6216249d8a6c7023ac",
+  "configuracao_ml_710.json": "95150507f7a52576e96be5fb6b753079049cf0e7ddfa38eaab22a35776002e91",
+  "earth_grid_expandido.json": "c06906e061d1f13786efa7c4106a59ee1a5ebb6526432c0454805065517a4ff1",
+  "grupos_planetarios_ml_710.csv": "cb5693ecc71e4f271c316214424107cb95ff8224c3bb5f4a9da78b632fab4ffe",
+  "kmeans_3_atributos_710.joblib": "1764a0a5ea2a9cc0816625706a0df057ecea8562b05b486436a18186cfc298f8",
+  "kmeans_5_atributos_710.joblib": "152b901f05a5d8efe31c01b6b4abc9801e104f1324ba7cdf91e69b4e1a7c44c7",
+  "metricas_ml_710.csv": "b986b5befb8c41983326ef7b3b31628feb89f329cf7fb3005c773a789b3e177d",
+  "ranking_top10_710.csv": "18d9483f2ded4ef71e25409976a258522dcd2cfafd88f9db8472be298b91e439",
+  "regions_expandido_proposta.json": "10f289c5af9bbb7154b2e0506c546bd5d971206e0605e8374ea7b7be843a39eb",
+  "scaler_3_atributos_710.joblib": "8b10aa85211cb3f6321a0fb2e4323509a12c10647de1f80196b4cf0242e3edc0",
+  "scaler_5_atributos_710.joblib": "4e110f22d538c8abfe72df98c9b662083f29cc87f5f24c9495defb785be540fd"
+}

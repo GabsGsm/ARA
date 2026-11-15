@@ -41,6 +41,9 @@ export default function InspectPanel({ siteId, siteVec, result, weights }) {
       <p className="text-[13px] text-ink-2">
         {T(`Peso de cada atributo na diferença: declividade ${fmt(ctb.slope_mean_deg, 0)}%, rugosidade ${fmt(ctb.roughness_mean_m, 0)}%, amplitude ${fmt(ctb.relief_m, 0)}%.`, `Share of each attribute in the difference: slope ${fmt(ctb.slope_mean_deg, 0)}%, roughness ${fmt(ctb.roughness_mean_m, 0)}%, relief ${fmt(ctb.relief_m, 0)}%.`)}{st && T(` Estabilidade em 2.000 conjuntos de pesos aleatórios: ${st}.`, ` Stability across 2,000 random weight sets: ${st}.`)}
       </p>
+      {!cell.context && (
+        <p className="text-[13px] text-ink-2">{T("Geologia: indisponível para esta célula (células novas da expansão ainda não têm litologia mapeada — o ARA não infere mineralogia).", "Geology: unavailable for this cell (new expansion cells do not have mapped lithology yet — ARA does not infer mineralogy).")}</p>
+      )}
       {cell.context && (
         <p className="text-[13px] text-ink-2">
           {T("Geologia", "Geology")} ({cell.context.geology_source}): {(cell.context.lithology ?? []).join(", ") || T("só contexto geral", "general context only")}. {T("Minerais não verificados.", "Minerals not verified.")}

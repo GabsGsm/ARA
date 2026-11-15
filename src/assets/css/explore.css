@@ -169,3 +169,11 @@
 @media (max-width: 860px) { .mx-grid { grid-template-columns: 1fr; } .mx-mapbox { height: 380px; } }
 .mx-left [role=group] { flex-wrap: wrap; }
 .mx-left [role=group] button { flex: 1 1 auto; padding: 7px 10px; }
+
+/* perfil por aprendizado de máquina (experimental) */
+.ml-box { margin-top: 18px; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--color-line); background: rgb(89 168 224 / .05); }
+.ml-exp { margin-left: 6px; padding: 1px 8px; border-radius: 999px; border: 1px dashed var(--color-warn); color: var(--color-warn); font: 600 10px var(--font-body); letter-spacing: .06em; text-transform: uppercase; vertical-align: 2px; }
+.ml-chip { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+.ml-chip.ok { background: rgb(127 214 180 / .15); color: var(--color-ok); }
+.ml-chip.bad { background: rgb(239 143 128 / .15); color: var(--color-bad); }
+.ml-chip.none { background: rgb(255 255 255 / .08); color: var(--color-muted); }
