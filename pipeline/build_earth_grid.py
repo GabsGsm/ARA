@@ -102,7 +102,7 @@ def main():
     args = ap.parse_args()
 
     import mapzen  # importa aqui para os testes não exigirem rede
-    regions = {r["id"]: r for r in json.loads((HERE / "regions.json").read_text())["regions"]}
+    regions = {r["id"]: r for r in json.loads((HERE / "regions.json").read_text(encoding="utf-8"))["regions"]}
     grid = load_grid()
     for rid in args.region:
         region = regions[rid]

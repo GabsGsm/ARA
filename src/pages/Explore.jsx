@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Card, { PageHeader } from "../components/ui/Card.jsx";
 import Segmented from "../components/ui/Segmented.jsx";
@@ -40,6 +40,11 @@ export default function Explore() {
     if (!keep) ex.setSelected(results[0]?.cell.id ?? null);
   }, [results]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // escolha feita pelo usuário: seleciona e faz o mapa voar até a célula
+  const [focus, setFocus] = useState(null);
+  const pick = (id) => { ex.setSelected(id); setFocus({ id, t: Date.now() }); };
+  const pickFromTable = (id) => { ex.setViewMode("map"); pick(id); };
+
   const onBody = (b) => { ex.setBody(b); setParams({ corpo: PARAM_FROM_BODY[b] }, { replace: true }); };
   const selected = results.find((r) => r.cell.id === ex.selected);
   const top = results[0];
@@ -71,9 +76,9 @@ export default function Explore() {
             </p>
           )}
           {ex.viewMode === "map"
-            ? <EarthMap results={results} selected={ex.selected} onSelect={ex.setSelected} />
-            : <ResultsTable results={results} />}
-          <RankingList siteId={ex.siteId} results={results} selected={ex.selected} onSelect={ex.setSelected} />
+            ? <EarthMap results={results} selected={ex.selected} focus={focus} onPick={pick} />
+            : <ResultsTable results={results} selected={ex.selected} onPick={pickFromTable} />}
+          <RankingList siteId={ex.siteId} results={results} selected={ex.selected} onSelect={pick} />
           {results.length > 0 && (
             <ExportButton siteId={ex.siteId} siteVec={siteVec} objective={ex.objective} weights={ex.weights}
                           variant={ex.variant} results={results} />

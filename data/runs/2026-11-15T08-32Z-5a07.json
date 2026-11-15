@@ -1,0 +1,334 @@
+{
+ "run_id": "2026-11-15T08-32Z-5a07",
+ "started_utc": "2026-11-15T08:32:19+00:00",
+ "script": "build_earth_grid.py",
+ "code_version": "67100d6",
+ "params": {
+  "region": {
+   "id": "atacama",
+   "name": "Atacama, Chile",
+   "bbox": [
+    -68.6,
+    -23.2,
+    -68.05,
+    -22.7
+   ],
+   "why": "Baseline: contains the Prototype 1 site (Valle de la Luna)",
+   "known": [
+    {
+     "name": "Valle de la Luna (Prototype 1)",
+     "lat": -22.9112,
+     "lon": -68.323
+    }
+   ]
+  },
+  "epsg": 32719,
+  "zoom": 12,
+  "res_m": 100,
+  "cell_km": 5,
+  "roughness_window_px": 3,
+  "resampling": "bilinear"
+ },
+ "sources": [
+  {
+   "name": "Mapzen Terrain Tiles (AWS Open Data, elevation-tiles-prod)",
+   "url": "https://registry.opendata.aws/terrain-tiles/",
+   "product_id": null,
+   "doi": null,
+   "license": null,
+   "accessed_utc": "2026-11-15T08:32:19+00:00"
+  }
+ ],
+ "requests": [
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1267/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1267/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1267/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1267/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1267/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1267/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1267/2319.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1268/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1268/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1268/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1268/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1268/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1268/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1268/2319.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1269/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1269/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1269/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1269/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1269/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1269/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1269/2319.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1270/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1270/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1270/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1270/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1270/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1270/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1270/2319.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1271/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1271/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1271/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1271/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1271/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1271/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1271/2319.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1272/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1272/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1272/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1272/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1272/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1272/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1272/2319.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1273/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1273/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1273/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1273/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1273/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1273/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1273/2319.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1274/2313.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1274/2314.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1274/2315.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1274/2316.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1274/2317.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1274/2318.tif",
+   "status": 200,
+   "n": null
+  },
+  {
+   "url": "https://s3.amazonaws.com/elevation-tiles-prod/geotiff/12/1274/2319.tif",
+   "status": 200,
+   "n": null
+  }
+ ],
+ "quality": {
+  "cells_total": 144,
+  "cells_valid": 144,
+  "raster_valid_pct": 100.0
+ },
+ "notes": [],
+ "finished_utc": "2026-11-15T08:32:34+00:00",
+ "outputs": [
+  "data\\earth_grid.json"
+ ]
+}

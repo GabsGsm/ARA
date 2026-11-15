@@ -61,8 +61,8 @@ def earth_example(data: dict) -> dict:
     return {
         "version": "1.0", "cell_km": terrain.CELL_KM, "res_m": terrain.RES_M,
         "dem": "Mapzen Terrain Tiles z12 (Prototype 1)",
-        "regions": [{"id": "prototipo1", "name": "Prototype 1 sites (hand-picked)",
-                     "why": "Known analogs used in Prototype 1; kept as baseline"}],
+        "regions": [{"id": "prototipo1", "name": "Locais do Protótipo 1 (escolhidos à mão)",
+                     "why": "Análogos conhecidos usados no Protótipo 1; mantidos como referência"}],
         "columns": ["id", "region", "lat", "lon", "slope_mean_deg", "slope_p90_deg",
                     "roughness_mean_m", "roughness_p90_m", "relief_m", "valid_pct"],
         "rows": rows, "known_analogs": known, "context": context, "run_ids": ["prototype1-mock-v7.3"],

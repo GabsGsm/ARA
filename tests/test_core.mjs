@@ -10,7 +10,12 @@ const grid = read("data/earth_grid.json");
 const sites = read("data/planet_sites.json");
 const proto = read("data/source/prototipo1_app_data.json");
 
-const cells = unpackGrid(grid);
+// Os testes conferem a matemática contra os números do Protótipo 1 e da entrega da equipe,
+// então usam só as 4 células do protótipo (p1_*). A grade nova (522+ células) pode — e deve —
+// achar células mais parecidas; isso é descoberta, não erro.
+const allCells = unpackGrid(grid);
+const cells = allCells.filter((c) => c.id.startsWith("p1_"));
+assert.equal(cells.length, 4, "as 4 células do Protótipo 1 precisam continuar na grade");
 const scales = scalesFrom(config);
 const w = normalizeWeights(config.objectives.default.weights);
 
@@ -38,6 +43,8 @@ console.log("Jezero 04, 1º lugar  rover:", rover, "| landscape:", land);
 
 // 4) explicação por dimensão inclui limites fixos e 'sem dado'
 const dims = explain(sites.jezero_02, cells[0], config);
+// a grade completa ranqueia sem erro
+assert.ok(rank(sites.jezero_01.terrain, allCells, config.objectives.default.weights, scales, 10).length >= 4);
 assert.ok(dims.some((d) => d.status === "no_data"));
 assert.equal(dims.filter((d) => d.attr === "limit").length, 3);
 
