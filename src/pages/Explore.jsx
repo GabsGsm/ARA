@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Card, { PageHeader } from "../components/ui/Card.jsx";
 import Segmented from "../components/ui/Segmented.jsx";
+import Pill from "../components/ui/Pill.jsx";
 import SitePicker from "../components/explore/SitePicker.jsx";
 import SiteFigure from "../components/explore/SiteFigure.jsx";
 import CriteriaPanel from "../components/explore/CriteriaPanel.jsx";
@@ -86,6 +87,11 @@ export default function Explore() {
 
         <Card title="O que é análogo — e o que não é" titleId="inspTitle" className="min-w-0 md:col-span-2 xl:col-span-1">
           <InspectPanel siteId={ex.siteId} siteVec={siteVec} result={selected} weights={ex.weights} />
+          {ex.siteId && selected && (
+            <Pill to={`/3d?site=${ex.siteId}&analog=${selected.cell.id}`} variant="gold" size="sm" className="mt-4">
+              Ver lado a lado em 3D
+            </Pill>
+          )}
         </Card>
       </div>
       <p className="sr-only" aria-live="polite">

@@ -1,0 +1,59 @@
+{
+ "id": "jezero_01",
+ "body": "mars",
+ "name": "Jezero 01",
+ "group": "Cratera Jezero",
+ "lat": 18.592978,
+ "lon": 77.268437,
+ "size_m": 10000,
+ "kind": "site",
+ "cell_m": 5000,
+ "height": {
+  "file": "jezero_01_h.png",
+  "n": 512,
+  "min": -2428.69,
+  "max": -1741.26,
+  "res_m": 19.53,
+  "native_res_m": 20.0,
+  "valid_pct": 100.0
+ },
+ "color": {
+  "file": "jezero_01_c.jpg",
+  "n": 2048,
+  "native_res_m": 6.0
+ },
+ "stats_inner": {
+  "window_m": 5000,
+  "native": {
+   "slope_mean_deg": 9.405,
+   "roughness_mean_m": 2.697,
+   "relief_m": 565.8,
+   "res_m": 19.53
+  },
+  "at_100m": {
+   "slope_mean_deg": 8.516,
+   "roughness_mean_m": 12.237,
+   "relief_m": 561.4,
+   "res_m": 97.7
+  }
+ },
+ "pois": [],
+ "sources": [
+  {
+   "name": "CTX DTM 20 m e ortomosaico 6 m de Jezero (Mars 2020 TRN)",
+   "by": "NASA/JPL-Caltech/MSSS · USGS Astrogeology",
+   "url": "https://planetarymaps.usgs.gov/mosaic/mars2020_trn/CTX/"
+  },
+  {
+   "name": "Viking MDIM 2.1 colorido (232 m) — só a cor",
+   "by": "NASA Solar System Treks",
+   "url": "https://trek.nasa.gov/mars/"
+  },
+  {
+   "name": "Trajeto e paradas do Perseverance",
+   "by": "NASA/JPL-Caltech MMGIS",
+   "url": "https://mars.nasa.gov/mars2020/mission/where-is-the-rover/"
+  }
+ ],
+ "built_utc": "2026-11-15T08:32:55Z"
+}

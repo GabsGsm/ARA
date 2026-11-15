@@ -1,0 +1,44 @@
+{
+ "id": "haworth_01",
+ "body": "moon",
+ "name": "Haworth",
+ "group": "Região candidata Artemis III",
+ "lat": -86.768,
+ "lon": -20.514,
+ "size_m": 10000,
+ "kind": "site",
+ "cell_m": 5000,
+ "height": {
+  "file": "haworth_01_h.png",
+  "n": 512,
+  "min": 1074.93,
+  "max": 2061.27,
+  "res_m": 19.53,
+  "native_res_m": 40.0,
+  "valid_pct": 100.0
+ },
+ "stats_inner": {
+  "window_m": 5000,
+  "native": {
+   "slope_mean_deg": 7.603,
+   "roughness_mean_m": 2.137,
+   "relief_m": 473.0,
+   "res_m": 19.53
+  },
+  "at_100m": {
+   "slope_mean_deg": 7.268,
+   "roughness_mean_m": 10.126,
+   "relief_m": 467.5,
+   "res_m": 97.7
+  }
+ },
+ "pois": [],
+ "sources": [
+  {
+   "name": "LOLA LDEM_80S_40MPP_ADJ (40 m)",
+   "by": "NASA Goddard PGDA · Barker et al. (2021)",
+   "url": "https://pgda.gsfc.nasa.gov/products/90"
+  }
+ ],
+ "built_utc": "2026-11-15T08:31:59Z"
+}

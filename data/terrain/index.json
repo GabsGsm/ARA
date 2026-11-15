@@ -1,0 +1,863 @@
+{
+ "version": 1,
+ "scenes": [
+  {
+   "id": "atacama_000007",
+   "body": "earth",
+   "name": "Atacama · célula 000007",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.718,
+   "lon": -68.24534,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 8.885,
+     "roughness_mean_m": 2.672,
+     "relief_m": 431.1,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 7.422,
+     "roughness_mean_m": 11.016,
+     "relief_m": 417.7,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "atacama_001011",
+   "body": "earth",
+   "name": "Atacama · célula 001011",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.76212,
+   "lon": -68.0503,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.843,
+     "roughness_mean_m": 2.835,
+     "relief_m": 440.0,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 7.363,
+     "roughness_mean_m": 10.537,
+     "relief_m": 417.5,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "atacama_002010",
+   "body": "earth",
+   "name": "Atacama · célula 002010",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.80757,
+   "lon": -68.0987,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.123,
+     "roughness_mean_m": 2.628,
+     "relief_m": 469.1,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 7.272,
+     "roughness_mean_m": 10.38,
+     "relief_m": 465.0,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "atacama_005001",
+   "body": "earth",
+   "name": "Atacama · célula 005001",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.94494,
+   "lon": -68.53669,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 4.653,
+     "roughness_mean_m": 1.334,
+     "relief_m": 204.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 3.454,
+     "roughness_mean_m": 4.858,
+     "relief_m": 190.1,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "atacama_005002",
+   "body": "earth",
+   "name": "Atacama · célula 005002",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.94479,
+   "lon": -68.48793,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 10.012,
+     "roughness_mean_m": 2.914,
+     "relief_m": 504.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 7.824,
+     "roughness_mean_m": 11.309,
+     "relief_m": 492.6,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "atacama_005005",
+   "body": "earth",
+   "name": "Atacama · célula 005005",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.94425,
+   "lon": -68.34162,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 5.359,
+     "roughness_mean_m": 1.551,
+     "relief_m": 199.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 3.724,
+     "roughness_mean_m": 5.423,
+     "relief_m": 191.5,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "atacama_006002",
+   "body": "earth",
+   "name": "Atacama · célula 006002",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.98996,
+   "lon": -68.48776,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.94,
+     "roughness_mean_m": 2.869,
+     "relief_m": 525.7,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 7.82,
+     "roughness_mean_m": 11.244,
+     "relief_m": 515.4,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_002007",
+   "body": "earth",
+   "name": "Death Valley · célula 002007",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.57255,
+   "lon": -116.69264,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 10.893,
+     "roughness_mean_m": 3.165,
+     "relief_m": 581.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.593,
+     "roughness_mean_m": 12.376,
+     "relief_m": 572.7,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_003008",
+   "body": "earth",
+   "name": "Death Valley · célula 003008",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.52732,
+   "lon": -116.63697,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 16.902,
+     "roughness_mean_m": 5.139,
+     "relief_m": 1090.9,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 14.135,
+     "roughness_mean_m": 21.004,
+     "relief_m": 1083.1,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_004003",
+   "body": "earth",
+   "name": "Death Valley · célula 004003",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.48277,
+   "lon": -116.91627,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 1.511,
+     "roughness_mean_m": 0.446,
+     "relief_m": 65.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 0.533,
+     "roughness_mean_m": 0.805,
+     "relief_m": 60.2,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_004005",
+   "body": "earth",
+   "name": "Death Valley · célula 004005",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.48264,
+   "lon": -116.80463,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 17.599,
+     "roughness_mean_m": 5.33,
+     "relief_m": 1024.6,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 12.465,
+     "roughness_mean_m": 18.443,
+     "relief_m": 998.7,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_005006",
+   "body": "earth",
+   "name": "Death Valley · célula 005006",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.43746,
+   "lon": -116.74896,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 18.104,
+     "roughness_mean_m": 5.592,
+     "relief_m": 1044.0,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 14.472,
+     "roughness_mean_m": 21.741,
+     "relief_m": 1026.7,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_005009",
+   "body": "earth",
+   "name": "Death Valley · célula 005009",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.43699,
+   "lon": -116.5816,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 14.653,
+     "roughness_mean_m": 4.523,
+     "relief_m": 1166.1,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 12.112,
+     "roughness_mean_m": 17.941,
+     "relief_m": 1140.1,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_007007",
+   "body": "earth",
+   "name": "Death Valley · célula 007007",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.34718,
+   "lon": -116.69353,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 10.539,
+     "roughness_mean_m": 3.091,
+     "relief_m": 521.9,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.41,
+     "roughness_mean_m": 12.148,
+     "relief_m": 496.7,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "death_valley_010010",
+   "body": "earth",
+   "name": "Death Valley · célula 010010",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.2114,
+   "lon": -116.52718,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 12.541,
+     "roughness_mean_m": 3.653,
+     "relief_m": 459.3,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 9.581,
+     "roughness_mean_m": 13.821,
+     "relief_m": 440.1,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "haworth_01",
+   "body": "moon",
+   "name": "Haworth",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -86.768,
+   "lon": -20.514,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 7.603,
+     "roughness_mean_m": 2.137,
+     "relief_m": 473.0,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 7.268,
+     "roughness_mean_m": 10.126,
+     "relief_m": 467.5,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_01",
+   "body": "mars",
+   "name": "Jezero 01",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.592978,
+   "lon": 77.268437,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.405,
+     "roughness_mean_m": 2.697,
+     "relief_m": 565.8,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.516,
+     "roughness_mean_m": 12.237,
+     "relief_m": 561.4,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_02",
+   "body": "mars",
+   "name": "Jezero 02",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.478258,
+   "lon": 77.416899,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 4.519,
+     "roughness_mean_m": 1.281,
+     "relief_m": 186.6,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 3.557,
+     "roughness_mean_m": 5.175,
+     "relief_m": 177.5,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_03",
+   "body": "mars",
+   "name": "Jezero 03",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.350041,
+   "lon": 77.56536,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 2.507,
+     "roughness_mean_m": 0.705,
+     "relief_m": 82.6,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 1.662,
+     "roughness_mean_m": 2.433,
+     "relief_m": 80.9,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_04",
+   "body": "mars",
+   "name": "Jezero 04",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.367755,
+   "lon": 77.27333,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.023,
+     "roughness_mean_m": 2.549,
+     "relief_m": 556.7,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.417,
+     "roughness_mean_m": 11.779,
+     "relief_m": 544.8,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_crater",
+   "body": "mars",
+   "name": "Cratera Jezero (visão geral)",
+   "group": "Cratera Jezero",
+   "kind": "overview",
+   "lat": 18.4,
+   "lon": 77.58,
+   "size_m": 60000,
+   "cell_m": null,
+   "stats_inner": {
+    "window_m": 30000,
+    "native": {
+     "slope_mean_deg": 2.858,
+     "roughness_mean_m": 3.932,
+     "relief_m": 1151.6,
+     "res_m": 93.75
+    },
+    "at_100m": {
+     "slope_mean_deg": 2.858,
+     "roughness_mean_m": 3.932,
+     "relief_m": 1151.6,
+     "res_m": 93.8
+    }
+   }
+  },
+  {
+   "id": "lunar_south_pole",
+   "body": "moon",
+   "name": "Polo sul da Lua (regiões Artemis III)",
+   "group": "Regiões candidatas Artemis III",
+   "kind": "overview",
+   "lat": -87.6,
+   "lon": 12.0,
+   "size_m": 180000,
+   "cell_m": null,
+   "stats_inner": {
+    "window_m": 90000,
+    "native": {
+     "slope_mean_deg": 10.516,
+     "roughness_mean_m": 38.48,
+     "relief_m": 9173.3,
+     "res_m": 250.0
+    },
+    "at_100m": {
+     "slope_mean_deg": 10.516,
+     "roughness_mean_m": 38.48,
+     "relief_m": 9173.3,
+     "res_m": 250.0
+    }
+   }
+  },
+  {
+   "id": "lut_000009",
+   "body": "earth",
+   "name": "Lut desert yardangs · célula 000009",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 30.79317,
+   "lon": 58.38488,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 3.556,
+     "roughness_mean_m": 1.034,
+     "relief_m": 88.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 1.797,
+     "roughness_mean_m": 2.672,
+     "relief_m": 75.9,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "lut_002010",
+   "body": "earth",
+   "name": "Lut desert yardangs · célula 002010",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 30.70239,
+   "lon": 58.43579,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 7.557,
+     "roughness_mean_m": 2.201,
+     "relief_m": 183.8,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 4.122,
+     "roughness_mean_m": 6.03,
+     "relief_m": 166.6,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "malapert_massif_01",
+   "body": "moon",
+   "name": "Malapert Massif",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -85.942,
+   "lon": -0.944,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 13.635,
+     "roughness_mean_m": 3.917,
+     "relief_m": 1066.5,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 13.38,
+     "roughness_mean_m": 18.852,
+     "relief_m": 1044.9,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "mons_mouton_01",
+   "body": "moon",
+   "name": "Mons Mouton",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -85.4,
+   "lon": 31.7,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.077,
+     "roughness_mean_m": 2.552,
+     "relief_m": 507.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.743,
+     "roughness_mean_m": 12.118,
+     "relief_m": 498.3,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "nobile_rim_01",
+   "body": "moon",
+   "name": "Nobile Rim 1",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -85.295,
+   "lon": 36.917,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 13.617,
+     "roughness_mean_m": 3.9,
+     "relief_m": 1141.7,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 13.346,
+     "roughness_mean_m": 18.81,
+     "relief_m": 1108.4,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_atacama_01",
+   "body": "earth",
+   "name": "Valle de la Luna, Atacama (Chile)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.9112,
+   "lon": -68.323,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 5.276,
+     "roughness_mean_m": 1.534,
+     "relief_m": 265.1,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 3.805,
+     "roughness_mean_m": 5.512,
+     "relief_m": 252.4,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_death_valley_01",
+   "body": "earth",
+   "name": "Death Valley (USA)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.42,
+   "lon": -116.812,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 14.038,
+     "roughness_mean_m": 4.256,
+     "relief_m": 578.0,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 9.602,
+     "roughness_mean_m": 14.168,
+     "relief_m": 545.3,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_timanfaya_01",
+   "body": "earth",
+   "name": "Timanfaya, Lanzarote (Spain)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 29.035,
+   "lon": -13.783,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 2.861,
+     "roughness_mean_m": 0.804,
+     "relief_m": 298.2,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 2.655,
+     "roughness_mean_m": 3.711,
+     "relief_m": 291.1,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_wadi_rum_01",
+   "body": "earth",
+   "name": "Wadi Rum (Jordan)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 29.64,
+   "lon": 35.434,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 13.244,
+     "roughness_mean_m": 4.131,
+     "relief_m": 471.6,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 9.205,
+     "roughness_mean_m": 14.026,
+     "relief_m": 439.2,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "pinacate_000008",
+   "body": "earth",
+   "name": "Pinacate volcanic field · célula 000008",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 32.04183,
+   "lon": -113.35639,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 2.547,
+     "roughness_mean_m": 0.751,
+     "relief_m": 125.0,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 1.674,
+     "roughness_mean_m": 2.453,
+     "relief_m": 99.7,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "pinacate_005005",
+   "body": "earth",
+   "name": "Pinacate volcanic field · célula 005005",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 31.81344,
+   "lon": -113.50899,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.87,
+     "roughness_mean_m": 2.856,
+     "relief_m": 552.9,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.668,
+     "roughness_mean_m": 12.462,
+     "relief_m": 537.5,
+     "res_m": 97.7
+    }
+   }
+  }
+ ]
+}

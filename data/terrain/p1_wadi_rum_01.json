@@ -1,0 +1,54 @@
+{
+ "id": "p1_wadi_rum_01",
+ "body": "earth",
+ "name": "Wadi Rum (Jordan)",
+ "group": "Análogo terrestre",
+ "lat": 29.64,
+ "lon": 35.434,
+ "size_m": 10000,
+ "kind": "analog",
+ "cell_m": 5000,
+ "height": {
+  "file": "p1_wadi_rum_01_h.png",
+  "n": 512,
+  "min": 765.24,
+  "max": 1502.93,
+  "res_m": 19.53,
+  "native_res_m": 8.3,
+  "valid_pct": 100.0
+ },
+ "color": {
+  "file": "p1_wadi_rum_01_c.jpg",
+  "n": 2048,
+  "native_res_m": 4.2
+ },
+ "stats_inner": {
+  "window_m": 5000,
+  "native": {
+   "slope_mean_deg": 13.244,
+   "roughness_mean_m": 4.131,
+   "relief_m": 471.6,
+   "res_m": 19.53
+  },
+  "at_100m": {
+   "slope_mean_deg": 9.205,
+   "roughness_mean_m": 14.026,
+   "relief_m": 439.2,
+   "res_m": 97.7
+  }
+ },
+ "pois": [],
+ "sources": [
+  {
+   "name": "Terrain Tiles (SRTM/NED/ETOPO, ~10–30 m)",
+   "by": "AWS Open Data · Mapzen",
+   "url": "https://registry.opendata.aws/terrain-tiles/"
+  },
+  {
+   "name": "World Imagery",
+   "by": "Esri, Maxar, Earthstar Geographics",
+   "url": "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"
+  }
+ ],
+ "built_utc": "2026-11-15T08:46:35Z"
+}

@@ -1,0 +1,54 @@
+{
+ "id": "death_valley_010010",
+ "body": "earth",
+ "name": "Death Valley · célula 010010",
+ "group": "Análogo terrestre",
+ "lat": 36.2114,
+ "lon": -116.52718,
+ "size_m": 10000,
+ "kind": "analog",
+ "cell_m": 5000,
+ "height": {
+  "file": "death_valley_010010_h.png",
+  "n": 512,
+  "min": 706.63,
+  "max": 1479.87,
+  "res_m": 19.53,
+  "native_res_m": 7.7,
+  "valid_pct": 100.0
+ },
+ "color": {
+  "file": "death_valley_010010_c.jpg",
+  "n": 2048,
+  "native_res_m": 3.9
+ },
+ "stats_inner": {
+  "window_m": 5000,
+  "native": {
+   "slope_mean_deg": 12.541,
+   "roughness_mean_m": 3.653,
+   "relief_m": 459.3,
+   "res_m": 19.53
+  },
+  "at_100m": {
+   "slope_mean_deg": 9.581,
+   "roughness_mean_m": 13.821,
+   "relief_m": 440.1,
+   "res_m": 97.7
+  }
+ },
+ "pois": [],
+ "sources": [
+  {
+   "name": "Terrain Tiles (SRTM/NED/ETOPO, ~10–30 m)",
+   "by": "AWS Open Data · Mapzen",
+   "url": "https://registry.opendata.aws/terrain-tiles/"
+  },
+  {
+   "name": "World Imagery",
+   "by": "Esri, Maxar, Earthstar Geographics",
+   "url": "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"
+  }
+ ],
+ "built_utc": "2026-11-15T09:19:30Z"
+}

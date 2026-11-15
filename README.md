@@ -12,6 +12,28 @@ NASA Space Apps Challenge 2026 · Challenge: *Identify Earth locations analogous
 - **Data-quality simulation:** recomputes the same cells with lower resolution, missing data or elevation noise to show how much a conclusion depends on the data. Simulated results are always labelled.
 - **Traceability:** every pipeline run writes `data/runs/<run_id>.json` with parameters, sources and requests.
 
+## 3D Lab — the twin view
+
+![Jezero 04 on Mars and its best Earth analog, side by side in real relief](docs/img/lab3d-twin.jpg)
+
+The **3D Lab** (`#/3d`) puts a fixed planetary site and its Earth analog side by side, in **real relief at the same scale** (10 × 10 km windows, 5 km analysis cell outlined in gold), so you can *see* why the ranking says they are alike — and where they are not.
+
+- **Real data, same grid for every body.** Mars: CTX 20 m DTM + 6 m orthomosaic of Jezero, coloured with the Viking MDIM mosaic. Moon: LOLA 40 m polar DEM. Earth: AWS Terrain Tiles + Esri World Imagery. Every source is resampled into a local azimuthal-equidistant grid centred on the site (`pipeline/build_terrain3d.py`), so Jezero, the lunar south pole and Death Valley are metric and comparable.
+- **Synchronised twin cameras** — orbit one, the other follows.
+- **Physical Sun for each body.** Local solar time + season (Ls on Mars, day of year on Earth, the ±1.54° lunar declination). Shadows are ray-cast on the real DEM (the same technique as lunar illumination maps), and the panel reports the **fraction of the cell in sunlight**. At Haworth (86.8° S) the Sun never rises above ~4.8°: long shadows, permanently shadowed craters.
+- **Scientific layers** — imagery, slope classes for rover trafficability (< 5° easy · 15° Perseverance-class limit · > 35° steep), hypsometric tints, contour lines (10–250 m), vertical exaggeration 1–6×.
+- **Elevation profile A → B** drawn on both terrains at once, with climb, descent and steepest stretch.
+- **Guided tour** (static mode) that flies both cameras through the three ARA measures — slope, roughness, relief — with captions using the real numbers; **free orbit**; and **walk mode** (first person, W A S D, Shift, Space) with each body's gravity: the same 2.5 m/s jump reaches 0.32 m on Earth, 0.84 m on Mars and 1.93 m on the Moon.
+- **Perseverance traverse** (NASA/JPL MMGIS, sols 14 → 2022, 45 km) and sol markers draped on the Jezero scenes; **overview scenes** of the whole Jezero crater (60 km) and the lunar south pole (180 km) with clickable site boxes.
+- **Cross-check:** the 3D scene recomputes the ARA measures at 100 m in the 5 km cell and shows them next to the catalogue values.
+- Cursor read-out (lat, lon, elevation, slope), PNG snapshot of both views, data-source list per scene, and URLs that reopen a view (`#/3d?site=haworth_01&layer=declividade&hour=7.5&exag=3`).
+
+| Lunar south pole, Sun at 3° | Slope classes + contours on Jezero |
+| --- | --- |
+| ![Haworth with ray-cast shadows](docs/img/lab3d-moon.jpg) | ![Slope layer](docs/img/lab3d-slope.jpg) |
+
+![The whole Jezero crater (60 km), the four ARA sectors as clickable boxes and the Perseverance traverse](docs/img/lab3d-jezero.jpg)
+
 ## Method
 
 For each 5 × 5 km window (100 m/pixel): mean slope (`np.gradient`), mean roughness (local standard deviation in a 3 × 3 window = 300 m) and relief (max − min). Similarity:
@@ -31,22 +53,26 @@ Stability: 2,000 random weight vectors, Dirichlet(1,1,1), seed 42 — sensitivit
 | LRO LOLA polar DEM (LDEM_80S_*MPP_ADJ) | Moon terrain | NASA Goddard PGDA (Barker et al.) |
 | Artemis III candidate landing regions | Moon site list | NASA (Oct 2024) |
 | Down Selected Artemis III Candidate Landing Site Navigational Grids | Moon site centres | USGS, McClernan (2024), doi:10.5066/P1MEQ6UK, CC0 |
-| Mars Trek WMTS (Viking MDIM 2.1 colour mosaic) | Mars context map | NASA Solar System Treks |
-| Mapzen Terrain Tiles (z12) | Earth terrain grid | AWS Open Data |
+| Mars Trek WMTS (Viking MDIM 2.1 colour mosaic) | Mars context map; colour of the 3D scenes | NASA Solar System Treks |
+| Mars 2020 TRN CTX DTM 20 m + orthomosaic 6 m; JPL CTX DEM 20 m + ortho 5 m of Jezero crater | 3D Lab (Mars) | NASA/JPL-Caltech/MSSS, USGS Astrogeology |
+| Perseverance traverse and waypoints | 3D Lab (Mars) | NASA/JPL-Caltech MMGIS |
+| LOLA LDEM_80S_40MPP_ADJ | 3D Lab (Moon) | NASA Goddard PGDA (Barker et al. 2021) |
+| Mapzen Terrain Tiles (z12; z14 in the 3D Lab) | Earth terrain grid and 3D relief | AWS Open Data |
 | Macrostrat API v2 | Earth lithology context | macrostrat.org (CC BY 4.0) |
 | GIBS (MODIS true colour) | Map layer | NASA GIBS |
-| World Imagery | Basemap | Esri |
+| World Imagery | Basemap; imagery of the Earth 3D scenes | Esri |
 
 ## Repository
 
 ```
 pipeline/   Python, run offline (terrain.py, moon_regions_from_usgs.py, build_earth_grid.py, build_moon_sites.py, build_catalog.py, stability.py, build_simulation.py, enrich_context.py)
-data/       JSON outputs read by the app (+ img/, source/ deliveries, runs/ trace logs)
+data/       JSON outputs read by the app (+ img/, terrain/ 3D scenes, source/ deliveries, runs/ trace logs)
 src/        React app (Vite + Tailwind v4 + React Router)
-  pages/        Home, Explore, Analyses, About (one file per route)
+  pages/        Home, Explore, Lab3D (3D twin view), Analyses, About (one file per route)
   components/   layout/ (Header, Footer, BrandMark), home/, explore/, ui/ (Pill, Card, StatusChip, Segmented, Icons)
   hooks/        useAraData (fetches data/*.json once), useExplorer (shared state), useRanking, useHighContrast
   lib/          core.js (ranking maths, tested), format.js (pt-BR formatting, labels)
+  lib/terrain3d/ TerrainView (three.js renderer), data.js (scene loading, heights, profiles), sun.js (Sun position per body, ray-cast shadows)
   components/fx/ Sky (stars, shooting stars, mouse parallax); home/GlobeCanvas uses lib/globe.js (360° rotating planets)
   assets/css/   ara.css: Tailwind import + design tokens (@theme) + shared classes · home.css: home page, top bar, animations
   assets/img/   logo, horizon, Mars/Moon equirectangular textures (tools/make_globe_texture.py)
@@ -69,6 +95,7 @@ python pipeline/build_catalog.py
 python pipeline/stability.py
 python pipeline/enrich_context.py --top 50
 python pipeline/build_simulation.py --mars-tif jezero_01=.../jezero_01_dem_100m.tif
+python pipeline/build_terrain3d.py          # 3D scenes -> data/terrain/ (reads only the needed windows from the public servers)
 ```
 
 Front end (Node 22):
