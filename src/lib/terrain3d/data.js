@@ -1,19 +1,20 @@
 // Carrega as cenas 3D geradas por pipeline/build_terrain3d.py (data/terrain/).
 // O relevo vem em PNG RGB com 16 bits divididos em R (byte alto) e G (byte baixo).
 import { dataUrl } from "../format.js";
+import { T, localizeData } from "../i18n.js";
 
 const cache = new Map();
 
 export const BODIES = {
-  mars: { label: "Marte", radius: 3396190, g: 3.721, day_h: 24.66, sky: ["#d7a477", "#8a5a3c"], fog: "#c99a72", ambient: 0.32, ambientColor: "#f0c9a0", sunColor: "#fff1dc", sunI: 2.6 },
-  moon: { label: "Lua", radius: 1737400, g: 1.62, day_h: 708.7, sky: ["#000000", "#05070a"], fog: "#000000", ambient: 0.025, ambientColor: "#9fb0c8", sunColor: "#ffffff", sunI: 3.2 },
-  earth: { label: "Terra", radius: 6371008, g: 9.807, day_h: 24, sky: ["#8fb7dc", "#d9e7f2"], fog: "#c7d9e8", ambient: 0.45, ambientColor: "#cfe2ff", sunColor: "#fff6e6", sunI: 2.4 },
+  mars: { get label() { return T("Marte", "Mars"); }, radius: 3396190, g: 3.721, day_h: 24.66, sky: ["#d7a477", "#8a5a3c"], fog: "#c99a72", ambient: 0.32, ambientColor: "#f0c9a0", sunColor: "#fff1dc", sunI: 2.6 },
+  moon: { get label() { return T("Lua", "Moon"); }, radius: 1737400, g: 1.62, day_h: 708.7, sky: ["#000000", "#05070a"], fog: "#000000", ambient: 0.025, ambientColor: "#9fb0c8", sunColor: "#ffffff", sunI: 3.2 },
+  earth: { get label() { return T("Terra", "Earth"); }, radius: 6371008, g: 9.807, day_h: 24, sky: ["#8fb7dc", "#d9e7f2"], fog: "#c7d9e8", ambient: 0.45, ambientColor: "#cfe2ff", sunColor: "#fff6e6", sunI: 2.4 },
 };
 
 export async function loadIndex() {
   const r = await fetch(dataUrl("data/terrain/index.json"), { cache: "no-cache" });
-  if (!r.ok) throw new Error("data/terrain/index.json não encontrado — rode pipeline/build_terrain3d.py");
-  return r.json();
+  if (!r.ok) throw new Error("data/terrain/index.json — rode/run pipeline/build_terrain3d.py");
+  return localizeData(await r.json());
 }
 
 async function loadImage(url, opts) {
@@ -28,6 +29,12 @@ export function loadScene(id) {
   const p = (async () => {
     const base = dataUrl(`data/terrain/${id}`);
     const meta = await (await fetch(`${base}.json`, { cache: "no-cache" })).json();
+    // nome e grupo da cena seguem o idioma escolhido (a cena fica em cache)
+    for (const k of ["name", "group"]) {
+      if (typeof meta[k] !== "string") continue;
+      const pt = meta[k];
+      Object.defineProperty(meta, k, { get: () => T(pt), enumerable: true, configurable: true });
+    }
     const hm = await loadImage(dataUrl(`data/terrain/${meta.height.file}`), { colorSpaceConversion: "none", premultiplyAlpha: "none" });
     const n = hm.width;
     const cv = new OffscreenCanvas(n, n);

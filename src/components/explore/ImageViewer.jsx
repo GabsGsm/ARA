@@ -2,6 +2,7 @@
 // Mantém a sobreposição (ex.: o quadrado da célula de 5 km) presa à imagem enquanto amplia.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { T } from "../../lib/i18n.js";
 
 export default function ImageViewer({ src, alt, caption, overlay, onClose }) {
   const [view, setView] = useState({ k: 1, x: 0, y: 0 });
@@ -67,11 +68,11 @@ export default function ImageViewer({ src, alt, caption, overlay, onClose }) {
       <div className="ex-viewer-bar">
         <p className="m-0 min-w-0 flex-1 truncate text-[13px] text-ink-2">{caption}</p>
         <div className="flex gap-1.5">
-          <button type="button" onClick={() => zoomAt(1 / 1.4)} aria-label="Diminuir">−</button>
+          <button type="button" onClick={() => zoomAt(1 / 1.4)} aria-label={T("Diminuir", "Zoom out")}>−</button>
           <span className="min-w-14 text-center font-mono text-[13px] text-gold-2">{Math.round(view.k * 100)}%</span>
-          <button type="button" onClick={() => zoomAt(1.4)} aria-label="Ampliar">+</button>
-          <button type="button" onClick={() => setView({ k: 1, x: 0, y: 0 })}>Ajustar</button>
-          <button type="button" ref={closeBtn} onClick={onClose} aria-label="Fechar">✕</button>
+          <button type="button" onClick={() => zoomAt(1.4)} aria-label={T("Ampliar", "Zoom in")}>+</button>
+          <button type="button" onClick={() => setView({ k: 1, x: 0, y: 0 })}>{T("Ajustar", "Fit")}</button>
+          <button type="button" ref={closeBtn} onClick={onClose} aria-label={T("Fechar", "Close")}>✕</button>
         </div>
       </div>
       <div ref={box} className={`ex-viewer-stage ${view.k > 1 ? "grab" : ""}`} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
@@ -81,7 +82,7 @@ export default function ImageViewer({ src, alt, caption, overlay, onClose }) {
           {overlay && <span className="ex-viewer-box" style={overlay} />}
         </div>
       </div>
-      <p className="ex-viewer-help">Roda do mouse ou pinça para ampliar · arraste para mover · duplo clique aproxima · Esc fecha</p>
+      <p className="ex-viewer-help">{T("Roda do mouse ou pinça para ampliar · arraste para mover · duplo clique aproxima · Esc fecha", "Mouse wheel or pinch to zoom · drag to pan · double-click zooms in · Esc closes")}</p>
     </div>,
     document.body,
   );

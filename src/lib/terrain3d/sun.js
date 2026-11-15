@@ -1,18 +1,19 @@
 // Posição do Sol para Marte, Lua e Terra (geometria esférica simples, suficiente para iluminar o relevo).
 // season: Marte = Ls (graus); Terra = dia do ano; Lua = fase do ciclo de 18,6 anos da inclinação (0..1).
 // hour: hora solar local verdadeira (0..24, meio-dia = 12) na escala do "dia" de cada corpo.
+import { T } from "../i18n.js";
 
 const RAD = Math.PI / 180;
 
 export const SEASON = {
-  mars: { label: "Estação (Ls)", min: 0, max: 359, step: 1, def: 30, fmt: (v) => `Ls ${Math.round(v)}°` },
-  earth: { label: "Dia do ano", min: 1, max: 365, step: 1, def: 172, fmt: (v) => dayLabel(v) },
-  moon: { label: "Declinação do Sol", min: -1.54, max: 1.54, step: 0.02, def: 0, fmt: (v) => `${v.toFixed(2)}°` },
+  mars: { get label() { return T("Estação (Ls)", "Season (Ls)"); }, min: 0, max: 359, step: 1, def: 30, fmt: (v) => `Ls ${Math.round(v)}°` },
+  earth: { get label() { return T("Dia do ano", "Day of year"); }, min: 1, max: 365, step: 1, def: 172, fmt: (v) => dayLabel(v) },
+  moon: { get label() { return T("Declinação do Sol", "Solar declination"); }, min: -1.54, max: 1.54, step: 0.02, def: 0, fmt: (v) => `${v.toFixed(2)}°` },
 };
 
 function dayLabel(n) {
   const d = new Date(Date.UTC(2026, 0, 1) + (n - 1) * 86400000);
-  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", timeZone: "UTC" });
+  return d.toLocaleDateString(T("pt-BR", "en-US"), { day: "2-digit", month: "short", timeZone: "UTC" });
 }
 
 export function declination(body, season) {

@@ -18,6 +18,7 @@ import * as core from "../lib/core.js";
 import { fmt, withUnit } from "../lib/format.js";
 import { BODIES, heightAt, loadIndex, profile as makeProfile, slopeGrid } from "../lib/terrain3d/data.js";
 import { SEASON, daylight, fmtHour, nowHour, shadowMask, sunPosition } from "../lib/terrain3d/sun.js";
+import { T } from "../lib/i18n.js";
 
 const LAYERS = [
   { value: "imagem", label: "Imagem" },
@@ -27,23 +28,23 @@ const LAYERS = [
 ];
 // veículos que podem ser colocados na cena, em escala real (comprimento em metros)
 const VEHICLES = {
-  mars: [["perseverance", "Perseverance", 3.0], ["curiosity", "Curiosity", 3.0], ["mer", "Spirit / Opportunity", 1.6], ["sojourner", "Sojourner (simplificado)", 0.65], ["ingenuity", "Ingenuity", 1.2], ["astronaut", "Astronauta", 0.9]],
-  moon: [["lrv", "Carro lunar Apollo (simplificado)", 3.1], ["lunar_module", "Módulo Lunar Apollo", 9.4], ["astronaut", "Astronauta", 0.9]],
+  mars: [["perseverance", "Perseverance", 3.0], ["curiosity", "Curiosity", 3.0], ["mer", "Spirit / Opportunity", 1.6], ["sojourner", ["Sojourner (simplificado)", "Sojourner (simplified)"], 0.65], ["ingenuity", "Ingenuity", 1.2], ["astronaut", ["Astronauta", "Astronaut"], 0.9]],
+  moon: [["lrv", ["Carro lunar Apollo (simplificado)", "Apollo lunar rover (simplified)"], 3.1], ["lunar_module", ["Módulo Lunar Apollo", "Apollo Lunar Module"], 9.4], ["astronaut", ["Astronauta", "Astronaut"], 0.9]],
 };
 const NAV = [{ value: "orbit", label: "Órbita" }, { value: "walk", label: "Caminhar" }, { value: "tour", label: "Tour guiado" }];
 const ATTRS = core.RANK_ATTRS;
 
 const TOUR = [
-  { cam: { p: [0, 0.46, 0.6], t: [0, -0.02, 0.04] }, layer: "imagem", title: "Visão geral",
-    text: (L, R) => `Duas janelas de 10 × 10 km na mesma escala. O quadrado dourado é a célula de 5 km comparada pelo ARA. ${L} à esquerda${R ? `, ${R} à direita` : ""}.` },
-  { cam: { p: [0, 1.25, 0.002], t: [0, 0, 0] }, layer: "declividade", title: "Onde um rover passa",
-    text: () => "Vista de cima colorida pela declividade: verde até 5° (fácil), amarelo até 15° (limite de rovers como o Perseverance), laranja e vermelho acima disso." },
-  { cam: { p: [-0.52, 0.11, 0.42], t: [0.05, -0.02, -0.05] }, layer: "imagem", title: "Rasante",
-    text: () => "Voo baixo para sentir a rugosidade — o desvio-padrão local da altitude, uma das três medidas do ARA." },
-  { cam: { p: [0.62, 0.28, -0.46], t: [0, 0, 0] }, layer: "altitude", title: "Amplitude do relevo",
-    text: (L, R, s) => `Cores por altitude. A diferença entre o ponto mais alto e o mais baixo da célula é a amplitude: ${s}.` },
-  { cam: { p: [0, 0.46, 0.6], t: [0, -0.02, 0.04] }, layer: "imagem", title: "Agora é com você",
-    text: () => "Arraste para girar, use a roda para aproximar, clique em dois pontos para traçar um perfil ou entre no modo Caminhar." },
+  { cam: { p: [0, 0.46, 0.6], t: [0, -0.02, 0.04] }, layer: "imagem", title: () => T("Visão geral", "Overview"),
+    text: (L, R) => T(`Duas janelas de 10 × 10 km na mesma escala. O quadrado dourado é a célula de 5 km comparada pelo ARA. ${L} à esquerda${R ? `, ${R} à direita` : ""}.`, `Two 10 × 10 km windows at the same scale. The gold square is the 5 km cell ARA compares. ${L} on the left${R ? `, ${R} on the right` : ""}.`) },
+  { cam: { p: [0, 1.25, 0.002], t: [0, 0, 0] }, layer: "declividade", title: () => T("Onde um rover passa", "Where a rover can go"),
+    text: () => T("Vista de cima colorida pela declividade: verde até 5° (fácil), amarelo até 15° (limite de rovers como o Perseverance), laranja e vermelho acima disso.", "Top view coloured by slope: green up to 5° (easy), yellow up to 15° (limit for rovers like Perseverance), orange and red above that.") },
+  { cam: { p: [-0.52, 0.11, 0.42], t: [0.05, -0.02, -0.05] }, layer: "imagem", title: () => T("Rasante", "Low pass"),
+    text: () => T("Voo baixo para sentir a rugosidade — o desvio-padrão local da altitude, uma das três medidas do ARA.", "A low flight to feel the roughness — the local standard deviation of altitude, one of ARA's three measures.") },
+  { cam: { p: [0.62, 0.28, -0.46], t: [0, 0, 0] }, layer: "altitude", title: () => T("Amplitude do relevo", "Relief"),
+    text: (L, R, s) => T(`Cores por altitude. A diferença entre o ponto mais alto e o mais baixo da célula é a amplitude: ${s}.`, `Colours by altitude. The difference between the highest and lowest point of the cell is the relief: ${s}.`) },
+  { cam: { p: [0, 0.46, 0.6], t: [0, -0.02, 0.04] }, layer: "imagem", title: () => T("Agora é com você", "Your turn"),
+    text: () => T("Arraste para girar, use a roda para aproximar, clique em dois pontos para traçar um perfil ou entre no modo Caminhar.", "Drag to rotate, scroll to zoom, click two points to draw a profile, or switch to Walk mode.") },
 ];
 
 function Seg({ options, value, onChange, label }) {
@@ -149,13 +150,13 @@ export default function Lab3D() {
 
   // ---- testar um lugar qualquer da Terra
   const testLive = async (lat, lon, name) => {
-    setLive((l) => ({ ...l, busy: true, error: null, progress: { f: 0, text: "Começando…" } }));
+    setLive((l) => ({ ...l, busy: true, error: null, progress: { f: 0, text: T("Começando…", "Starting…") } }));
     try {
       const sc = await buildLiveScene(lat, lon, name, (text, f) => setLive((l) => ({ ...l, progress: { text, f } })));
       setLive({ scene: sc, busy: false, progress: { f: 1, text: "" }, error: null });
     } catch (e) {
       console.error(e);
-      setLive((l) => ({ ...l, busy: false, error: "Não consegui baixar os dados desse ponto (sem rede ou fora da cobertura). Tente outro." }));
+      setLive((l) => ({ ...l, busy: false, error: T("Não consegui baixar os dados desse ponto (sem rede ou fora da cobertura). Tente outro.", "Could not download data for this point (no network or outside coverage). Try another.") }));
     }
   };
 
@@ -237,7 +238,7 @@ export default function Lab3D() {
     const t = setTimeout(() => {
       const gL = coarseGrid(L0, 128);
       const route = plan(gL, trav.a, trav.b, m.maxSlope);
-      if (!route) { setTrav((x) => ({ ...x, result: { status: `Não há caminho entre A e B sem passar de ${m.maxSlope}° de declividade. Tente outros pontos ou outro modo.` } })); return; }
+      if (!route) { setTrav((x) => ({ ...x, result: { status: T(`Não há caminho entre A e B sem passar de ${m.maxSlope}° de declividade. Tente outros pontos ou outro modo.`, `There is no path between A and B without exceeding ${m.maxSlope}° of slope. Try other points or another mode.`) } })); return; }
       route.cell = gL.res;
       left.current?.view?.setRoutes([{ pts: route.pts, color: 0xffd166, label: "A" }]);
       const R0 = twin ? scenes.right : null;
@@ -356,7 +357,7 @@ export default function Lab3D() {
 
   return (
     <section aria-labelledby="labTitle" className="t3-page">
-      <h1 id="labTitle" className="sr-only">Laboratório 3D</h1>
+      <h1 id="labTitle" className="sr-only">{T("Laboratório 3D", "3D Lab")}</h1>
       <div className={`t3-stage ${twin ? "twin" : "single"}`}>
         <TerrainPane ref={left} side="left" sceneId={siteId} settings={settings} onCamera={onCamera} onPick={onPick}
                      onSite={setSite} onLoaded={onLoaded} onUser={onUser} walking={nav === "walk"}
@@ -381,16 +382,16 @@ export default function Lab3D() {
         </div>
 
         {/* ---------- painel esquerdo ---------- */}
-        <aside className={`t3-panel t3-left ${panels.left ? "" : "closed"}`} aria-label="Locais e comparação">
+        <aside className={`t3-panel t3-left ${panels.left ? "" : "closed"}`} aria-label={T("Locais e comparação", "Sites and comparison")}>
           <button type="button" className="t3-collapse" onClick={() => setPanels((p) => ({ ...p, left: !p.left }))}
-                  aria-label={panels.left ? "Recolher painel" : "Abrir painel"}>{panels.left ? "‹" : "›"}</button>
+                  aria-label={panels.left ? T("Recolher painel", "Collapse panel") : T("Abrir painel", "Open panel")}>{panels.left ? "‹" : "›"}</button>
           <div className="t3-scroll">
             <h2 className="t3-h">{tr("Sítio planetário")}</h2>
-            <div className="t3-list" role="radiogroup" aria-label="Sítio">
+            <div className="t3-list" role="radiogroup" aria-label={T("Sítio", "Site")}>
               {planets.map((s) => (
                 <button key={s.id} type="button" role="radio" aria-checked={s.id === siteId} onClick={() => setSite(s.id)}>
                   <span className={`t3-dot ${s.body}`} />
-                  <span><b>{s.name}</b><small>{BODIES[s.body].label} · {s.kind === "overview" ? `visão geral ${fmt(s.size_m / 1000, 0)} km` : s.kind === "walk" ? "caminhada em alta resolução" : s.group}</small></span>
+                  <span><b>{s.name}</b><small>{BODIES[s.body].label} · {s.kind === "overview" ? T(`visão geral ${fmt(s.size_m / 1000, 0)} km`, `${fmt(s.size_m / 1000, 0)} km overview`) : s.kind === "walk" ? T("caminhada em alta resolução", "high-resolution walk") : s.group}</small></span>
                 </button>
               ))}
             </div>
@@ -427,57 +428,57 @@ export default function Lab3D() {
               <>
                 <h2 className="t3-h">{tr(live.scene ? "Este ponto seria análogo?" : "Por que é análogo")}</h2>
                 <table className="t3-table">
-                  <thead><tr><th>Medida</th><th>{BODIES[planetBody].label}</th><th>Terra</th><th /></tr></thead>
+                  <thead><tr><th>{T("Medida")}</th><th>{BODIES[planetBody].label}</th><th>{T("Terra")}</th><th /></tr></thead>
                   <tbody>
                     {dims.map((d) => (
                       <tr key={d.attr}>
-                        <td>{d.meta.label}</td><td>{withUnit(d.site, d.meta.unit)}</td><td>{withUnit(d.cell, d.meta.unit)}</td>
+                        <td>{T(d.meta.label)}</td><td>{withUnit(d.site, d.meta.unit)}</td><td>{withUnit(d.cell, d.meta.unit)}</td>
                         <td><StatusChip status={d.status} /></td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                {rk && <p className="t3-note">Distância ARA {fmt(rk.d, 3)} — {rk.live ? `entraria em ${rk.position}º lugar` : `${rk.position}º lugar`} entre {data.cells.length} células da Terra. Calculado a 100 m, como no ranking.</p>}
+                {rk && <p className="t3-note">{T("Distância ARA")} {fmt(rk.d, 3)} — {rk.live ? T(`entraria em ${rk.position}º lugar`, `would rank #${rk.position}`) : T(`${rk.position}º lugar`, `#${rk.position}`)} {T(`entre ${data.cells.length} células da Terra. Calculado a 100 m, como no ranking.`, `among ${data.cells.length} Earth cells. Computed at 100 m, as in the ranking.`)}</p>}
                 {L?.stats_inner?.at_100m && R?.stats_inner?.at_100m && (
-                  <p className="t3-note">Conferência no 3D (recalculado nesta cena, 100 m): declividade {fmt(L.stats_inner.at_100m.slope_mean_deg, 1)}° × {fmt(R.stats_inner.at_100m.slope_mean_deg, 1)}°,
-                    amplitude {fmt(L.stats_inner.at_100m.relief_m, 0)} × {fmt(R.stats_inner.at_100m.relief_m, 0)} m.</p>
+                  <p className="t3-note">{T("Conferência no 3D (recalculado nesta cena, 100 m): declividade", "3D cross-check (recomputed in this scene, 100 m): slope")} {fmt(L.stats_inner.at_100m.slope_mean_deg, 1)}° × {fmt(R.stats_inner.at_100m.slope_mean_deg, 1)}°,
+                    {T("amplitude", "relief")} {fmt(L.stats_inner.at_100m.relief_m, 0)} × {fmt(R.stats_inner.at_100m.relief_m, 0)} m.</p>
                 )}
-                <p className="t3-note">Não reproduzível na Terra: gravidade ({fmt(gB.g, 2)} vs 9,81 m/s²), atmosfera e radiação.</p>
+                <p className="t3-note">{T(`Não reproduzível na Terra: gravidade (${fmt(gB.g, 2)} vs 9,81 m/s²), atmosfera e radiação.`, `Not reproducible on Earth: gravity (${fmt(gB.g, 2)} vs 9.81 m/s²), atmosphere and radiation.`)}</p>
               </>
             )}
-            {isWalk && <p className="t3-note mt-4">Relevo HiRISE de 1 m e imagem de 25 cm em volta do pouso do Perseverance. Ande pelo terreno com a gravidade de Marte; o trajeto do rover está marcado em branco.</p>}
-            {isOverview && <p className="t3-note mt-4">Clique num quadrado dourado no relevo para abrir aquele sítio lado a lado com o melhor análogo da Terra.</p>}
+            {isWalk && <p className="t3-note mt-4">{T("Relevo HiRISE de 1 m e imagem de 25 cm em volta do pouso do Perseverance. Ande pelo terreno com a gravidade de Marte; o trajeto do rover está marcado em branco.", "1 m HiRISE relief and 25 cm imagery around the Perseverance landing site. Walk the terrain with Martian gravity; the rover traverse is marked in white.")}</p>}
+            {isOverview && <p className="t3-note mt-4">{T("Clique num quadrado dourado no relevo para abrir aquele sítio lado a lado com o melhor análogo da Terra.", "Click a gold square on the relief to open that site side by side with its best Earth analog.")}</p>}
           </div>
         </aside>
 
         {/* ---------- painel direito ---------- */}
-        <aside className={`t3-panel t3-right ${panels.right ? "" : "closed"}`} aria-label="Camadas, Sol e ferramentas">
+        <aside className={`t3-panel t3-right ${panels.right ? "" : "closed"}`} aria-label={T("Camadas, Sol e ferramentas", "Layers, Sun and tools")}>
           <button type="button" className="t3-collapse" onClick={() => setPanels((p) => ({ ...p, right: !p.right }))}
-                  aria-label={panels.right ? "Recolher painel" : "Abrir painel"}>{panels.right ? "›" : "‹"}</button>
+                  aria-label={panels.right ? T("Recolher painel", "Collapse panel") : T("Abrir painel", "Open panel")}>{panels.right ? "›" : "‹"}</button>
           <div className="t3-scroll">
             <h2 className="t3-h">{tr("Camada")}</h2>
             <Seg label="Camada" options={planetBody === "moon" ? [...LAYERS, { value: "operacoes", label: "Janela operacional" }] : LAYERS} value={settings.layer} onChange={(v) => setSettings((s) => ({ ...s, layer: v }))} />
             {settings.layer === "operacoes" && planetBody === "moon" && (
               <div className="t3-ops">
                 <div className="t3-legend">
-                  <span style={{ "--c": "#33c780" }}>Sol + Terra + &lt;10°</span><span style={{ "--c": "#f9d64d" }}>2 de 3</span>
-                  <span style={{ "--c": "#f58033" }}>1 de 3</span><span style={{ "--c": "#bf262e" }}>nenhum</span>
+                  <span style={{ "--c": "#33c780" }}>{T("Sol + Terra + <10°", "Sun + Earth + <10°")}</span><span style={{ "--c": "#f9d64d" }}>{T("2 de 3", "2 of 3")}</span>
+                  <span style={{ "--c": "#f58033" }}>{T("1 de 3", "1 of 3")}</span><span style={{ "--c": "#bf262e" }}>{T("nenhum")}</span>
                 </div>
-                <p className="t3-note">Critérios da Artemis III: luz do Sol, Terra acima do horizonte para comunicação direta e declividade &lt; 10° para pouso. Agora: <b>{ops.left?.all == null ? "…" : `${fmt(ops.left.all * 100, 1)}%`}</b> da cena atende aos três; Terra visível em {ops.left?.earth == null ? "…" : `${fmt(ops.left.earth * 100, 0)}%`}{ops.left?.earthSky ? ` (Terra a ${fmt(ops.left.earthSky.elevation, 1)}° de altura, azimute ${fmt(ops.left.earthSky.azimuth, 0)}°)` : ""}.</p>
+                <p className="t3-note">{T("Critérios da Artemis III: luz do Sol, Terra acima do horizonte para comunicação direta e declividade < 10° para pouso. Agora:", "Artemis III criteria: sunlight, Earth above the horizon for direct communication and slope < 10° for landing. Now:")} <b>{ops.left?.all == null ? "…" : `${fmt(ops.left.all * 100, 1)}%`}</b> {T("da cena atende aos três; Terra visível em", "of the scene meets all three; Earth visible over")} {ops.left?.earth == null ? "…" : `${fmt(ops.left.earth * 100, 0)}%`}{ops.left?.earthSky ? T(` (Terra a ${fmt(ops.left.earthSky.elevation, 1)}° de altura, azimute ${fmt(ops.left.earthSky.azimuth, 0)}°)`, ` (Earth ${fmt(ops.left.earthSky.elevation, 1)}° high, azimuth ${fmt(ops.left.earthSky.azimuth, 0)}°)`) : ""}.</p>
                 <label className="t3-range"><span>{tr("Libração em latitude")} <b>{fmt(lib.lat, 1)}°</b></span>
                   <input type="range" min="-6.7" max="6.7" step="0.1" value={lib.lat} onChange={(e) => setLib((l) => ({ ...l, lat: Number(e.target.value) }))} /></label>
                 <label className="t3-range"><span>{tr("Libração em longitude")} <b>{fmt(lib.lon, 1)}°</b></span>
                   <input type="range" min="-7.9" max="7.9" step="0.1" value={lib.lon} onChange={(e) => setLib((l) => ({ ...l, lon: Number(e.target.value) }))} /></label>
-                <p className="t3-note">A libração muda a posição da Terra no céu lunar ao longo do mês: perto do polo sul ela sobe e desce alguns graus, e o relevo pode escondê-la — é por isso que a comunicação direta entra na escolha do local.</p>
+                <p className="t3-note">{T("A libração muda a posição da Terra no céu lunar ao longo do mês: perto do polo sul ela sobe e desce alguns graus, e o relevo pode escondê-la — é por isso que a comunicação direta entra na escolha do local.", "Libration moves Earth across the lunar sky over the month: near the south pole it rises and sets by a few degrees and the terrain can hide it — that is why direct communication matters when choosing a site.")}</p>
               </div>
             )}
             {settings.layer === "declividade" && (
               <div className="t3-legend">
-                <span style={{ "--c": "#2a9e73" }}>&lt;5° fácil</span><span style={{ "--c": "#f9d64d" }}>15° limite rover</span>
-                <span style={{ "--c": "#f58033" }}>25°</span><span style={{ "--c": "#cc262e" }}>35°+ íngreme</span>
+                <span style={{ "--c": "#2a9e73" }}>{T("<5° fácil", "<5° easy")}</span><span style={{ "--c": "#f9d64d" }}>{T("15° limite rover", "15° rover limit")}</span>
+                <span style={{ "--c": "#f58033" }}>25°</span><span style={{ "--c": "#cc262e" }}>{T("35°+ íngreme", "35°+ steep")}</span>
               </div>
             )}
-            {settings.layer === "altitude" && L && <p className="t3-note">{fmt(L.height.min, 0)} a {fmt(L.height.max, 0)} m{R ? ` · Terra ${fmt(R.height.min, 0)} a ${fmt(R.height.max, 0)} m` : ""}</p>}
+            {settings.layer === "altitude" && L && <p className="t3-note">{fmt(L.height.min, 0)} {T("a", "to")} {fmt(L.height.max, 0)} m{R ? ` · ${T("Terra")} ${fmt(R.height.min, 0)} ${T("a", "to")} ${fmt(R.height.max, 0)} m` : ""}</p>}
             <div className="t3-toggles">
               <Toggle on={settings.contours} onChange={(v) => setSettings((s) => ({ ...s, contours: v }))}>{tr("Curvas de nível")}</Toggle>
               {settings.contours && (
@@ -516,7 +517,7 @@ export default function Lab3D() {
             </label>
             {twin && (
               <label className="t3-range">
-                <span>Terra: {SEASON.earth.label.toLowerCase()} <b>{SEASON.earth.fmt(season.earth)}</b></span>
+                <span>{T("Terra")}: {SEASON.earth.label.toLowerCase()} <b>{SEASON.earth.fmt(season.earth)}</b></span>
                 <input type="range" min={1} max={365} step={1} value={season.earth} onChange={(e) => setSeason((m) => ({ ...m, earth: Number(e.target.value) }))} />
               </label>
             )}
@@ -529,23 +530,23 @@ export default function Lab3D() {
               {[["left", L, sunL], ["right", R, sunR]].filter(([, m]) => m).map(([side, m, sp]) => (
                 <div key={side}>
                   <dt>{BODIES[m.body].label}</dt>
-                  <dd>Sol a <b>{fmt(sp.elevation, 1)}°</b> de altura, azimute {fmt(sp.azimuth, 0)}°</dd>
-                  <dd>{sp.day.polarDay ? "Sol não se põe nesta época" : sp.day.polarNight ? "Noite polar: Sol abaixo do horizonte" : `Dia claro ${fmtHour(sp.day.rise)}–${fmtHour(sp.day.set)}`}</dd>
-                  <dd>Área ao sol (sombras calculadas no relevo real): <b>{lit[side] == null ? "…" : `${fmt(lit[side] * 100, 0)}%`}</b></dd>
+                  <dd>{T("Sol a", "Sun at")} <b>{fmt(sp.elevation, 1)}°</b> {T("de altura, azimute", "elevation, azimuth")} {fmt(sp.azimuth, 0)}°</dd>
+                  <dd>{sp.day.polarDay ? T("Sol não se põe nesta época", "The Sun does not set at this time of year") : sp.day.polarNight ? T("Noite polar: Sol abaixo do horizonte", "Polar night: Sun below the horizon") : `${T("Dia claro", "Daylight")} ${fmtHour(sp.day.rise)}–${fmtHour(sp.day.set)}`}</dd>
+                  <dd>{T("Área ao sol (sombras calculadas no relevo real): ")}<b>{lit[side] == null ? "…" : `${fmt(lit[side] * 100, 0)}%`}</b></dd>
                 </div>
               ))}
             </dl>
-            {planetBody === "moon" && L && <p className="t3-note">A {fmt(Math.abs(L.lat), 1)}°S o Sol nunca sobe mais que {fmt(90 - Math.abs(L.lat) + 1.54, 1)}° (90° − latitude + 1,54° de inclinação do eixo lunar). Por isso as sombras são quilométricas, há crateras em sombra permanente e a Artemis III mira as bordas mais iluminadas.</p>}
+            {planetBody === "moon" && L && <p className="t3-note">{T(`A ${fmt(Math.abs(L.lat), 1)}°S o Sol nunca sobe mais que ${fmt(90 - Math.abs(L.lat) + 1.54, 1)}° (90° − latitude + 1,54° de inclinação do eixo lunar). Por isso as sombras são quilométricas, há crateras em sombra permanente e a Artemis III mira as bordas mais iluminadas.`, `At ${fmt(Math.abs(L.lat), 1)}°S the Sun never rises more than ${fmt(90 - Math.abs(L.lat) + 1.54, 1)}° (90° − latitude + the 1.54° tilt of the lunar axis). That is why shadows are kilometres long, some craters are in permanent shadow and Artemis III aims for the best-lit rims.`)}</p>}
 
             {VEHICLES[planetBody] && !isOverview && (
               <>
                 <h2 className="t3-h">{tr("Veículo em escala real")}</h2>
-                <select className="t3-select" value={vehicle} aria-label="Veículo na cena" onChange={(e) => setVehicle(e.target.value)}>
+                <select className="t3-select" value={vehicle} aria-label={T("Veículo na cena", "Vehicle in the scene")} onChange={(e) => setVehicle(e.target.value)}>
                   <option value="">{tr("Nenhum")}</option>
-                  {VEHICLES[planetBody].map(([k, label, len]) => <option key={k} value={k}>{label} · {fmt(len, len < 2 ? 2 : 1)} m</option>)}
+                  {VEHICLES[planetBody].map(([k, label, len]) => <option key={k} value={k}>{Array.isArray(label) ? T(...label) : label} · {fmt(len, len < 2 ? 2 : 1)} m</option>)}
                 </select>
                 {vehicle && <div className="t3-btns"><button type="button" onClick={goToVehicle}>{tr("Ir até o veículo")}</button><Link to="/veiculos" className="t3-linkbtn">{tr("Ficha dos veículos")}</Link></div>}
-                {vehicle && <p className="t3-note">Modelos 3D oficiais da NASA (domínio público) carregados de science.nasa.gov; Sojourner e carro lunar são simplificados com as dimensões reais.</p>}
+                {vehicle && <p className="t3-note">{T("Modelos 3D oficiais da NASA (domínio público) carregados de science.nasa.gov; Sojourner e carro lunar são simplificados com as dimensões reais.", "Official NASA 3D models (public domain) loaded from science.nasa.gov; Sojourner and the lunar rover are simplified with their real dimensions.")}</p>}
               </>
             )}
 
@@ -559,17 +560,17 @@ export default function Lab3D() {
             </div>
             {tool === "travessia" && (
               <div className="mt-2">
-                <select className="t3-select" value={travMode} aria-label="Modo da travessia" onChange={(e) => { setTravMode(e.target.value); setTrav((t) => (t?.b ? { a: t.a, b: t.b } : t)); }}>
-                  {Object.entries(TRAV).map(([k, m]) => <option key={k} value={k}>{m.label} · até {m.maxSlope}°</option>)}
+                <select className="t3-select" value={travMode} aria-label={T("Modo da travessia", "Traverse mode")} onChange={(e) => { setTravMode(e.target.value); setTrav((t) => (t?.b ? { a: t.a, b: t.b } : t)); }}>
+                  {Object.entries(TRAV).map(([k, m]) => <option key={k} value={k}>{T(m.label)} · {T("até", "up to")} {m.maxSlope}°</option>)}
                 </select>
-                <p className="t3-note">{!trav?.a ? "Clique no ponto de partida da missão (relevo da esquerda)." : !trav.b ? "Agora clique no destino." : "Rota planejada. Clique de novo para recomeçar."} O ARA traça a rota de menor custo respeitando o limite de declividade e procura no análogo da Terra o trecho com as mesmas subidas e descidas, para ensaiar exatamente o que a equipe vai enfrentar.</p>
+                <p className="t3-note">{!trav?.a ? T("Clique no ponto de partida da missão (relevo da esquerda).", "Click the mission start point (left terrain).") : !trav.b ? T("Agora clique no destino.", "Now click the destination.") : T("Rota planejada. Clique de novo para recomeçar.", "Route planned. Click again to start over.")} {T("O ARA traça a rota de menor custo respeitando o limite de declividade e procura no análogo da Terra o trecho com as mesmas subidas e descidas, para ensaiar exatamente o que a equipe vai enfrentar.", "ARA plots the least-cost route within the slope limit and searches the Earth analog for the stretch with the same climbs and descents, so the team can rehearse exactly what it will face.")}</p>
               </div>
             )}
-            {tool === "profile" && <p className="t3-note">{pts.length === 0 ? "Clique no ponto A do relevo." : pts.length === 1 ? "Agora clique no ponto B." : "Perfil traçado nas duas cenas. Clique de novo para recomeçar."}</p>}
+            {tool === "profile" && <p className="t3-note">{pts.length === 0 ? T("Clique no ponto A do relevo.", "Click point A on the terrain.") : pts.length === 1 ? T("Agora clique no ponto B.", "Now click point B.") : T("Perfil traçado nas duas cenas. Clique de novo para recomeçar.", "Profile drawn on both scenes. Click again to start over.")}</p>}
             {showSources && (
               <ul className="t3-sources">
                 {[L, R].filter(Boolean).flatMap((m) => m.sources.map((s) => ({ ...s, scene: m.name }))).map((s, i) => (
-                  <li key={i}><a href={s.url} target="_blank" rel="noopener noreferrer">{s.name}</a><small>{s.by} · usado em {s.scene}</small></li>
+                  <li key={i}><a href={s.url} target="_blank" rel="noopener noreferrer">{s.name}</a><small>{s.by} · {T("usado em", "used in")} {s.scene}</small></li>
                 ))}
               </ul>
             )}
@@ -581,8 +582,8 @@ export default function Lab3D() {
         {tour && (
           <div className="t3-caption card" role="status">
             <div className="flex items-center justify-between gap-3">
-              <h3 className="eyebrow mb-0">Tour · {tourStep + 1}/{TOUR.length} · {tour.title}</h3>
-              <button type="button" className="t3-x" onClick={() => setNav("orbit")} aria-label="Sair do tour">×</button>
+              <h3 className="eyebrow mb-0">Tour · {tourStep + 1}/{TOUR.length} · {typeof tour.title === "function" ? tour.title() : tour.title}</h3>
+              <button type="button" className="t3-x" onClick={() => setNav("orbit")} aria-label={T("Sair do tour", "Leave the tour")}>×</button>
             </div>
             <p className="m-0 text-[14px]">{tour.text(L?.name ?? "", R?.name, reliefTxt)}</p>
             <div className="t3-btns mt-2">
@@ -596,12 +597,12 @@ export default function Lab3D() {
         {nav === "walk" && (
           <div className="t3-walk card">
             {!locked
-              ? <p className="m-0"><b>Modo caminhada em {BODIES[planetBody].label}.</b> Clique no relevo da esquerda para começar. <kbd>W A S D</kbd> anda, <kbd>Shift</kbd> corre, <kbd>Espaço</kbd> pula, <kbd>Esc</kbd> solta o mouse.</p>
-              : <p className="m-0">Andando · <kbd>Esc</kbd> para soltar o mouse</p>}
-            {walkInfo && <p className="m-0 mt-1 text-[13px]">Altitude {fmt(walkInfo.h, 0)} m · declividade sob os pés {fmt(walkInfo.slope, 1)}°</p>}
+              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {BODIES[planetBody].label}.</b> {T("Clique no relevo da esquerda para começar.")} <kbd>W A S D</kbd> {T("anda", "walk")}, <kbd>Shift</kbd> {T("corre", "run")}, <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}, <kbd>Esc</kbd> {T("solta o mouse.", "releases the mouse.")}</p>
+              : <p className="m-0">{T("Andando", "Walking")} · <kbd>Esc</kbd> {T("para soltar o mouse", "to release the mouse")}</p>}
+            {walkInfo && <p className="m-0 mt-1 text-[13px]">{T("Altitude", "Altitude")} {fmt(walkInfo.h, 0)} m · {T("declividade sob os pés", "slope underfoot")} {fmt(walkInfo.slope, 1)}°</p>}
             <p className="m-0 mt-1 text-[13px]">
-              Mesmo impulso de pulo (2,5 m/s): <b>{fmt(jumpH(gB.g), 2)} m em {gB.label}</b> · {fmt(jumpH(9.807), 2)} m na Terra
-              {jump != null && <> · seu último pulo: <b>{fmt(jump, 2)} m</b></>}
+              {T("Mesmo impulso de pulo (2,5 m/s):", "Same jump impulse (2.5 m/s):")} <b>{fmt(jumpH(gB.g), 2)} m {T("em", "on")} {gB.label}</b> · {fmt(jumpH(9.807), 2)} m {T("na Terra", "on Earth")}
+              {jump != null && <> · {T("seu último pulo", "your last jump")}: <b>{fmt(jump, 2)} m</b></>}
             </p>
           </div>
         )}

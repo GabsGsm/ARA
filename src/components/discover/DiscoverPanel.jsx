@@ -15,17 +15,18 @@ import * as svc from "../../lib/services/earthData.js";
 import StatusChip from "../ui/StatusChip.jsx";
 import EvidencePanel from "../evidence/EvidencePanel.jsx";
 import ClimateCalendar from "./ClimateCalendar.jsx";
-import { FAMOUS } from "../lab3d/LiveEarthPicker.jsx";
+import { famous } from "../lab3d/LiveEarthPicker.jsx";
+import { T } from "../../lib/i18n.js";
 
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const MACRO = "https://tiles.macrostrat.org/carto/{z}/{x}/{y}.png";
 const pin = L.divIcon({ className: "t3-pin", html: "<span></span>", iconSize: [18, 18], iconAnchor: [9, 9] });
-const STEPS = [
-  ["terrain", "Relevo e medidas do ARA (AWS Terrain Tiles)"],
-  ["geology", "Unidade geológica (Macrostrat)"],
-  ["climate", "Climatologia (NASA POWER)"],
-  ["soil", "Solo 0–5 cm (SoilGrids)"],
-  ["water", "Água superficial 1984–2021 (JRC)"],
+const STEPS = () => [
+  ["terrain", T("Relevo e medidas do ARA (AWS Terrain Tiles)", "Relief and ARA measures (AWS Terrain Tiles)")],
+  ["geology", T("Unidade geológica (Macrostrat)", "Geological unit (Macrostrat)")],
+  ["climate", T("Climatologia (NASA POWER)", "Climatology (NASA POWER)")],
+  ["soil", T("Solo 0–5 cm (SoilGrids)", "Soil 0–5 cm (SoilGrids)")],
+  ["water", T("Água superficial 1984–2021 (JRC)", "Surface water 1984–2021 (JRC)")],
 ];
 
 function Picker({ onPick }) { useMapEvents({ click: (e) => onPick(e.latlng.lat, e.latlng.lng) }); return null; }
@@ -50,7 +51,7 @@ export default function DiscoverPanel() {
 
   const pick = (lat, lon, name) => {
     const lo = ((lon + 540) % 360) - 180;
-    setPoint({ lat, lon: lo, name: name || `Ponto ${lat.toFixed(4)}°, ${lo.toFixed(4)}°`, key: `${lat},${lo},${Date.now()}` });
+    setPoint({ lat, lon: lo, name: name || `${T("Ponto", "Point")} ${lat.toFixed(4)}°, ${lo.toFixed(4)}°`, key: `${lat},${lo},${Date.now()}` });
     setLatTxt(lat.toFixed(5)); setLonTxt(lo.toFixed(5));
     setRun(null);
   };
@@ -59,9 +60,9 @@ export default function DiscoverPanel() {
     if (!query.trim()) return;
     setFound({ loading: true });
     try {
-      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(query)}`, { headers: { "Accept-Language": "pt-BR" } });
+      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(query)}`, { headers: { "Accept-Language": T("pt-BR", "en") } });
       setFound({ list: (await r.json()).map((x) => ({ name: x.display_name, lat: +x.lat, lon: +x.lon })) });
-    } catch { setFound({ error: "Busca indisponível agora — use coordenadas ou clique no mapa." }); }
+    } catch { setFound({ error: T("Busca indisponível agora — use coordenadas ou clique no mapa.", "Search unavailable right now — use coordinates or click the map.") }); }
   };
 
   // célula do catálogo que contém o ponto (para validação e para evidências pré-processadas)
@@ -72,7 +73,7 @@ export default function DiscoverPanel() {
 
   const analyze = async () => {
     if (!point) return;
-    const status = Object.fromEntries(STEPS.map(([k]) => [k, "wait"]));
+    const status = Object.fromEntries(STEPS().map(([k]) => [k, "wait"]));
     const res = {};
     const update = () => setRun({ status: { ...status }, res: { ...res } });
     update();
@@ -111,64 +112,64 @@ export default function DiscoverPanel() {
   return (
     <div className="dv-grid">
       {/* ---------- painel esquerdo ---------- */}
-      <aside className="card dv-left" aria-label="Escolher local">
-        <h2 className="eyebrow">1 · Escolha um ponto da Terra</h2>
+      <aside className="card dv-left" aria-label={T("Escolher local", "Choose a place")}>
+        <h2 className="eyebrow">{T("1 · Escolha um ponto da Terra", "1 · Pick a point on Earth")}</h2>
         <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); search(); }}>
-          <input className="field" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar lugar (ex.: Wadi Rum)" aria-label="Buscar lugar" />
-          <button type="submit" className="dv-btn">Buscar</button>
+          <input className="field" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={T("Buscar lugar (ex.: Wadi Rum)", "Search a place (e.g. Wadi Rum)")} aria-label={T("Buscar lugar", "Search a place")} />
+          <button type="submit" className="dv-btn">{T("Buscar", "Search")}</button>
         </form>
-        {found?.loading && <p className="note">Buscando…</p>}
+        {found?.loading && <p className="note">{T("Buscando…", "Searching…")}</p>}
         {found?.error && <p className="note text-warn">{found.error}</p>}
         {found?.list && (
           <ul className="dv-found">
             {found.list.map((f) => <li key={f.name}><button type="button" onClick={() => { pick(f.lat, f.lon, f.name.split(",").slice(0, 2).join(",")); setFound(null); }}>{f.name}</button></li>)}
-            {!found.list.length && <li className="note">Nada encontrado.</li>}
+            {!found.list.length && <li className="note">{T("Nada encontrado.", "Nothing found.")}</li>}
           </ul>
         )}
-        <small className="note">Busca: OpenStreetMap / Nominatim</small>
+        <small className="note">{T("Busca", "Search")}: OpenStreetMap / Nominatim</small>
         <div className="mt-3 grid grid-cols-2 gap-2">
           <label className="t3-field"><span>Latitude</span><input className="field" inputMode="decimal" value={latTxt} onChange={(e) => setLatTxt(e.target.value)} /></label>
           <label className="t3-field"><span>Longitude</span><input className="field" inputMode="decimal" value={lonTxt} onChange={(e) => setLonTxt(e.target.value)} /></label>
         </div>
         <button type="button" className="dv-btn mt-2 w-full" disabled={!(Math.abs(+latTxt) <= 85 && Math.abs(+lonTxt) <= 180 && latTxt !== "" && lonTxt !== "")}
-                onClick={() => pick(+latTxt, +lonTxt)}>Usar coordenadas</button>
-        <select className="field mt-2" value="" aria-label="Análogos famosos" onChange={(e) => { const f = FAMOUS[+e.target.value]; if (f) pick(f.lat, f.lon, f.name); }}>
-          <option value="">Ou um análogo famoso (NASA/ESA)…</option>
-          {FAMOUS.map((f, i) => <option key={f.name} value={i}>{f.name}</option>)}
+                onClick={() => pick(+latTxt, +lonTxt)}>{T("Usar coordenadas", "Use coordinates")}</button>
+        <select className="field mt-2" value="" aria-label={T("Análogos famosos", "Famous analogs")} onChange={(e) => { const f = famous()[+e.target.value]; if (f) pick(f.lat, f.lon, f.name); }}>
+          <option value="">{T("Ou um análogo famoso (NASA/ESA)…", "Or a famous analog (NASA/ESA)…")}</option>
+          {famous().map((f, i) => <option key={f.name} value={i}>{f.name}</option>)}
         </select>
 
-        <h2 className="eyebrow mt-5">2 · Alvo e objetivo</h2>
-        <label className="t3-field"><span>Alvo planetário</span>
+        <h2 className="eyebrow mt-5">{T("2 · Alvo e objetivo", "2 · Target and objective")}</h2>
+        <label className="t3-field"><span>{T("Alvo planetário", "Planetary target")}</span>
           <select className="field" value={targetId} onChange={(e) => setTargetId(e.target.value)}>
-            {targets.map((s) => <option key={s.id} value={s.id}>{BODY_LABEL[s.body]} · {s.name}</option>)}
+            {targets.map((s) => <option key={s.id} value={s.id}>{T(BODY_LABEL[s.body])} · {T(s.name)}</option>)}
           </select>
         </label>
-        <label className="t3-field mt-2"><span>Objetivo (pesos)</span>
+        <label className="t3-field mt-2"><span>{T("Objetivo (pesos)", "Objective (weights)")}</span>
           <select className="field" value={ex.objective} onChange={(e) => ex.setObjective(e.target.value)}>
-            {Object.entries(data.config.objectives).map(([k, o]) => <option key={k} value={k}>{o.label}</option>)}
-            <option value="custom">Personalizado</option>
+            {Object.entries(data.config.objectives).map(([k, o]) => <option key={k} value={k}>{T(o.label)}</option>)}
+            <option value="custom">{T("Personalizado")}</option>
           </select>
         </label>
-        <label className="t3-field mt-2"><span>Tamanho da área</span>
+        <label className="t3-field mt-2"><span>{T("Tamanho da área", "Area size")}</span>
           <select className="field" value="5" onChange={() => {}}>
-            <option value="5">5 × 5 km (mesma do catálogo)</option>
-            <option value="10" disabled>10 × 10 km — em validação</option>
+            <option value="5">{T("5 × 5 km (mesma do catálogo)", "5 × 5 km (same as the catalogue)")}</option>
+            <option value="10" disabled>{T("10 × 10 km — em validação", "10 × 10 km — under validation")}</option>
           </select>
         </label>
-        <button type="button" className="dv-go" disabled={!point || run?.status?.terrain === "wait"} onClick={analyze}>Analisar este local</button>
-        {!point && <p className="note">Clique no mapa, busque um lugar ou digite coordenadas.</p>}
+        <button type="button" className="dv-go" disabled={!point || run?.status?.terrain === "wait"} onClick={analyze}>{T("Analisar este local", "Analyse this place")}</button>
+        {!point && <p className="note">{T("Clique no mapa, busque um lugar ou digite coordenadas.", "Click the map, search a place or type coordinates.")}</p>}
       </aside>
 
       {/* ---------- mapa ---------- */}
-      <section className="card dv-map" aria-label="Mapa">
+      <section className="card dv-map" aria-label={T("Mapa", "Map")}>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="eyebrow mb-0">Mapa da Terra</h2>
-          <label className="t3-toggle"><input type="checkbox" checked={geoLayer} onChange={(e) => setGeoLayer(e.target.checked)} /><span />Geologia (Macrostrat)</label>
+          <h2 className="eyebrow mb-0">{T("Mapa da Terra", "Earth map")}</h2>
+          <label className="t3-toggle"><input type="checkbox" checked={geoLayer} onChange={(e) => setGeoLayer(e.target.checked)} /><span />{T("Geologia (Macrostrat)", "Geology (Macrostrat)")}</label>
         </div>
         <div className="dv-mapbox">
           <MapContainer center={[25, -40]} zoom={2} worldCopyJump style={{ height: "100%" }}>
-            <TileLayer url={ESRI} maxZoom={18} attribution="Imagens © Esri" />
-            {geoLayer && <TileLayer url={MACRO} opacity={0.6} maxZoom={14} attribution="Geologia © Macrostrat (CC BY 4.0)" />}
+            <TileLayer url={ESRI} maxZoom={18} attribution={T("Imagens © Esri", "Imagery © Esri")} />
+            {geoLayer && <TileLayer url={MACRO} opacity={0.6} maxZoom={14} attribution={T("Geologia © Macrostrat (CC BY 4.0)", "Geology © Macrostrat (CC BY 4.0)")} />}
             <Picker onPick={(la, lo) => pick(la, lo)} />
             {point && <Marker position={[point.lat, point.lon]} icon={pin} />}
             {box && <Rectangle bounds={box} pathOptions={{ color: "#f2b53a", weight: 2, fillOpacity: 0.12 }} />}
@@ -177,80 +178,80 @@ export default function DiscoverPanel() {
         </div>
         {point && (
           <p className="m-0 mt-2 text-[13px] text-ink-2">
-            <b>{point.name}</b> · {fmt(Math.abs(point.lat), 4)}°{point.lat >= 0 ? "N" : "S"}, {fmt(Math.abs(point.lon), 4)}°{point.lon >= 0 ? "L" : "O"} · janela 5 × 5 km
-            {inCatalog && <> · <span className="text-gold-2">dentro da célula {inCatalog.id} do catálogo</span></>}
+            <b>{point.name}</b> · {fmt(Math.abs(point.lat), 4)}°{point.lat >= 0 ? "N" : "S"}, {fmt(Math.abs(point.lon), 4)}°{point.lon >= 0 ? T("L", "E") : T("O", "W")} · {T("janela 5 × 5 km", "5 × 5 km window")}
+            {inCatalog && <> · <span className="text-gold-2">{T(`dentro da célula ${inCatalog.id} do catálogo`, `inside catalogue cell ${inCatalog.id}`)}</span></>}
           </p>
         )}
       </section>
 
       {/* ---------- resultados ---------- */}
-      <section className="card dv-res" aria-label="Resultados" aria-live="polite">
-        <h2 className="eyebrow">3 · Resultado</h2>
-        {!run && <p className="note">Os resultados aparecem aqui, etapa por etapa, conforme cada fonte responde.</p>}
+      <section className="card dv-res" aria-label={T("Resultados", "Results")} aria-live="polite">
+        <h2 className="eyebrow">{T("3 · Resultado", "3 · Result")}</h2>
+        {!run && <p className="note">{T("Os resultados aparecem aqui, etapa por etapa, conforme cada fonte responde.", "Results appear here step by step as each source responds.")}</p>}
         {run && (
           <ol className="dv-steps">
-            {STEPS.map(([k, label]) => (
+            {STEPS().map(([k, label]) => (
               <li key={k} className={run.status[k]}>
                 <span aria-hidden="true">{run.status[k] === "wait" ? "◌" : run.status[k] === "ok" ? "✓" : run.status[k] === "none" ? "∅" : "✕"}</span>
                 {label}
-                <small>{run.status[k] === "wait" ? "buscando…" : run.status[k] === "ok" ? "ok" : run.status[k] === "none" ? "sem dado neste ponto" : run.res[k]?.error}</small>
+                <small>{run.status[k] === "wait" ? T("buscando…", "fetching…") : run.status[k] === "ok" ? "ok" : run.status[k] === "none" ? T("sem dado neste ponto", "no data at this point") : run.res[k]?.error}</small>
               </li>
             ))}
           </ol>
         )}
-        {ocean && <p className="dv-warn">Este ponto parece estar no mar: o relevo veio plano em 0 m. Escolha um ponto em terra.</p>}
+        {ocean && <p className="dv-warn">{T("Este ponto parece estar no mar: o relevo veio plano em 0 m. Escolha um ponto em terra.", "This point seems to be at sea: the relief came back flat at 0 m. Pick a point on land.")}</p>}
         {m && !ocean && siteVec && (
           <>
             <table className="data-table">
-              <thead><tr><th>Medida</th><th>{site.name}</th><th>Este ponto</th><th /></tr></thead>
+              <thead><tr><th>{T("Medida", "Measure")}</th><th>{T(site.name)}</th><th>{T("Este ponto", "This point")}</th><th /></tr></thead>
               <tbody>
                 {core.RANK_ATTRS.map((a) => {
                   const meta = data.config.attributes[a];
                   const st = core.dimensionStatus(siteVec[a], m[a], meta.scale, data.config.thresholds);
-                  return <tr key={a}><th scope="row">{meta.label}</th><td>{withUnit(siteVec[a], meta.unit)}</td><td>{withUnit(m[a], meta.unit)}</td><td><StatusChip status={st.status} /></td></tr>;
+                  return <tr key={a}><th scope="row">{T(meta.label)}</th><td>{withUnit(siteVec[a], meta.unit)}</td><td>{withUnit(m[a], meta.unit)}</td><td><StatusChip status={st.status} /></td></tr>;
                 })}
               </tbody>
             </table>
             <div className="dv-score">
-              <div><small>Distância ARA</small><b>{fmt(dist, 3)}</b></div>
-              <p>Entraria em <b>{position}º</b> entre as {data.cells.length} células do catálogo para {site.name}. <span className="text-warn">Comparação exploratória:</span> resolução (tiles z14) e processamento diferentes do catálogo (z12) podem limitar a equivalência — o ponto não é misturado ao ranking oficial.</p>
+              <div><small>{T("Distância ARA")}</small><b>{fmt(dist, 3)}</b></div>
+              <p>{T("Entraria em", "It would rank")} <b>{position}º</b> {T(`entre as ${data.cells.length} células do catálogo para ${T(site.name)}.`, `among the ${data.cells.length} catalogue cells for ${T(site.name)}.`)} <span className="text-warn">{T("Comparação exploratória:", "Exploratory comparison:")}</span> {T("resolução (tiles z14) e processamento diferentes do catálogo (z12) podem limitar a equivalência — o ponto não é misturado ao ranking oficial.", "a resolution (z14 tiles) and processing different from the catalogue (z12) may limit equivalence — the point is not mixed into the official ranking.")}</p>
             </div>
             {inCatalog && (
-              <p className="note">Validação: a célula {inCatalog.id} do catálogo tem declividade {fmt(inCatalog.slope_mean_deg, 1)}°, rugosidade {fmt(inCatalog.roughness_mean_m, 1)} m e amplitude {fmt(inCatalog.relief_m, 0)} m (centro e fonte podem diferir levemente do ponto escolhido).</p>
+              <p className="note">{T(`Validação: a célula ${inCatalog.id} do catálogo tem declividade ${fmt(inCatalog.slope_mean_deg, 1)}°, rugosidade ${fmt(inCatalog.roughness_mean_m, 1)} m e amplitude ${fmt(inCatalog.relief_m, 0)} m (centro e fonte podem diferir levemente do ponto escolhido).`, `Check: catalogue cell ${inCatalog.id} has slope ${fmt(inCatalog.slope_mean_deg, 1)}°, roughness ${fmt(inCatalog.roughness_mean_m, 1)} m and relief ${fmt(inCatalog.relief_m, 0)} m (its centre and source may differ slightly from the chosen point).`)}</p>
             )}
             <div className="flex flex-wrap gap-2">
-              <Link className="dv-btn" to={`/3d?site=${targetId}&lat=${point.lat.toFixed(5)}&lon=${point.lon.toFixed(5)}&nome=${encodeURIComponent(point.name)}`}>Ver lado a lado em 3D →</Link>
+              <Link className="dv-btn" to={`/3d?site=${targetId}&lat=${point.lat.toFixed(5)}&lon=${point.lon.toFixed(5)}&nome=${encodeURIComponent(point.name)}`}>{T("Ver lado a lado em 3D →", "See side by side in 3D →")}</Link>
             </div>
           </>
         )}
-        {terr && !terr.ok && <p className="dv-warn">Relevo indisponível: {terr.error}. Sem relevo não há comparação — tente de novo ou outro ponto.</p>}
+        {terr && !terr.ok && <p className="dv-warn">{T("Relevo indisponível", "Relief unavailable")}: {terr.error}. {T("Sem relevo não há comparação — tente de novo ou outro ponto.", "Without relief there is no comparison — try again or another point.")}</p>}
       </section>
 
       {/* ---------- contexto + evidências ---------- */}
       {run && (
-        <section className="card dv-ctx" aria-label="Contexto do local">
+        <section className="card dv-ctx" aria-label={T("Contexto do local", "Site context")}>
           <div className="grid gap-5 lg:grid-cols-2">
             <div>
-              <h3 className="eyebrow">Geologia (Macrostrat)</h3>
+              <h3 className="eyebrow">{T("Geologia (Macrostrat)", "Geology (Macrostrat)")}</h3>
               {live.geology?.ok && live.geology.data ? (
                 <div className="text-[13px] text-ink-2">
                   <b className="text-ink">{live.geology.data.best.name}</b>
-                  {live.geology.data.best.lith && <p className="m-0 mt-1">Litologia: {live.geology.data.best.lith}</p>}
-                  {live.geology.data.best.age?.best && <p className="m-0">Idade: {live.geology.data.best.age.best}{live.geology.data.best.age.b_ma ? ` (${fmt(live.geology.data.best.age.t_ma, 1)}–${fmt(live.geology.data.best.age.b_ma, 1)} Ma)` : ""}</p>}
+                  {live.geology.data.best.lith && <p className="m-0 mt-1">{T("Litologia", "Lithology")}: {live.geology.data.best.lith}</p>}
+                  {live.geology.data.best.age?.best && <p className="m-0">{T("Idade", "Age")}: {live.geology.data.best.age.best}{live.geology.data.best.age.b_ma ? ` (${fmt(live.geology.data.best.age.t_ma, 1)}–${fmt(live.geology.data.best.age.b_ma, 1)} Ma)` : ""}</p>}
                   {live.geology.data.best.descrip && <p className="m-0 mt-1">{live.geology.data.best.descrip.slice(0, 320)}{live.geology.data.best.descrip.length > 320 ? "…" : ""}</p>}
-                  <p className="note m-0 mt-1">Escala do mapa: {live.geology.data.best.scale}. {live.geology.data.best.ref?.name && <>Fonte: {live.geology.data.best.ref.url ? <a href={live.geology.data.best.ref.url} target="_blank" rel="noopener noreferrer">{live.geology.data.best.ref.name}</a> : live.geology.data.best.ref.name}{live.geology.data.best.ref.year ? ` (${live.geology.data.best.ref.year})` : ""}.</>} Litologia mapeada, não identificação mineral.</p>
-                  {live.geology.data.all.length > 1 && <p className="note m-0">Outras {live.geology.data.all.length - 1} unidades em escalas menos detalhadas.</p>}
+                  <p className="note m-0 mt-1">{T("Escala do mapa", "Map scale")}: {live.geology.data.best.scale}. {live.geology.data.best.ref?.name && <>{T("Fonte", "Source")}: {live.geology.data.best.ref.url ? <a href={live.geology.data.best.ref.url} target="_blank" rel="noopener noreferrer">{live.geology.data.best.ref.name}</a> : live.geology.data.best.ref.name}{live.geology.data.best.ref.year ? ` (${live.geology.data.best.ref.year})` : ""}.</>} {T("Litologia mapeada, não identificação mineral.", "Mapped lithology, not a mineral identification.")}</p>
+                  {live.geology.data.all.length > 1 && <p className="note m-0">{T(`Outras ${live.geology.data.all.length - 1} unidades em escalas menos detalhadas.`, `${live.geology.data.all.length - 1} other units at less detailed scales.`)}</p>}
                 </div>
-              ) : <p className="note">{live.geology?.ok === false ? `Indisponível: ${live.geology.error}` : live.geology ? "Sem unidade mapeada pelo Macrostrat aqui." : "Buscando…"}</p>}
+              ) : <p className="note">{live.geology?.ok === false ? `${T("Indisponível", "Unavailable")}: ${live.geology.error}` : live.geology ? T("Sem unidade mapeada pelo Macrostrat aqui.", "No unit mapped by Macrostrat here.") : T("Buscando…", "Fetching…")}</p>}
             </div>
             <div>
-              <h3 className="eyebrow">Clima ao longo do ano (NASA POWER)</h3>
-              {live.climate?.ok && live.climate.data ? <ClimateCalendar climate={live.climate.data} /> : <p className="note">{live.climate?.ok === false ? `Indisponível: ${live.climate.error}` : live.climate ? "Sem dado." : "Buscando…"}</p>}
+              <h3 className="eyebrow">{T("Clima ao longo do ano (NASA POWER)", "Climate through the year (NASA POWER)")}</h3>
+              {live.climate?.ok && live.climate.data ? <ClimateCalendar climate={live.climate.data} /> : <p className="note">{live.climate?.ok === false ? `${T("Indisponível", "Unavailable")}: ${live.climate.error}` : live.climate ? T("Sem dado.", "No data.") : T("Buscando…", "Fetching…")}</p>}
             </div>
           </div>
           {candidate && !ocean && (
             <>
-              <h3 className="eyebrow mt-5">Evidências além do relevo</h3>
+              <h3 className="eyebrow mt-5">{T("Evidências além do relevo", "Evidence beyond relief")}</h3>
               <EvidencePanel candidate={candidate} site={site} siteAttrs={data.sites[targetId]} siteVec={siteVec} extra={extra} data={data}
                              objective={ex.objective} weights={ex.weights} distance={dist} rankInfo={{ exploratory_position: position, of: data.cells.length }}
                              exploratory sourcesMeta={sourcesMeta} />

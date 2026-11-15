@@ -2,6 +2,7 @@
 // Baixa os Terrain Tiles (AWS, Terrarium) e o Esri World Imagery do ponto escolhido, monta uma cena
 // de 10 × 10 km igual às do pipeline e calcula as mesmas três medidas do ARA a 100 m na célula de 5 km.
 import { BODIES } from "./data.js";
+import { T } from "../i18n.js";
 
 const TERRARIUM = (z, x, y) => `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`;
 const ESRI = (z, x, y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
@@ -88,8 +89,8 @@ export async function buildLiveScene(lat, lon, name, onProgress) {
   const size = 10000, n = 512, nc = 1024;
   const dLat = (size * 0.75) / 111320, dLon = dLat / Math.max(Math.cos((lat * Math.PI) / 180), 0.05);
   const z = Math.abs(lat) > 70 ? 12 : 14;
-  onProgress?.("Baixando relevo (AWS Terrain Tiles)…", 0);
-  const dem = await mosaic(TERRARIUM, z, lon - dLon, lon + dLon, lat - dLat, lat + dLat, (f) => onProgress?.("Baixando relevo (AWS Terrain Tiles)…", f * 0.5));
+  onProgress?.(T("Baixando relevo (AWS Terrain Tiles)…", "Downloading relief (AWS Terrain Tiles)…"), 0);
+  const dem = await mosaic(TERRARIUM, z, lon - dLon, lon + dLon, lat - dLat, lat + dLat, (f) => onProgress?.(T("Baixando relevo (AWS Terrain Tiles)…", "Downloading relief (AWS Terrain Tiles)…"), f * 0.5));
   const g = grid(lat, lon, size, n);
   const heights = new Float32Array(n * n), o = [0, 0, 0];
   let min = Infinity, max = -Infinity;
@@ -98,10 +99,10 @@ export async function buildLiveScene(lat, lon, name, onProgress) {
     const h = o[0] * 256 + o[1] + o[2] / 256 - 32768;
     heights[i] = h; if (h < min) min = h; if (h > max) max = h;
   }
-  onProgress?.("Baixando imagem de satélite (Esri)…", 0.5);
+  onProgress?.(T("Baixando imagem de satélite (Esri)…", "Downloading satellite imagery (Esri)…"), 0.5);
   let color = null;
   try {
-    const img = await mosaic(ESRI, z + 1, lon - dLon, lon + dLon, lat - dLat, lat + dLat, (f) => onProgress?.("Baixando imagem de satélite (Esri)…", 0.5 + f * 0.45));
+    const img = await mosaic(ESRI, z + 1, lon - dLon, lon + dLon, lat - dLat, lat + dLat, (f) => onProgress?.(T("Baixando imagem de satélite (Esri)…", "Downloading satellite imagery (Esri)…"), 0.5 + f * 0.45));
     const gc = grid(lat, lon, size, nc);
     const cv = new OffscreenCanvas(nc, nc), ctx = cv.getContext("2d");
     const out = ctx.createImageData(nc, nc);
@@ -114,11 +115,11 @@ export async function buildLiveScene(lat, lon, name, onProgress) {
     ctx.putImageData(out, 0, 0);
     color = await createImageBitmap(cv);
   } catch { /* sem imagem: a cena fica só com o relevo */ }
-  onProgress?.("Calculando as medidas do ARA…", 0.97);
+  onProgress?.(T("Calculando as medidas do ARA…", "Computing the ARA measures…"), 0.97);
   const res = size / n;
   const stats = araMetrics(heights, n, res);
   const meta = {
-    id: `live_${lat.toFixed(4)}_${lon.toFixed(4)}`, body: "earth", name, group: "Teste ao vivo", lat, lon, size_m: size, cell_m: 5000, kind: "live",
+    id: `live_${lat.toFixed(4)}_${lon.toFixed(4)}`, body: "earth", name, group: T("Teste ao vivo", "Live test"), lat, lon, size_m: size, cell_m: 5000, kind: "live",
     height: { n, min, max, res_m: res, native_res_m: Math.round((40075016 * Math.cos((lat * Math.PI) / 180)) / (256 * 2 ** z)), valid_pct: 100 },
     color: color ? { n: nc, native_res_m: Math.round((40075016 * Math.cos((lat * Math.PI) / 180)) / (256 * 2 ** (z + 1))) } : null,
     stats_inner: { at_100m: stats }, pois: [],
@@ -127,6 +128,6 @@ export async function buildLiveScene(lat, lon, name, onProgress) {
       { name: "World Imagery", by: "Esri, Maxar, Earthstar Geographics", url: "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9" },
     ],
   };
-  onProgress?.("Pronto", 1);
+  onProgress?.(T("Pronto", "Done"), 1);
   return { meta, heights, n, color, minerals: null, body: BODIES.earth };
 }

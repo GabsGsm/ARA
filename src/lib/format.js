@@ -1,9 +1,10 @@
-// Formatação em pt-BR e rótulos compartilhados pela interface.
+// Formatação no idioma escolhido e rótulos compartilhados pela interface.
+import { locale } from "./i18n.js";
 
 export const fmt = (v, d = 1) =>
   v == null || Number.isNaN(Number(v))
     ? "—"
-    : Number(v).toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+    : Number(v).toLocaleString(locale(), { minimumFractionDigits: d, maximumFractionDigits: d });
 
 /** Valor com unidade: "8,3°", "12,3 m", "562 m". */
 export const withUnit = (v, unit) => {

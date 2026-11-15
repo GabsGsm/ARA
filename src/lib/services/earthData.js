@@ -3,6 +3,7 @@
 // para o motor de evidências e a ficha (Analog Passport).
 import { fromArrayBuffer, fromUrl } from "geotiff";
 import { araMetrics, buildLiveScene } from "../terrain3d/liveEarth.js";
+import { T, localizeData } from "../i18n.js";
 
 const HALF_KM = 2.5;
 const cellBox = (lat, lon, half = HALF_KM) => {
@@ -12,7 +13,7 @@ const cellBox = (lat, lon, half = HALF_KM) => {
 
 async function withTimeout(promise, ms, label) {
   let t;
-  const timeout = new Promise((_, rej) => { t = setTimeout(() => rej(new Error(`${label}: sem resposta em ${ms / 1000} s`)), ms); });
+  const timeout = new Promise((_, rej) => { t = setTimeout(() => rej(new Error(T(`${label}: sem resposta em ${ms / 1000} s`, `${label}: no response in ${ms / 1000} s`))), ms); });
   try { return await Promise.race([promise, timeout]); } finally { clearTimeout(t); }
 }
 
@@ -22,7 +23,7 @@ async function getJSON(url, label, ms = 30000) {
   return r.json();
 }
 
-export const SOURCES = {
+const SOURCES_PT = {
   terrain: { id: "terrain_tiles", name: "AWS Terrain Tiles (Mapzen/Terrarium)", url: "https://registry.opendata.aws/terrain-tiles/", origin: "derived",
     caveats: ["O zoom do tile não é a resolução nativa do DEM: a fonte varia por região (SRTM ~30 m, NED ~10 m nos EUA, ETOPO1 no oceano).",
       "Mesma fórmula do ARA (100 m na célula de 5 km); o catálogo usou tiles z12 e esta análise usa z14 — diferenças pequenas são esperadas."] },
@@ -38,6 +39,8 @@ export const SOURCES = {
   landcover: { id: "worldcover", name: "ESA WorldCover 2021 (10 m)", url: "https://esa-worldcover.org/en/data-access", origin: "observed",
     caveats: ["Classificação de imagens Sentinel; não mede mineral nem propriedade mecânica."] },
 };
+/** Fontes no idioma atual. */
+export const SOURCES = new Proxy(SOURCES_PT, { get: (t, k) => localizeData(t[k]) });
 
 /** Relevo + as três medidas do ARA (mesma função do laboratório 3D), mais a cena 3D pronta. */
 export async function terrain(lat, lon, onProgress) {
@@ -49,7 +52,7 @@ export async function terrain(lat, lon, onProgress) {
     for (let i = 0; i < h.length; i++) { if (h[i] < lo) lo = h[i]; if (h[i] > hi) hi = h[i]; if (h[i] <= 0.5 && h[i] >= -0.5) flat++; }
     const oceanLike = flat / h.length > 0.6 && hi - lo < 5;
     return { ok: true, data: { metrics: m, scene, ocean: oceanLike, elevation: { min: lo, max: hi } },
-      meta: { ...SOURCES.terrain, resolution_m: scene.meta.height.native_res_m, method: `Grade azimutal 10 km, 512 px; métricas a ${Math.round(m.res_m)} m na célula de 5 km` } };
+      meta: { ...SOURCES.terrain, resolution_m: scene.meta.height.native_res_m, method: T(`Grade azimutal 10 km, 512 px; métricas a ${Math.round(m.res_m)} m na célula de 5 km`, `10 km azimuthal grid, 512 px; measures at ${Math.round(m.res_m)} m over the 5 km cell`) } };
   } catch (e) {
     return { ok: false, error: e.message, meta: SOURCES.terrain };
   }

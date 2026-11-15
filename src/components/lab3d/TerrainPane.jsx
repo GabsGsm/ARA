@@ -5,6 +5,7 @@ import TerrainView from "../../lib/terrain3d/TerrainView.js";
 import { loadScene } from "../../lib/terrain3d/data.js";
 import { useTr } from "../../hooks/useSettings.jsx";
 import { fmt } from "../../lib/format.js";
+import { T } from "../../lib/i18n.js";
 
 const BODY_TAG = { mars: "Marte", moon: "Lua", earth: "Terra" };
 const coarse = () => window.matchMedia?.("(pointer: coarse)").matches;
@@ -25,16 +26,16 @@ function TouchControls({ view }) {
   return (
     <div className="t3-touch">
       <div className="t3-joy" onPointerDown={(e) => { joy.current = e.pointerId; e.currentTarget.setPointerCapture(e.pointerId); onJoy(e); }}
-           onPointerMove={(e) => joy.current === e.pointerId && onJoy(e)} onPointerUp={endJoy} onPointerCancel={endJoy} aria-label="Andar">
+           onPointerMove={(e) => joy.current === e.pointerId && onJoy(e)} onPointerUp={endJoy} onPointerCancel={endJoy} aria-label={T("Andar", "Walk")}>
         <span ref={knob} />
       </div>
-      <div className="t3-lookpad" aria-label="Olhar em volta"
+      <div className="t3-lookpad" aria-label={T("Olhar em volta", "Look around")}
            onPointerDown={(e) => { look.current = [e.clientX, e.clientY, e.pointerId]; e.currentTarget.setPointerCapture(e.pointerId); }}
            onPointerMove={(e) => { if (!look.current || look.current[2] !== e.pointerId) return; view()?.touchLook(e.clientX - look.current[0], e.clientY - look.current[1]); look.current = [e.clientX, e.clientY, e.pointerId]; }}
            onPointerUp={() => { look.current = null; }} onPointerCancel={() => { look.current = null; }} />
       <div className="t3-touch-btns">
-        <button type="button" onClick={() => view()?.jump()}>Pular</button>
-        <button type="button" aria-pressed={run} onClick={() => { setRun((v) => { view()?.setRun(!v); return !v; }); }}>Correr</button>
+        <button type="button" onClick={() => view()?.jump()}>{T("Pular", "Jump")}</button>
+        <button type="button" aria-pressed={run} onClick={() => { setRun((v) => { view()?.setRun(!v); return !v; }); }}>{T("Correr", "Run")}</button>
       </div>
     </div>
   );
@@ -99,22 +100,22 @@ const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, 
     <div className={`t3-pane t3-${meta?.body ?? "none"}`}>
       <div ref={box} className="t3-canvas" />
       <div className="t3-tag">
-        <span className="t3-body">{BODY_TAG[meta?.body] ?? ""}{meta?.kind === "live" ? " · teste ao vivo" : ""}</span>
+        <span className="t3-body">{T(BODY_TAG[meta?.body] ?? "")}{meta?.kind === "live" ? T(" · teste ao vivo", " · live test") : ""}</span>
         <strong>{meta?.name ?? "…"}</strong>
-        {meta && <small>{fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} × {fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} km · relevo {fmt(meta.height.native_res_m, meta.height.native_res_m < 5 ? 1 : 0)} m{meta.color ? ` · imagem ${fmt(meta.color.native_res_m, meta.color.native_res_m < 2 ? 2 : 0)} m` : " · sem imagem: luz e sombra calculadas"}</small>}
+        {meta && <small>{fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} × {fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} km · {T("relevo", "relief")} {fmt(meta.height.native_res_m, meta.height.native_res_m < 5 ? 1 : 0)} m{meta.color ? ` · ${T("imagem", "imagery")} ${fmt(meta.color.native_res_m, meta.color.native_res_m < 2 ? 2 : 0)} m` : T(" · sem imagem: luz e sombra calculadas", " · no imagery: computed light and shade")}</small>}
       </div>
       {status === "loading" && <div className="t3-loading" role="status"><span className="t3-spinner" />{tr("Carregando relevo real…")}</div>}
-      {status === "error" && <div className="t3-loading" role="alert">Não consegui carregar esta cena. Rode <code>python pipeline/build_terrain3d.py</code>.</div>}
+      {status === "error" && <div className="t3-loading" role="alert">{T("Não consegui carregar esta cena. Rode", "Could not load this scene. Run")} <code>python pipeline/build_terrain3d.py</code>.</div>}
       {walking && coarse() && <TouchControls view={() => view.current} />}
       <div className="t3-readout" aria-live="off">
         {hover ? (
           <>
             <span>LAT <b>{fmt(Math.abs(hover.lat), 4)}°{hover.lat >= 0 ? "N" : "S"}</b></span>
-            <span>LON <b>{fmt(Math.abs(hover.lon), 4)}°{hover.lon >= 0 ? "L" : "O"}</b></span>
+            <span>LON <b>{fmt(Math.abs(hover.lon), 4)}°{hover.lon >= 0 ? T("L", "E") : T("O", "W")}</b></span>
             <span>ELEV <b>{fmt(hover.h, 0)} m</b></span>
-            <span>DECLIV. <b>{fmt(hover.slope, 1)}°</b></span>
+            <span>{T("DECLIV.", "SLOPE")} <b>{fmt(hover.slope, 1)}°</b></span>
           </>
-        ) : <span className="opacity-70">Aponte no relevo para ler os dados · arraste para girar · roda ou pinça para zoom · botão direito ou dois dedos para mover</span>}
+        ) : <span className="opacity-70">{T("Aponte no relevo para ler os dados · arraste para girar · roda ou pinça para zoom · botão direito ou dois dedos para mover", "Point at the terrain to read the data · drag to rotate · scroll or pinch to zoom · right button or two fingers to pan")}</span>}
       </div>
     </div>
   );

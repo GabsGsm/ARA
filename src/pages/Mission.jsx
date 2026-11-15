@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import TerrainView from "../lib/terrain3d/TerrainView.js";
-import { BODIES, loadIndex, loadScene, slopeGrid, uvToLatLon } from "../lib/terrain3d/data.js";
+import { BODIES, heightAt, loadIndex, loadScene, slopeGrid, uvToLatLon } from "../lib/terrain3d/data.js";
 import { buildLiveScene } from "../lib/terrain3d/liveEarth.js";
 import { SEASON, fmtHour, shadowMask, sunPosition } from "../lib/terrain3d/sun.js";
 import { ROVERS, SOURCES, critAngle, softFromTI, startState, step, tiSampler } from "../lib/mission/rover.js";
@@ -12,6 +12,8 @@ import { STRATEGIES, describeRoute, hazardGrid, obstacleLimit, planRover, routeE
 import { ROCK_SOURCES, clearRockCache, rockAbundance, rocksNear } from "../lib/mission/rocks.js";
 import { PP_SOURCES, at, consequences, loadMemory, permanentShadow, rasterTracks, rasterZones, saveMemory, sceneMemory, scienceFromMinerals } from "../lib/mission/pristine.js";
 import LiveEarthPicker from "../components/lab3d/LiveEarthPicker.jsx";
+import VehiclePicker from "../components/mission/VehiclePicker.jsx";
+import { localize, byKey } from "../lib/vehicles.js";
 import { useSettings } from "../hooks/useSettings.jsx";
 import { beep, speak } from "../lib/a11y/sense.js";
 import { dataUrl, fmt } from "../lib/format.js";
@@ -95,6 +97,7 @@ export default function Mission() {
   const [report, setReport] = useState(null);
   const [showReport, setShowReport] = useState(true);
   const [srcOpen, setSrcOpen] = useState(false);
+  const [picker, setPicker] = useState(() => { try { return !sessionStorage.getItem("ara-picked"); } catch { return true; } });
   const sim = useRef(null);
   const warpRef = useRef(warp); warpRef.current = warp;
 
@@ -249,6 +252,22 @@ export default function Mission() {
     if (!scene || !ground) return;
     view.current?.setRockField(kWorld, body === "moon" ? 0x8d8c88 : body === "earth" ? 0x8a7866 : 0x6e4c3c);
   }, [scene, ground, kWorld, body]);
+
+  // ---- escolher veículo: confirma e a câmera voa até ele no terreno
+  const focusVehicle = () => {
+    const v = view.current;
+    if (!v || !scene) return;
+    const a = pts.a ?? { u: 0.5, v: 0.5 };
+    const hy = (heightAt(scene, a.u, a.v) - (scene.meta.height.min + scene.meta.height.max) / 2) / S;
+    const d = (spec.len * 5) / S;
+    v.cancelFly();
+    v.flyTo({ p: [a.u - 0.5 + d * 0.7, hy + d * 0.5, a.v - 0.5 + d], t: [a.u - 0.5, hy, a.v - 0.5] }, 2200);
+  };
+  const confirmVehicle = (k) => {
+    setRoverKey(k); setPicker(false);
+    try { sessionStorage.setItem("ara-picked", "1"); } catch { /* ignora */ }
+    setTimeout(focusVehicle, 400);
+  };
 
   // ---- clique no terreno
   cbPick.current = (p) => {
@@ -423,9 +442,10 @@ export default function Mission() {
               </details>
 
               <h2 className="t3-h">{tr("Veículo", "Vehicle")}</h2>
-              <select className="t3-select" value={roverKey} onChange={(e) => setRoverKey(e.target.value)} aria-label={tr("Veículo", "Vehicle")}>
-                {vehiclesHere.map(([k, r]) => <option key={k} value={k}>{r.name}</option>)}
-              </select>
+              <button type="button" className="ms-veh" onClick={() => setPicker(true)}>
+                <b>{localize(byKey(roverKey) ?? { key: roverKey, name: spec.name }, lang).name}</b>
+                <span>{tr("Trocar veículo", "Change vehicle")} ›</span>
+              </button>
               <p className="t3-note">{fmt(spec.mass, 0)} kg · {fmt(spec.vmax * 3.6, spec.vmax < 1 ? 2 : 1)} km/h · {tr("sobe até", "climbs up to")} {spec.maxSlope}° · {tr("passa pedras de até", "clears rocks up to")} {fmt(obstacleLimit(spec) * 100, 0)} cm · {spec.rtgW ? `MMRTG ${spec.rtgW} W` : spec.solarW ? tr(`painel solar ${spec.solarW} W`, `solar panel ${spec.solarW} W`) : tr("bateria não recarregável", "non-rechargeable battery")} · {fmt(spec.batteryWh / 1000, 1)} kWh</p>
 
               <h2 className="t3-h">{tr("Hora, solo e rochas", "Time, soil and rocks")}</h2>
@@ -456,7 +476,7 @@ export default function Mission() {
               {srcOpen && (
                 <div className="ms-src">
                   <p className="t3-note">{tr("Energia: P = m·g·v·(Crr·cosθ + senθ)/η + consumo fixo; recarga por gerador ou painel ao Sol. Patinagem cresce com a subida e chega a 100% no ângulo crítico do solo. Pedras menores que o pixel vêm do modelo de Golombek & Rapp: as maiores que a roda bloqueiam, as médias gastam as rodas. Consumo fixo e eficiência são estimativas de ordem de grandeza.", "Energy: P = m·g·v·(Crr·cosθ + sinθ)/η + fixed load; recharge by generator or sunlit panel. Slip grows with the climb and reaches 100% at the soil's critical angle. Sub-pixel rocks come from the Golombek & Rapp model: rocks taller than the wheel block, medium ones wear the wheels. Fixed load and efficiency are order-of-magnitude estimates.")}</p>
-                  <ul className="ms-srclist">{[...SOURCES, ...ROCK_SOURCES, ...PP_SOURCES].map((s) => <li key={s.id + s.url}><a href={s.url} target="_blank" rel="noopener noreferrer">{s.text} ↗</a></li>)}</ul>
+                  <ul className="ms-srclist">{[...SOURCES, ...ROCK_SOURCES, ...PP_SOURCES].map((s) => <li key={s.id + s.url}><a href={s.url} target="_blank" rel="noopener noreferrer">{tr(s.text, s.en)} ↗</a></li>)}</ul>
                 </div>
               )}
             </div>
@@ -582,6 +602,11 @@ export default function Mission() {
             <p className="t3-note">{tr("A travessia foi salva na memória da exploração deste local: a próxima missão a vê na camada Proteção e pode reaproveitar a trilha.", "The traverse was saved in this site's exploration memory: the next mission sees it in the Protection layer and can reuse the track.")}</p>
             <div className="t3-btns"><button type="button" className="gold" onClick={retry}>{tr("Tentar de novo", "Try again")}</button><button type="button" onClick={replan}>{tr("Nova rota", "New route")}</button><button type="button" onClick={() => setShowReport(false)}>{tr("Ver o terreno", "View terrain")}</button></div>
           </div>
+        )}
+
+        {picker && phase === "plan" && (
+          <VehiclePicker options={vehiclesHere} value={roverKey} onConfirm={confirmVehicle}
+                         onClose={() => { setPicker(false); try { sessionStorage.setItem("ara-picked", "1"); } catch { /* ignora */ } }} />
         )}
 
         <div className="t3-top">

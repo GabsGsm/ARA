@@ -1,5 +1,6 @@
 // ARA — lógica pura (sem DOM). Usada pelo app e pelos testes em Node.
 // Distância igual ao Protótipo 1: d = sqrt( sum_i w_i * ((a_i - b_i) / s_i)^2 ).
+import { T } from "./i18n.js";
 
 export const RANK_ATTRS = ["slope_mean_deg", "roughness_mean_m", "relief_m"];
 
@@ -67,13 +68,13 @@ export function dimensionStatus(siteVal, cellVal, scale, thresholds) {
 
 export function explain(siteAttrs, cell, config) {
   const dims = Object.entries(config.attributes).map(([attr, meta]) => ({
-    dimension: meta.label, attr, unit: meta.unit,
+    dimension: T(meta.label), attr, unit: meta.unit,
     site: siteAttrs?.terrain?.[attr] ?? null, cell: cell[attr] ?? null,
     ...dimensionStatus(siteAttrs?.terrain?.[attr], cell[attr], meta.scale, config.thresholds),
   }));
-  dims.push({ dimension: "Temperatura da superfície", attr: "thermal", status: "no_data", diff: null,
+  dims.push({ dimension: T("Temperatura da superfície", "Surface temperature"), attr: "thermal", status: "no_data", diff: null,
               note: thermalNote(siteAttrs?.thermal) });
-  dims.push({ dimension: "Mineralogia", attr: "mineralogy", status: "no_data", diff: null,
+  dims.push({ dimension: T("Mineralogia", "Mineralogy"), attr: "mineralogy", status: "no_data", diff: null,
               note: mineralNote(siteAttrs?.mineralogy, cell) });
   config.earth_limits.forEach((l) => dims.push({ dimension: l.dimension, attr: "limit", status: "not_analog", diff: null, note: l.text }));
   return dims;
@@ -81,21 +82,21 @@ export function explain(siteAttrs, cell, config) {
 
 function thermalNote(thermal) {
   const shown = (thermal?.display ?? []).filter((d) => d.value != null)
-    .map((d) => `${d.label} ${br(d.value, d.unit === "K" ? 0 : 0)} ${d.unit}`);
-  const planet = shown.length ? `Planeta: ${shown.join("; ")}.` : "Planeta: sem dado térmico.";
-  return `${planet} Terra: ainda não calculada, por isso não entra no ranking.`;
+    .map((d) => `${T(d.label)} ${br(d.value, d.unit === "K" ? 0 : 0)} ${d.unit}`);
+  const planet = shown.length ? `${T("Planeta", "Planet")}: ${shown.join("; ")}.` : T("Planeta: sem dado térmico.", "Planet: no thermal data.");
+  return `${planet} ${T("Terra: ainda não calculada, por isso não entra no ranking.", "Earth: not yet computed, so it is not part of the ranking.")}`;
 }
 
 function mineralNote(mineral, cell) {
-  let planet = "Planeta: sem dado mineralógico.";
-  if (mineral?.summary) planet = `Planeta: ${mineral.summary}.`;
+  let planet = T("Planeta: sem dado mineralógico.", "Planet: no mineralogical data.");
+  if (mineral?.summary) planet = `${T("Planeta", "Planet")}: ${T(mineral.summary)}.`;
   else if (mineral?.source === "CRISM") {
     const cls = (mineral.classes ?? []).filter(Boolean);
-    planet = `Planeta (CRISM): ${br(mineral.coverage_pct, 0)}% do recorte mapeado${cls.length ? ` — ${cls.join(", ")}` : ""}.`;
+    planet = T(`Planeta (CRISM): ${br(mineral.coverage_pct, 0)}% do recorte mapeado${cls.length ? ` — ${cls.join(", ")}` : ""}.`, `Planet (CRISM): ${br(mineral.coverage_pct, 0)}% of the site mapped${cls.length ? ` — ${cls.join(", ")}` : ""}.`);
   }
   const earth = cell.context?.lithology?.length
-    ? `Terra: litologia mapeada (${cell.context.lithology.join(", ")}), minerais não verificados.`
-    : "Terra: mineralogia não verificada.";
+    ? T(`Terra: litologia mapeada (${cell.context.lithology.join(", ")}), minerais não verificados.`, `Earth: mapped lithology (${cell.context.lithology.join(", ")}), minerals not verified.`)
+    : T("Terra: mineralogia não verificada.", "Earth: mineralogy not verified.");
   return `${planet} ${earth}`;
 }
 
@@ -113,14 +114,14 @@ export function cellsForVariant(cells, variant, simulation) {
     .map((c) => ({ ...c, ...simulation.earth[c.id][variant], simulated: true }));
 }
 
-const br = (v, d) => (v == null ? "—" : Number(v).toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d }));
-const STATUS_WORD = { analog: "análogo", partial: "parcialmente análogo", not_analog: "não análogo", no_data: "sem dado" };
+const br = (v, d) => (v == null ? "—" : Number(v).toLocaleString(T("pt-BR", "en-US"), { minimumFractionDigits: d, maximumFractionDigits: d }));
+const STATUS_WORD = () => ({ analog: T("análogo", "analog"), partial: T("parcialmente análogo", "partly analog"), not_analog: T("não análogo", "not analog"), no_data: T("sem dado", "no data") });
 
 export function describeCell(cell, dims, position) {
   const parts = dims.filter((d) => ["slope_mean_deg", "roughness_mean_m", "relief_m"].includes(d.attr))
-    .map((d) => `${d.dimension.toLowerCase()} ${br(d.cell, 1)}${d.unit === "°" ? "" : " "}${d.unit} (${STATUS_WORD[d.status]})`);
-  const name = cell.known ? `${cell.known}, análogo conhecido` : "novo candidato";
-  return `${position}º: célula ${cell.id}, ${name}, em ${br(cell.lat, 2)}°, ${br(cell.lon, 2)}°. ${parts.join("; ")}.`;
+    .map((d) => `${T(d.dimension).toLowerCase()} ${br(d.cell, 1)}${d.unit === "°" ? "" : " "}${d.unit} (${STATUS_WORD()[d.status]})`);
+  const name = cell.known ? `${cell.known}, ${T("análogo conhecido", "known analog")}` : T("novo candidato", "new candidate");
+  return T(`${position}º: célula ${cell.id}, ${name}, em ${br(cell.lat, 2)}°, ${br(cell.lon, 2)}°. ${parts.join("; ")}.`, `#${position}: cell ${cell.id}, ${name}, at ${br(cell.lat, 2)}°, ${br(cell.lon, 2)}°. ${parts.join("; ")}.`);
 }
 
 export function cellBounds(cell, halfKm = 2.5) {
