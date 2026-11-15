@@ -7,12 +7,17 @@ import RankingList from "../components/explore/RankingList.jsx";
 import ResultsTable from "../components/explore/ResultsTable.jsx";
 import ExportButton from "../components/explore/ExportButton.jsx";
 import AnalogDetails from "../components/explore/AnalogDetails.jsx";
+import DiscoverPanel from "../components/discover/DiscoverPanel.jsx";
+import EvidencePanel from "../components/evidence/EvidencePanel.jsx";
+import RobustnessMatrix from "../components/evidence/RobustnessMatrix.jsx";
+import { cellExtra, useEvidence } from "../hooks/useEvidence.js";
 import { useAraData } from "../hooks/useAraData.jsx";
 import { useExplorer } from "../hooks/useExplorer.jsx";
 import { useRanking } from "../hooks/useRanking.js";
 import { BODY_FROM_PARAM, PARAM_FROM_BODY, fmt } from "../lib/format.js";
 
 const VIEWS = [{ value: "map", label: "Mapa" }, { value: "table", label: "Tabela" }];
+const MODES = [{ value: "catalogo", label: "Catálogo" }, { value: "descobrir", label: "Descobrir novo local" }];
 
 export default function Explore() {
   const data = useAraData();
@@ -40,9 +45,27 @@ export default function Explore() {
   const pick = (id) => { ex.setSelected(id); setFocus({ id, t: Date.now() }); };
   const pickFromTable = (id) => { ex.setViewMode("map"); pick(id); };
 
+  const mode = MODES.some((m) => m.value === params.get("modo")) ? params.get("modo") : "catalogo";
+  const setMode = (m) => setParams(m === "catalogo" ? { corpo: PARAM_FROM_BODY[ex.body] } : { modo: m }, { replace: true });
   const onBody = (b) => { ex.setBody(b); setParams({ corpo: PARAM_FROM_BODY[b] }, { replace: true }); };
   const selected = results.find((r) => r.cell.id === ex.selected);
   const top = results[0];
+  const evidence = useEvidence();
+
+  // abas extras dos detalhes: evidências além do relevo e robustez da decisão
+  const site = ex.siteId ? data.siteById(ex.siteId) : null;
+  const other = selected ? results.find((r) => r.cell.id !== selected.cell.id) : null;
+  const asCandidate = (r) => ({ ...r.cell, name: data.cellName(r.cell), origin: "catalog" });
+  const extraTabs = selected && site ? [
+    { id: "evidencias", label: "Evidências", render: () => (evidence.status === "loading"
+      ? <p className="note">Carregando evidências…</p>
+      : <EvidencePanel candidate={asCandidate(selected)} site={site} siteAttrs={data.sites[ex.siteId]} siteVec={siteVec}
+                       extra={cellExtra(evidence, selected.cell.id)} data={data} objective={ex.objective} weights={ex.weights}
+                       distance={selected.d} rankInfo={{ position: selected.position, of: data.cells.length }}
+                       sourcesMeta={evidence.manifest?.datasets ?? []}
+                       compare={other ? { candidate: asCandidate(other), extra: cellExtra(evidence, other.cell.id) } : null} />) },
+    { id: "robustez", label: "Robustez", render: () => <RobustnessMatrix siteId={ex.siteId} /> },
+  ] : [];
 
   return (
     <section aria-labelledby="exTitle" className="ex-page mx-auto max-w-[1640px] px-[clamp(12px,2vw,30px)] pt-6">
@@ -51,6 +74,9 @@ export default function Explore() {
         <p className="ex-lead">Encontre células de 5 × 5 km da Terra parecidas com locais de exploração em Marte e na Lua — e veja, medida por medida, em que se parecem e em que não.</p>
       </header>
 
+      <div className="ex-modes"><Segmented asTabs label="Modo" options={MODES} value={mode} onChange={setMode} /></div>
+
+      {mode === "descobrir" ? <DiscoverPanel /> : <>
       <FilterBar ex={ex} onBody={onBody} />
 
       <div className="ex-row">
@@ -88,7 +114,8 @@ export default function Explore() {
         </section>
       </div>
 
-      <AnalogDetails ex={ex} siteVec={siteVec} result={selected} />
+      <AnalogDetails ex={ex} siteVec={siteVec} result={selected} extraTabs={extraTabs} />
+      </>}
 
       <p className="sr-only" aria-live="polite">
         {top ? `Melhor correspondência: ${data.cellName(top.cell)}, distância ${fmt(top.d, 3)}.` : ""}

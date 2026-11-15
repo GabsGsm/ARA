@@ -1,0 +1,68 @@
+{
+ "built_utc": "2026-11-15T11:18:55Z",
+ "window": "célula de 5 × 5 km centrada no ponto da grade do ARA",
+ "datasets": [
+  {
+   "id": "worldcover",
+   "name": "ESA WorldCover 10 m 2021 v200",
+   "origin": "observed",
+   "resolution_m": 10,
+   "period": "2021",
+   "url": "https://esa-worldcover.org/en/data-access",
+   "license": "CC BY 4.0",
+   "doi": "10.5281/zenodo.7254221",
+   "caveats": [
+    "Classificação de imagens Sentinel-1/2; não mede mineral nem propriedade mecânica do solo."
+   ]
+  },
+  {
+   "id": "soilgrids",
+   "name": "ISRIC SoilGrids 2.0 (0–5 cm)",
+   "origin": "model_estimate",
+   "resolution_m": 250,
+   "url": "https://isric.org/explore/soilgrids/",
+   "license": "CC BY 4.0",
+   "doi": "10.5194/soil-7-217-2021",
+   "caveats": [
+    "Predição de modelo, não amostra de campo.",
+    "Desertos extremos e afloramentos rochosos têm poucas amostras de treino.",
+    "Não converter em tração, afundamento ou capacidade de suporte sem ensaio."
+   ]
+  },
+  {
+   "id": "macrostrat",
+   "name": "Macrostrat geologic map units (API v2)",
+   "origin": "contextual",
+   "url": "https://macrostrat.org",
+   "license": "CC BY 4.0",
+   "caveats": [
+    "Litologia mapeada em escala regional; não é identificação mineral.",
+    "Unidade no centro da célula; a célula pode cruzar várias unidades."
+   ]
+  },
+  {
+   "id": "power",
+   "name": "NASA POWER climatologia (MERRA-2 / CERES)",
+   "origin": "contextual",
+   "resolution_m": 55000,
+   "url": "https://power.larc.nasa.gov/",
+   "license": "NASA (uso livre, citar)",
+   "caveats": [
+    "Média de longo prazo num pixel de ~0,5°; contexto regional, não medição atual nem da célula."
+   ]
+  },
+  {
+   "id": "jrc_gsw",
+   "name": "JRC Global Surface Water v1.4 — ocorrência",
+   "origin": "observed",
+   "resolution_m": 30,
+   "period": "1984–2021",
+   "url": "https://global-surface-water.appspot.com/",
+   "license": "CC BY 4.0",
+   "doi": "10.1038/nature20584",
+   "caveats": [
+    "Água detectada pelo Landsat entre 1984 e 2021; não cobre depois de 2021 nem umidade do solo."
+   ]
+  }
+ ]
+}
