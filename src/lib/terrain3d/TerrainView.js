@@ -13,8 +13,68 @@ import { T } from "../i18n.js";
 
 const LAYERS = { imagem: 0, declividade: 1, altitude: 2, relevo: 3, operacoes: 4, protecao: 5 };
 const EYE = 1.75;          // altura dos olhos (m)
-const WALK = 1.4, RUN = 14; // m/s
+const WALK = 1.4, RUN = 3.5; // m/s
 const JUMP_V = 2.5;        // m/s — o mesmo impulso nos três corpos
+const WALK_CAMERA_DISTANCE = 4.5;
+
+function createWalker() {
+  const suit = new THREE.MeshStandardMaterial({ color: 0xe7e9e5, roughness: 0.8 });
+  const trim = new THREE.MeshStandardMaterial({ color: 0xf2b53a, roughness: 0.65 });
+  const visor = new THREE.MeshStandardMaterial({ color: 0x25445a, metalness: 0.45, roughness: 0.25 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x333b40, roughness: 0.9 });
+  const root = new THREE.Group();
+  const addCapsule = (parent, radius, length, material, y) => {
+    const mesh = new THREE.Mesh(new THREE.CapsuleGeometry(radius, length, 4, 8), material);
+    mesh.position.y = y;
+    parent.add(mesh);
+    return mesh;
+  };
+  const torso = addCapsule(root, 0.23, 0.46, suit, 1.15);
+  torso.rotation.x = -0.08;
+  const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 12), suit);
+  helmet.position.set(0, 1.67, 0);
+  root.add(helmet);
+  const faceplate = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.55), visor);
+  faceplate.position.set(0, 1.68, -0.105);
+  faceplate.rotation.x = -0.18;
+  root.add(faceplate);
+  const backpack = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.55, 0.22), dark);
+  backpack.position.set(0, 1.18, 0.27);
+  root.add(backpack);
+  const badge = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.2, 0.025), trim);
+  badge.position.set(0, 1.25, -0.235);
+  root.add(badge);
+
+  const arms = [-1, 1].map((side) => {
+    const pivot = new THREE.Group();
+    pivot.position.set(side * 0.29, 1.39, 0);
+    addCapsule(pivot, 0.095, 0.43, suit, -0.24);
+    root.add(pivot);
+    return pivot;
+  });
+  const legs = [-1, 1].map((side) => {
+    const pivot = new THREE.Group();
+    pivot.position.set(side * 0.13, 0.82, 0);
+    addCapsule(pivot, 0.12, 0.43, suit, -0.27);
+    const boot = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.12, 0.3), dark);
+    boot.position.set(0, -0.56, -0.04);
+    pivot.add(boot);
+    root.add(pivot);
+    return pivot;
+  });
+  root.userData.walkingParts = { arms, legs, suit, trim, visor, dark };
+  root.traverse((object) => { if (object.isMesh) { object.castShadow = false; object.receiveShadow = false; } });
+  return root;
+}
+
+function disposeWalker(walker) {
+  walker.traverse((object) => {
+    if (!object.isMesh) return;
+    object.geometry.dispose();
+    const materials = Array.isArray(object.material) ? object.material : [object.material];
+    for (const material of materials) material.dispose();
+  });
+}
 
 export default class TerrainView {
   constructor(container, cb = {}) {
@@ -93,11 +153,13 @@ export default class TerrainView {
 
   // ------------------------------------------------------------------ cena
   setScene(data) {
+    if (this.mode === "walk") this.setMode("orbit");
     this.data = data;
     const { meta, heights, n, body } = data;
     const S = meta.size_m;
     this.S = S;
     this.mid = (meta.height.min + meta.height.max) / 2;
+    if (this.walker) { this.scene.remove(this.walker); disposeWalker(this.walker); this.walker = null; this.walkPos = null; }
     if (this.mesh) { this.scene.remove(this.mesh); this.mesh.geometry.dispose(); this.mesh.material.map?.dispose(); this.mesh.material.dispose(); }
     this.clearOverlays();
 
@@ -564,6 +626,13 @@ reflectedLight.directSpecular *= vShadow;
     if (!this.data) return; // a página chama de novo quando a cena carregar
     if (mode === this.mode && !(mode === "walk" && start)) return;
     this.mode = mode;
+    if (mode !== "walk" && this.walker) {
+      this.scene.remove(this.walker);
+      disposeWalker(this.walker);
+      this.walker = null;
+      this.walkPos = null;
+      this._walkJump = 0;
+    }
     if (this._ambBase != null && mode !== "drive") { this.ambient.intensity = this._ambBase; this._ambBase = null; }
     if (mode === "drive") {
       this.cancelFly();
@@ -582,15 +651,24 @@ reflectedLight.directSpecular *= vShadow;
     if (mode === "walk") {
       this.cancelFly();
       this.controls.enabled = false;
+      if (this.walker) { this.scene.remove(this.walker); disposeWalker(this.walker); }
       const t = this.controls.target;
-      if (start) t.set((start.u - 0.5) * this.S, 0, (start.v - 0.5) * this.S);
-      const u = t.x / this.S + 0.5, v = t.z / this.S + 0.5;
+      const u = start?.u ?? t.x / this.S + 0.5, v = start?.v ?? t.z / this.S + 0.5;
+      t.set((u - 0.5) * this.S, 0, (v - 0.5) * this.S);
       const g = (heightAt(this.data, u, v) - this.mid) * this.exag;
-      this.camera.position.set(t.x, g + EYE, t.z);
-      this.camera.lookAt(t.x + 10, g + EYE - 3.5, t.z - 10); // olhando um pouco para o chão
+      this.walkPos = new THREE.Vector3(t.x, g, t.z);
+      this._walkJump = 0;
+      this.walker = createWalker();
+      this.walker.position.copy(this.walkPos);
+      this.scene.add(this.walker);
+      this.camera.position.set(t.x, g + EYE + 1.1, t.z + WALK_CAMERA_DISTANCE);
+      this.camera.rotation.order = "YXZ";
+      this.camera.lookAt(t.x, g + 1.05, t.z);
       this.overlays.visible = false;                          // linhas e rótulos ficariam flutuando na altura dos olhos
       this.labels.domElement.style.display = "none";
       this.vel.set(0, 0, 0);
+      this.onGround = true;
+      this._walkAnim = 0;
       this.camera.near = 0.2; this.camera.updateProjectionMatrix();
     } else {
       if (this.pointerLock.isLocked) this.pointerLock.unlock();
@@ -619,7 +697,7 @@ reflectedLight.directSpecular *= vShadow;
   }
   jump() {
     if (this.mode !== "walk" || !this.onGround) return;
-    this.vel.y = JUMP_V; this.onGround = false; this.jumpStart = this.camera.position.y; this.jumpMax = 0;
+    this.vel.y = JUMP_V; this.onGround = false; this.jumpStart = this._walkJump ?? 0; this.jumpMax = 0;
   }
   setRun(on) { this.running = on; }
 
@@ -723,19 +801,35 @@ reflectedLight.directSpecular *= vShadow;
       let side = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0) + j.x;
       const inputLength = Math.hypot(fwd, side);
       if (inputLength > 1) { fwd /= inputLength; side /= inputLength; }
-      if (fwd) this.pointerLock.moveForward(fwd * speed * dt);
-      if (side) this.pointerLock.moveRight(side * speed * dt);
-      const p = this.camera.position, half = this.S / 2 - 1;
+      const p = this.walkPos, yaw = this.camera.rotation.y, half = this.S / 2 - 1;
+      p.x += (Math.sin(yaw) * fwd + Math.cos(yaw) * side) * speed * dt;
+      p.z += (-Math.cos(yaw) * fwd + Math.sin(yaw) * side) * speed * dt;
       p.x = Math.max(-half, Math.min(half, p.x)); p.z = Math.max(-half, Math.min(half, p.z));
       const u = p.x / this.S + 0.5, v = p.z / this.S + 0.5;
-      const ground = (heightAt(this.data, u, v) - this.mid) * this.exag + EYE;
+      const elevation = (heightAt(this.data, u, v) - this.mid) * this.exag;
       this.vel.y -= this.data.body.g * dt;
-      p.y += this.vel.y * dt;
-      if (!this.onGround && this.jumpStart != null) this.jumpMax = Math.max(this.jumpMax, p.y - this.jumpStart);
-      if (p.y <= ground) {
+      this._walkJump = Math.max(0, (this._walkJump ?? 0) + this.vel.y * dt);
+      if (!this.onGround && this.jumpStart != null) this.jumpMax = Math.max(this.jumpMax, this._walkJump - this.jumpStart);
+      if (this._walkJump <= 0) {
         if (!this.onGround && this.jumpStart != null) this.cb.onJump?.(this.jumpMax);
-        p.y = ground; this.vel.y = 0; this.onGround = true; this.jumpStart = null;
+        this.vel.y = 0; this.onGround = true; this.jumpStart = null;
       }
+      const ground = (heightAt(this.data, u, v) - this.mid) * this.exag;
+      p.y = ground;
+      if (this.walker) {
+        this.walker.position.set(p.x, ground + this._walkJump, p.z);
+        this.walker.rotation.y = yaw;
+        const parts = this.walker.userData.walkingParts, moving = inputLength > 0.02;
+        this._walkAnim += dt * (moving ? speed * 1.8 : 0);
+        const swing = moving ? Math.sin(this._walkAnim) * 0.48 : 0;
+        parts.legs[0].rotation.x = swing; parts.legs[1].rotation.x = -swing;
+        parts.arms[0].rotation.x = -swing * 0.7; parts.arms[1].rotation.x = swing * 0.7;
+      }
+      const cameraX = p.x - Math.sin(yaw) * WALK_CAMERA_DISTANCE;
+      const cameraZ = p.z + Math.cos(yaw) * WALK_CAMERA_DISTANCE;
+      const cameraU = cameraX / this.S + 0.5, cameraV = cameraZ / this.S + 0.5;
+      const cameraGround = (heightAt(this.data, cameraU, cameraV) - this.mid) * this.exag;
+      this.camera.position.set(cameraX, cameraGround + EYE + 1.1 + this._walkJump, cameraZ);
       this.cb.onWalk?.({ u, v, h: heightAt(this.data, u, v), slope: slopeAt(this.data, u, v), ...uvToLatLon(this.data, u, v) });
       this.dirty = true;
     } else if (this.mode === "drive" && this.data) {
@@ -778,6 +872,7 @@ reflectedLight.directSpecular *= vShadow;
     this.pointerLock.dispose?.();
     this.mesh?.geometry.dispose();
     this.mesh?.material.dispose();
+    if (this.walker) disposeWalker(this.walker);
     this.renderer.dispose();
     this.el.innerHTML = "";
   }

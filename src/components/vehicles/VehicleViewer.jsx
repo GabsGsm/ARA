@@ -87,14 +87,29 @@ export default function VehicleViewer({ vehicle, calm, spotlight = false }) {
       s.camera.position.set(d * 0.75, big * 0.75, d);
       s.controls.target.set(0.3, Math.min(size.y, 1.75) / 2, 0);
       s.controls.minDistance = big * 0.6; s.controls.maxDistance = big * 6;
+      s.controls.saveState();
       setStatus("");
     }).catch(() => alive && setStatus(tr("Não foi possível baixar o modelo da NASA agora.", "Could not download the NASA model right now.")));
     return () => { alive = false; };
   }, [vehicle]);
 
+  const zoom = (action) => {
+    const controls = st.current?.controls;
+    if (!controls) return;
+    if (action === "in") controls.dollyIn(1.25);
+    else if (action === "out") controls.dollyOut(1.25);
+    else controls.reset();
+    controls.update();
+  };
+
   return (
     <div className="vh-viewer">
       <div ref={host} className="vh-canvas" aria-label={`${tr("Modelo 3D", "3D model")}: ${vehicle?.name}`} role="img" />
+      <div className="vh-zoom" role="group" aria-label={tr("Zoom do modelo", "Model zoom")}>
+        <button type="button" onClick={() => zoom("in")} aria-label={tr("Aproximar", "Zoom in")} title={tr("Aproximar", "Zoom in")}>+</button>
+        <button type="button" onClick={() => zoom("out")} aria-label={tr("Afastar", "Zoom out")} title={tr("Afastar", "Zoom out")}>−</button>
+        <button type="button" onClick={() => zoom("reset")} aria-label={tr("Restaurar zoom", "Reset zoom")} title={tr("Restaurar zoom", "Reset zoom")}>1:1</button>
+      </div>
       {status && <p className="vh-status" role="status">{status}</p>}
       <p className="vh-hint">{tr("Arraste para girar · role para aproximar · silhueta = pessoa de 1,75 m", "Drag to rotate · scroll to zoom · silhouette = 1.75 m person")}</p>
     </div>

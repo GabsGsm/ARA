@@ -91,6 +91,8 @@ export default function Lab3D() {
   const [jump, setJump] = useState(null);
   const [locked, setLocked] = useState(false);
   const [panels, setPanels] = useState({ left: true, right: true });
+  const [walkSide, setWalkSide] = useState("left");
+  const [walkSolo, setWalkSolo] = useState(false);
   const [showSources, setShowSources] = useState(false);
   const [lib, setLib] = useState({ lat: 0, lon: 0 });   // libração (ponto sub-Terra) para a Lua
   const [ops, setOps] = useState({});
@@ -124,6 +126,7 @@ export default function Lab3D() {
 
   const isWalk = site?.kind === "walk";
   const twin = !isOverview && !isWalk && (live.scene || (analogId && byId[analogId]));
+  const focusedWalk = nav === "walk" && walkSolo && Boolean(twin);
   const asked = params.get("analog");
   const missing3d = asked && index && !byId[asked] ? (data.cells?.find((c) => c.id === asked) ? data.cellName(data.cells.find((c) => c.id === asked)) : asked) : null;
 
@@ -293,12 +296,14 @@ export default function Lab3D() {
   const stopTour = () => { clearTimeout(tourTimer.current); setTourStep(-1); left.current?.view?.cancelFly(); right.current?.view?.cancelFly(); };
   useEffect(() => {
     const walk = nav === "walk";
-    const start = isWalk ? scenes.left?.meta?.pois?.find((q) => q.kind === "landing") : null;
-    left.current?.view?.setMode(walk ? "walk" : "orbit", start);
-    right.current?.view?.setMode("orbit");
+    const leftMode = walk && (!twin || walkSide === "left") ? "walk" : "orbit";
+    const rightMode = walk && twin && walkSide === "right" ? "walk" : "orbit";
+    const start = isWalk && walkSide === "left" ? scenes.left?.meta?.pois?.find((q) => q.kind === "landing") : null;
+    if (left.current?.view && left.current.view.mode !== leftMode) left.current.view.setMode(leftMode, start);
+    if (right.current?.view && right.current.view.mode !== rightMode) right.current.view.setMode(rightMode);
     if (nav === "tour") setTourStep(0); else stopTour();
-    if (!walk) { setWalkInfo(null); setJump(null); }
-  }, [nav, scenes.left]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!walk) { setWalkInfo(null); setJump(null); setWalkSolo(false); }
+  }, [nav, scenes.left, scenes.right, walkSide, twin]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (tourStep < 0) return;
@@ -333,7 +338,8 @@ export default function Lab3D() {
     const better = data.cells.filter((c) => core.distance(siteVec, c, w, data.scales) < d).length;
     rk = { d, position: better + 1, live: true };
   }
-  const gB = BODIES[planetBody], jumpH = (g) => (2.5 * 2.5) / (2 * g);
+  const walkBody = (walkSide === "right" ? scenes.right : scenes.left)?.meta.body ?? planetBody;
+  const gB = BODIES[walkBody], jumpH = (g) => (2.5 * 2.5) / (2 * g);
   const tour = tourStep >= 0 ? TOUR[tourStep] : null;
   const reliefTxt = [L && `${L.name} ${fmt(L.stats_inner?.at_100m?.relief_m ?? 0, 0)} m`, R && `${R.name} ${fmt(R.stats_inner?.at_100m?.relief_m ?? 0, 0)} m`].filter(Boolean).join(" · ");
   const ss = SEASON[planetBody];
@@ -355,15 +361,18 @@ export default function Lab3D() {
   return (
     <section aria-labelledby="labTitle" className="t3-page">
       <h1 id="labTitle" className="sr-only">{T("Laboratório 3D", "3D Lab")}</h1>
-      <div className={`t3-stage ${twin ? "twin" : "single"}`}>
+      <div className={`t3-stage ${twin && !focusedWalk ? "twin" : "single"}${focusedWalk ? " focused" : ""}`}>
         <TerrainPane ref={left} side="left" sceneId={siteId} settings={settings} onCamera={onCamera} onPick={onPick}
-                     onSite={setSite} onLoaded={onLoaded} onUser={onUser} walking={nav === "walk"}
+                     onSite={setSite} onLoaded={onLoaded} onUser={onUser} walking={nav === "walk" && (!twin || walkSide === "left")}
+                     focusHidden={focusedWalk && walkSide !== "left"}
                      onWalk={(_, p) => setWalkInfo(p)} onJump={(_, h) => setJump(h)} onWalkLock={setLocked} />
         {twin && (
           <TerrainPane ref={right} side="right" sceneId={live.scene ? null : analogId} sceneData={live.scene} settings={settings}
-                       onCamera={onCamera} onPick={onPick} onLoaded={onLoaded} onUser={onUser} />
+                       onCamera={onCamera} onPick={onPick} onLoaded={onLoaded} onUser={onUser}
+                       walking={nav === "walk" && walkSide === "right"} focusHidden={focusedWalk && walkSide !== "right"}
+                       onWalk={(_, p) => setWalkInfo(p)} onJump={(_, h) => setJump(h)} onWalkLock={setLocked} />
         )}
-        {twin && <div className="t3-divider" aria-hidden="true"><span>⇄</span></div>}
+        {twin && !focusedWalk && <div className="t3-divider" aria-hidden="true"><span>⇄</span></div>}
         {intro && <GlobeIntro key={intro.id} {...intro} slow={params.get("intro") === "lento"} onDone={endIntro} />}
 
         {/* ---------- barra superior ---------- */}
@@ -593,14 +602,21 @@ export default function Lab3D() {
         )}
         {nav === "walk" && (
           <div className="t3-walk card">
+            {twin && <div className="t3-walk-controls" role="group" aria-label={T("Controles da caminhada", "Walk controls")}>
+              <span>{T("Caminhar em", "Walk on")}:</span>
+              <button type="button" aria-pressed={walkSide === "left"} onClick={() => setWalkSide("left")}>{L?.name ?? T("Esquerda", "Left")}</button>
+              <button type="button" aria-pressed={walkSide === "right"} onClick={() => setWalkSide("right")}>{R?.name ?? T("Direita", "Right")}</button>
+              <button type="button" onClick={() => setWalkSolo((v) => !v)}>{focusedWalk ? T("Voltar à comparação", "Back to comparison") : T("Ampliar lado escolhido", "Expand selected side")}</button>
+            </div>}
             {!locked
-              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {BODIES[planetBody].label}.</b> {T("Clique no relevo da esquerda para começar.")} <kbd>W A S D</kbd> {T("ou", "or")} <kbd>↑ ↓ ← →</kbd> {T("anda", "walk")}, <kbd>Shift</kbd> {T("corre", "run")}, <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}, <kbd>Esc</kbd> {T("solta o mouse.", "releases the mouse.")}</p>
+              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {gB.label}.</b> {T("Clique no relevo escolhido para começar.", "Click the selected terrain to start.")} <kbd>W A S D</kbd> {T("ou", "or")} <kbd>↑ ↓ ← →</kbd> {T("anda", "walk")}, <kbd>Shift</kbd> {T("corre", "run")}, <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}, <kbd>Esc</kbd> {T("solta o mouse.", "releases the mouse.")}</p>
               : <p className="m-0">{T("Andando", "Walking")} · <kbd>W A S D</kbd> {T("ou", "or")} <kbd>↑ ↓ ← →</kbd> {T("para andar", "to walk")} · <kbd>Esc</kbd> {T("para soltar o mouse", "to release the mouse")}</p>}
             {walkInfo && <p className="m-0 mt-1 text-[13px]">{T("Altitude", "Altitude")} {fmt(walkInfo.h, 0)} m · {T("declividade sob os pés", "slope underfoot")} {fmt(walkInfo.slope, 1)}°</p>}
             <p className="m-0 mt-1 text-[13px]">
               {T("Mesmo impulso de pulo (2,5 m/s):", "Same jump impulse (2.5 m/s):")} <b>{fmt(jumpH(gB.g), 2)} m {T("em", "on")} {gB.label}</b> · {fmt(jumpH(9.807), 2)} m {T("na Terra", "on Earth")}
               {jump != null && <> · {T("seu último pulo", "your last jump")}: <b>{fmt(jump, 2)} m</b></>}
             </p>
+            <button type="button" className="t3-walk-back" onClick={() => setNav("orbit")}>{T("Voltar à órbita", "Back to orbit")}</button>
           </div>
         )}
         {tool === "travessia" && trav?.result && <TwinTraversePanel result={trav.result} mode={travMode} onClose={() => { setTrav(null); setTool(null); }} />}

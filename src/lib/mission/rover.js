@@ -79,6 +79,17 @@ function rockIntersectsRover(rock, x, z, heading, spec) {
   return Math.abs(forward) <= spec.len / 2 + radius && Math.abs(lateral) <= spec.width / 2 + radius;
 }
 
+function rockIntersectsWheel(rock, x, z, heading, spec) {
+  const dx = rock.x - x, dz = rock.z - z;
+  const forward = Math.sin(heading) * dx - Math.cos(heading) * dz;
+  const lateral = Math.cos(heading) * dx + Math.sin(heading) * dz;
+  const radius = rock.d / 2 + spec.wheelR * 0.35;
+  for (const side of [-1, 1]) for (const along of [-spec.len * 0.38, 0, spec.len * 0.38]) {
+    if (Math.hypot(forward - along, lateral - side * spec.width * 0.42) <= radius) return true;
+  }
+  return false;
+}
+
 /**
  * Um passo da simulação. input = { throttle −1..1, steer −1..1 }. dt em segundos de missão.
  * env = { scene, soft(u,v) → 0..1, sunlit(u,v) → bool, sunElev (graus) }
@@ -126,9 +137,10 @@ export function step(st, spec, input, dt, env) {
       if (!rockIntersectsRover(rk, x, z, s.heading, spec)) continue;
       const ahead = (rk.x - x) * dir.x + (rk.z - z) * dir.z;
       if (rk.h > lim && ahead * Math.sign(v) > -0.2) { s.blocked = rk; break; }
-      if (!env.hits.has(rk.id) && rk.h > spec.wheelR * 0.6) {
+      if (!env.hits.has(rk.id) && rk.h > spec.wheelR * 0.6 && rockIntersectsWheel(rk, x, z, s.heading, spec)) {
         env.hits.add(rk.id);
-        s.wheel = Math.min(100, s.wheel + 4 * (rk.h / lim));
+        const contact = (rk.h - spec.wheelR * 0.6) / Math.max(0.01, lim - spec.wheelR * 0.6);
+        s.wheel = Math.min(100, s.wheel + 1.5 * Math.min(1, contact) ** 2);
         s.rocksClimbed = (s.rocksClimbed || 0) + 1;
       }
     }
