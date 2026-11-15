@@ -1,5 +1,6 @@
 // Perfil de elevação A→B nas duas cenas, no mesmo eixo (distância real, altura relativa ao ponto A).
 import { fmt } from "../../lib/format.js";
+import { T } from "../../lib/i18n.js";
 
 const COLORS = { left: "#ffd166", right: "#59e0ff" };
 
@@ -16,12 +17,12 @@ export default function ProfileChart({ profiles, onClose }) {
   const y = (h) => P.t + (1 - (h - lo) / (hi - lo)) * (H - P.t - P.b);
   const ticks = 4;
   return (
-    <div className="t3-profile card" role="region" aria-label="Perfil de elevação">
+    <div className="t3-profile card" role="region" aria-label={T("Perfil de elevação", "Elevation profile")}>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="eyebrow mb-0">Perfil de elevação A → B</h3>
-        <button type="button" className="t3-x" onClick={onClose} aria-label="Fechar perfil">×</button>
+        <h3 className="eyebrow mb-0">{T("Perfil de elevação A → B", "Elevation profile A → B")}</h3>
+        <button type="button" className="t3-x" onClick={onClose} aria-label={T("Fechar perfil", "Close profile")}>×</button>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Gráfico do perfil de elevação">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={T("Gráfico do perfil de elevação", "Elevation profile chart")}>
         {[...Array(ticks + 1)].map((_, i) => {
           const h = lo + ((hi - lo) * i) / ticks;
           return <g key={i}><line x1={P.l} x2={W - P.r} y1={y(h)} y2={y(h)} stroke="rgba(255,255,255,.1)" />
@@ -38,7 +39,7 @@ export default function ProfileChart({ profiles, onClose }) {
       <div className="grid gap-1 text-[12px] sm:grid-cols-2">
         {list.map((p) => (
           <p key={p.side} className="m-0" style={{ color: COLORS[p.side] }}>
-            <b>{p.name}</b>: {fmt(p.len / 1000, 2)} km · sobe {fmt(p.up, 0)} m · desce {fmt(p.down, 0)} m · trecho mais íngreme {fmt(p.maxSlope, 1)}°
+            <b>{p.name}</b>: {fmt(p.len / 1000, 2)} km · {T("sobe", "up")} {fmt(p.up, 0)} m · {T("desce", "down")} {fmt(p.down, 0)} m · {T("trecho mais íngreme", "steepest stretch")} {fmt(p.maxSlope, 1)}°
           </p>
         ))}
       </div>

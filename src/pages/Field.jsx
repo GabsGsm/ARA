@@ -11,6 +11,7 @@ import { BODY_LABEL, fmt, withUnit } from "../lib/format.js";
 import * as svc from "../lib/services/earthData.js";
 import { evidenceFor, nextBest } from "../lib/evidence/engine.js";
 import StatusChip from "../components/ui/StatusChip.jsx";
+import { T } from "../lib/i18n.js";
 
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const MACRO = "https://tiles.macrostrat.org/carto/{z}/{x}/{y}.png";
@@ -89,12 +90,12 @@ export default function Field() {
 
   const startGps = () => {
     setErr(null);
-    if (!("geolocation" in navigator)) { setErr("Este navegador não oferece localização."); return; }
-    if (!window.isSecureContext) { setErr("A localização exige HTTPS."); return; }
+    if (!("geolocation" in navigator)) { setErr(T("Este navegador não oferece localização.", "This browser does not provide location.")); return; }
+    if (!window.isSecureContext) { setErr(T("A localização exige HTTPS.", "Location requires HTTPS.")); return; }
     setMode("gps"); setRunning(true); t0.current = Date.now();
     watch.current = navigator.geolocation.watchPosition(
       (p) => accept(p.coords.latitude, p.coords.longitude, p.coords.accuracy, p.timestamp),
-      (e) => { setErr(e.code === 1 ? "Permissão de localização negada. Você ainda pode escolher um local no mapa ou ver a demonstração." : `GPS indisponível (${e.message}).`); stop(); },
+      (e) => { setErr(e.code === 1 ? T("Permissão de localização negada. Você ainda pode escolher um local no mapa ou ver a demonstração.", "Location permission denied. You can still pick a place on the map or watch the demonstration.") : T(`GPS indisponível (${e.message}).`, `GPS unavailable (${e.message}).`)); stop(); },
       { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 },
     );
   };
@@ -164,26 +165,26 @@ export default function Field() {
   if (!mode) {
     return (
       <section className="fx-start" aria-labelledby="fxTitle">
-        <h1 id="fxTitle" className="display">Explore o seu próprio planeta</h1>
-        <p className="lead">Descubra como o ambiente ao seu redor pode ajudar a compreender outros mundos.</p>
+        <h1 id="fxTitle" className="display">{T("Explore o seu próprio planeta", "Explore your own planet")}</h1>
+        <p className="lead">{T("Descubra como o ambiente ao seu redor pode ajudar a compreender outros mundos.", "Discover how the environment around you can help us understand other worlds.")}</p>
         <div className="fx-actions">
-          <button type="button" className="fx-big gold" onClick={startGps}><b>Usar minha localização</b><small>GPS do aparelho, só enquanto a sessão estiver ativa</small></button>
-          <button type="button" className="fx-big" onClick={() => { setMode("map"); setErr(null); }}><b>Escolher um local no mapa</b><small>Sem GPS: toque num ponto</small></button>
-          <button type="button" className="fx-big" onClick={startDemo}><b>Experimentar demonstração</b><small>Percurso simulado no Vale da Morte</small></button>
+          <button type="button" className="fx-big gold" onClick={startGps}><b>{T("Usar minha localização", "Use my location")}</b><small>{T("GPS do aparelho, só enquanto a sessão estiver ativa", "Device GPS, only while the session is active")}</small></button>
+          <button type="button" className="fx-big" onClick={() => { setMode("map"); setErr(null); }}><b>{T("Escolher um local no mapa", "Pick a place on the map")}</b><small>{T("Sem GPS: toque num ponto", "No GPS: tap a point")}</small></button>
+          <button type="button" className="fx-big" onClick={startDemo}><b>{T("Experimentar demonstração", "Try the demonstration")}</b><small>{T("Percurso simulado no Vale da Morte", "Simulated walk in Death Valley")}</small></button>
         </div>
         {err && <p className="dv-warn">{err}</p>}
-        <p className="note">Sua localização fica só neste aparelho e não é publicada. Precisão depende do aparelho e do céu aberto; em ambientes fechados o GPS pode errar dezenas de metros.</p>
+        <p className="note">{T("Sua localização fica só neste aparelho e não é publicada. Precisão depende do aparelho e do céu aberto; em ambientes fechados o GPS pode errar dezenas de metros.", "Your location stays on this device only and is never published. Accuracy depends on the device and open sky; indoors GPS can be off by tens of metres.")}</p>
       </section>
     );
   }
 
   return (
-    <section className="fx-page" aria-label="Exploração de campo">
-      {mode === "demo" && <p className="fx-demo">Simulação de percurso — modo demonstração<span className="fx-long"> (trilha aproximada Golden Canyon → Zabriskie Point, Vale da Morte). Não é GPS real.</span></p>}
+    <section className="fx-page" aria-label={T("Exploração de campo", "Field exploration")}>
+      {mode === "demo" && <p className="fx-demo">{T("Simulação de percurso — modo demonstração", "Simulated walk — demonstration mode")}<span className="fx-long">{T(" (trilha aproximada Golden Canyon → Zabriskie Point, Vale da Morte). Não é GPS real.", " (approximate Golden Canyon → Zabriskie Point trail, Death Valley). Not real GPS.")}</span></p>}
       <div className="fx-map">
         <MapContainer center={pos ?? [36.42, -116.83]} zoom={pos ? 15 : 3} style={{ height: "100%" }} zoomControl={false}>
-          <TileLayer url={ESRI} maxZoom={19} attribution="Imagens © Esri" />
-          {geoLayer && <TileLayer url={MACRO} opacity={0.55} maxZoom={14} attribution="Geologia © Macrostrat" />}
+          <TileLayer url={ESRI} maxZoom={19} attribution={T("Imagens © Esri", "Imagery © Esri")} />
+          {geoLayer && <TileLayer url={MACRO} opacity={0.55} maxZoom={14} attribution={T("Geologia © Macrostrat", "Geology © Macrostrat")} />}
           {track.length > 1 && <Polyline positions={track.map((p) => [p[0], p[1]])} pathOptions={{ color: "#f7c75a", weight: 4 }} />}
           {pos && fix.acc && <Circle center={pos} radius={fix.acc} pathOptions={{ color: "#59e0ff", weight: 1, fillOpacity: 0.12 }} />}
           {pos && <Marker position={pos} icon={me} />}
@@ -192,70 +193,70 @@ export default function Field() {
           <Pick on={mode === "map"} onPick={(la, lo) => { setFix({ lat: la, lon: lo, acc: 0, t: Date.now() }); setTerr(null); }} />
         </MapContainer>
         <div className="fx-hud" role="status">
-          <span>{mode === "gps" ? (running ? "● Acompanhando" : "Pausado") : mode === "demo" ? (running ? "● Simulando" : "Simulação parada") : "Local escolhido no mapa"}</span>
-          {fix?.acc > 0 && <span>Precisão ± {fmt(fix.acc, 0)} m{fix.acc > MAX_ACC ? " (ignorado)" : ""}</span>}
-          {mode !== "map" && <span>Distância {dist >= 1000 ? `${fmt(dist / 1000, 2)} km` : `${fmt(dist, 0)} m`}</span>}
-          {mode !== "map" && <span>{track.length} pontos · {rejected} descartados · {elapsed} min</span>}
+          <span>{mode === "gps" ? (running ? T("● Acompanhando", "● Tracking") : T("Pausado", "Paused")) : mode === "demo" ? (running ? T("● Simulando", "● Simulating") : T("Simulação parada", "Simulation stopped")) : T("Local escolhido no mapa", "Place picked on the map")}</span>
+          {fix?.acc > 0 && <span>{T("Precisão", "Accuracy")} ± {fmt(fix.acc, 0)} m{fix.acc > MAX_ACC ? T(" (ignorado)", " (ignored)") : ""}</span>}
+          {mode !== "map" && <span>{T("Distância", "Distance")} {dist >= 1000 ? `${fmt(dist / 1000, 2)} km` : `${fmt(dist, 0)} m`}</span>}
+          {mode !== "map" && <span>{track.length} {T("pontos", "points")} · {rejected} {T("descartados", "discarded")} · {elapsed} min</span>}
         </div>
         <div className="fx-ctrl">
-          {mode !== "map" && <button type="button" onClick={pause}>{running ? "Pausar" : "Retomar"}</button>}
-          {mode !== "map" && <button type="button" onClick={finish}>Finalizar</button>}
-          <button type="button" onClick={erase}>Excluir sessão</button>
-          <button type="button" aria-pressed={geoLayer} onClick={() => setGeoLayer((v) => !v)}>Geologia</button>
+          {mode !== "map" && <button type="button" onClick={pause}>{running ? T("Pausar", "Pause") : T("Retomar", "Resume")}</button>}
+          {mode !== "map" && <button type="button" onClick={finish}>{T("Finalizar", "Finish")}</button>}
+          <button type="button" onClick={erase}>{T("Excluir sessão", "Delete session")}</button>
+          <button type="button" aria-pressed={geoLayer} onClick={() => setGeoLayer((v) => !v)}>{T("Geologia", "Geology")}</button>
         </div>
-        {mode === "map" && !pos && <p className="fx-tip">Toque no mapa para escolher um ponto.</p>}
+        {mode === "map" && !pos && <p className="fx-tip">{T("Toque no mapa para escolher um ponto.", "Tap the map to pick a point.")}</p>}
       </div>
 
       <div className={`fx-sheet ${sheet ? "open" : ""}`}>
-        <button type="button" className="fx-grip" onClick={() => setSheet((v) => !v)} aria-expanded={sheet}>{sheet ? "Recolher ▾" : "Ver painel científico ▴"}</button>
+        <button type="button" className="fx-grip" onClick={() => setSheet((v) => !v)} aria-expanded={sheet}>{sheet ? T("Recolher ▾", "Collapse ▾") : T("Ver painel científico ▴", "Show science panel ▴")}</button>
         <div className="fx-sheet-body">
-          <h2 className="eyebrow">Você está explorando a Terra</h2>
-          {!pos && <p className="note">Aguardando a primeira posição…</p>}
-          {pos && <p className="m-0 text-[13px] text-ink-2">{fmt(Math.abs(pos[0]), 5)}°{pos[0] >= 0 ? "N" : "S"}, {fmt(Math.abs(pos[1]), 5)}°{pos[1] >= 0 ? "L" : "O"}</p>}
+          <h2 className="eyebrow">{T("Você está explorando a Terra", "You are exploring Earth")}</h2>
+          {!pos && <p className="note">{T("Aguardando a primeira posição…", "Waiting for the first position…")}</p>}
+          {pos && <p className="m-0 text-[13px] text-ink-2">{fmt(Math.abs(pos[0]), 5)}°{pos[0] >= 0 ? "N" : "S"}, {fmt(Math.abs(pos[1]), 5)}°{pos[1] >= 0 ? T("L", "E") : T("O", "W")}</p>}
 
-          <h3 className="fx-q">O que sabemos sobre este local?</h3>
-          {geo?.loading && <p className="note">Consultando a geologia…</p>}
-          {geo?.ok && geo.data && <p className="m-0 text-[13px] text-ink-2"><b>{geo.data.best.name}</b>{geo.data.best.lith ? ` — ${geo.data.best.lith}` : ""}{geo.data.best.age?.best ? ` · ${geo.data.best.age.best}` : ""}. <span className="text-muted">Mapa geológico regional (escala {geo.data.best.scale}), não coletado agora.</span></p>}
-          {geo?.ok && !geo.data && <p className="note">Sem unidade geológica mapeada aqui.</p>}
-          {geo && !geo.loading && !geo.ok && <p className="note">Geologia indisponível: {geo.error}</p>}
+          <h3 className="fx-q">{T("O que sabemos sobre este local?", "What do we know about this place?")}</h3>
+          {geo?.loading && <p className="note">{T("Consultando a geologia…", "Looking up the geology…")}</p>}
+          {geo?.ok && geo.data && <p className="m-0 text-[13px] text-ink-2"><b>{geo.data.best.name}</b>{geo.data.best.lith ? ` — ${geo.data.best.lith}` : ""}{geo.data.best.age?.best ? ` · ${geo.data.best.age.best}` : ""}. <span className="text-muted">{T(`Mapa geológico regional (escala ${geo.data.best.scale}), não coletado agora.`, `Regional geological map (scale ${geo.data.best.scale}), not collected now.`)}</span></p>}
+          {geo?.ok && !geo.data && <p className="note">{T("Sem unidade geológica mapeada aqui.", "No geological unit mapped here.")}</p>}
+          {geo && !geo.loading && !geo.ok && <p className="note">{T("Geologia indisponível", "Geology unavailable")}: {geo.error}</p>}
 
-          <h3 className="fx-q">Qual ambiente planetário está sendo comparado?</h3>
+          <h3 className="fx-q">{T("Qual ambiente planetário está sendo comparado?", "Which planetary environment is being compared?")}</h3>
           <select className="field" value={targetId} onChange={(e) => setTargetId(e.target.value)}>
-            {data.catalog.sites.filter((s) => data.hasTerrain(s.id)).map((s) => <option key={s.id} value={s.id}>{BODY_LABEL[s.body]} · {s.name}</option>)}
+            {data.catalog.sites.filter((s) => data.hasTerrain(s.id)).map((s) => <option key={s.id} value={s.id}>{T(BODY_LABEL[s.body])} · {s.name}</option>)}
           </select>
-          <button type="button" className="dv-go" disabled={!pos || terr?.loading} onClick={characterize}>{terr?.loading ? "Analisando o relevo…" : "Caracterizar o relevo daqui (5 km)"}</button>
-          {terr?.t && !terr.t.ok && <p className="dv-warn">Relevo indisponível: {terr.t.error}</p>}
+          <button type="button" className="dv-go" disabled={!pos || terr?.loading} onClick={characterize}>{terr?.loading ? T("Analisando o relevo…", "Analysing the relief…") : T("Caracterizar o relevo daqui (5 km)", "Characterise the relief here (5 km)")}</button>
+          {terr?.t && !terr.t.ok && <p className="dv-warn">{T("Relevo indisponível", "Relief unavailable")}: {terr.t.error}</p>}
           {m && siteVec && (
             <>
-              <h3 className="fx-q">O que é semelhante? O que é diferente?</h3>
+              <h3 className="fx-q">{T("O que é semelhante? O que é diferente?", "What is similar? What is different?")}</h3>
               <table className="data-table m-0">
                 <tbody>{core.RANK_ATTRS.map((a) => { const meta = data.config.attributes[a]; const st = core.dimensionStatus(siteVec[a], m[a], meta.scale, data.config.thresholds);
-                  return <tr key={a}><th scope="row">{meta.label}</th><td>{withUnit(m[a], meta.unit)}</td><td>alvo {withUnit(siteVec[a], meta.unit)}</td><td><StatusChip status={st.status} /></td></tr>; })}
-                  <tr><th scope="row">Gravidade</th><td>9,81 m/s²</td><td>alvo {site.body === "moon" ? "1,62" : "3,72"} m/s²</td><td><StatusChip status="not_analog" /></td></tr>
+                  return <tr key={a}><th scope="row">{T(meta.label)}</th><td>{withUnit(m[a], meta.unit)}</td><td>{T("alvo", "target")} {withUnit(siteVec[a], meta.unit)}</td><td><StatusChip status={st.status} /></td></tr>; })}
+                  <tr><th scope="row">{T("Gravidade")}</th><td>{fmt(9.81, 2)} m/s²</td><td>{T("alvo", "target")} {fmt(site.body === "moon" ? 1.62 : 3.72, 2)} m/s²</td><td><StatusChip status="not_analog" /></td></tr>
                 </tbody>
               </table>
               {evid && (
                 <>
-                  <h3 className="fx-q">Quais dados faltam?</h3>
+                  <h3 className="fx-q">{T("Quais dados faltam?", "What data is missing?")}</h3>
                   <ul className="list-clean text-[13px] text-ink-2">{evid.nb.missing.map((x) => <li key={x.attr}><b>{x.attr}</b>: {x.measure}</li>)}</ul>
                 </>
               )}
-              <p className="note">Comparação exploratória (mesma fórmula do ARA, DEM AWS z14). <Link to={`/3d?site=${targetId}&lat=${terr.at[0].toFixed(5)}&lon=${terr.at[1].toFixed(5)}&nome=Campo`}>Abrir lado a lado em 3D →</Link></p>
+              <p className="note">{T("Comparação exploratória (mesma fórmula do ARA, DEM AWS z14).", "Exploratory comparison (same formula as ARA, AWS z14 DEM).")} <Link to={`/3d?site=${targetId}&lat=${terr.at[0].toFixed(5)}&lon=${terr.at[1].toFixed(5)}&nome=Campo`}>{T("Abrir lado a lado em 3D →", "Open side by side in 3D →")}</Link></p>
             </>
           )}
 
-          <h3 className="fx-q">Notas de campo</h3>
-          <input className="field" placeholder="Título" value={note.title} onChange={(e) => setNote((n) => ({ ...n, title: e.target.value }))} />
-          <textarea className="field mt-2" rows={3} placeholder="O que você observou?" value={note.text} onChange={(e) => setNote((n) => ({ ...n, text: e.target.value }))} />
+          <h3 className="fx-q">{T("Notas de campo", "Field notes")}</h3>
+          <input className="field" placeholder={T("Título", "Title")} value={note.title} onChange={(e) => setNote((n) => ({ ...n, title: e.target.value }))} />
+          <textarea className="field mt-2" rows={3} placeholder={T("O que você observou?", "What did you observe?")} value={note.text} onChange={(e) => setNote((n) => ({ ...n, text: e.target.value }))} />
           <div className="mt-2 flex flex-wrap gap-2">
-            <button type="button" className="dv-btn" onClick={saveNote}>Salvar nota</button>
-            {notes.length > 0 && <button type="button" className="dv-btn" onClick={exportNotes}>Exportar notas (JSON)</button>}
-            {notes.length > 0 && <button type="button" className="dv-btn" onClick={() => setNotes([])}>Apagar todas</button>}
+            <button type="button" className="dv-btn" onClick={saveNote}>{T("Salvar nota", "Save note")}</button>
+            {notes.length > 0 && <button type="button" className="dv-btn" onClick={exportNotes}>{T("Exportar notas (JSON)", "Export notes (JSON)")}</button>}
+            {notes.length > 0 && <button type="button" className="dv-btn" onClick={() => setNotes([])}>{T("Apagar todas", "Delete all")}</button>}
           </div>
           <ul className="fx-notes">
-            {notes.map((n) => <li key={n.id}><b>{n.title || "Sem título"}</b>{n.demo ? " (demonstração)" : ""}<small>{new Date(n.date).toLocaleString("pt-BR")} · {n.lat != null ? `${n.lat}°, ${n.lon}° (aprox.)` : "sem posição"}</small>{n.text && <p>{n.text}</p>}</li>)}
+            {notes.map((n) => <li key={n.id}><b>{n.title || T("Sem título", "Untitled")}</b>{n.demo ? T(" (demonstração)", " (demonstration)") : ""}<small>{new Date(n.date).toLocaleString(T("pt-BR", "en-US"))} · {n.lat != null ? `${n.lat}°, ${n.lon}° (${T("aprox.", "approx.")})` : T("sem posição", "no position")}</small>{n.text && <p>{n.text}</p>}</li>)}
           </ul>
-          <p className="note">As notas ficam só neste aparelho. Identificação mineral por foto comum não é feita pelo ARA.</p>
+          <p className="note">{T("As notas ficam só neste aparelho. Identificação mineral por foto comum não é feita pelo ARA.", "Notes stay on this device only. ARA does not identify minerals from ordinary photos.")}</p>
         </div>
       </div>
     </section>

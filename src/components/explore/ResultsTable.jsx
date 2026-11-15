@@ -1,14 +1,15 @@
 import { useAraData } from "../../hooks/useAraData.jsx";
 import { fmt } from "../../lib/format.js";
+import { T } from "../../lib/i18n.js";
 
 export default function ResultsTable({ results, selected, onPick }) {
   const { regionName } = useAraData();
   return (
     <div className="overflow-x-auto">
       <table className="data-table">
-        <caption>Melhores células da Terra para o local escolhido. Clique numa linha para ver no mapa.</caption>
+        <caption>{T("Melhores células da Terra para o local escolhido. Clique numa linha para ver no mapa.", "Best Earth cells for the chosen site. Click a row to see it on the map.")}</caption>
         <thead>
-          <tr><th>#</th><th>Célula</th><th>Região</th><th>Declividade (°)</th><th>Rugosidade (m)</th><th>Amplitude (m)</th><th>Distância</th></tr>
+          <tr><th>#</th><th>{T("Célula", "Cell")}</th><th>{T("Região", "Region")}</th><th>{T("Declividade (°)", "Slope (°)")}</th><th>{T("Rugosidade (m)", "Roughness (m)")}</th><th>{T("Amplitude (m)", "Relief (m)")}</th><th>{T("Distância", "Distance")}</th></tr>
         </thead>
         <tbody>
           {results.map((r) => (

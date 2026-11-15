@@ -8,11 +8,11 @@
 import { shadowMask } from "../terrain3d/sun.js";
 
 export const PP_SOURCES = [
-  { id: "nid", text: "NASA NID 8715.129 — Biological Planetary Protection for Human Missions to Mars (2020)", url: "https://nodis3.gsfc.nasa.gov/OPD_docs/NID_8715-129_.pdf" },
-  { id: "nas", text: "National Academies (2021) — Evaluation of bioburden requirements / human missions to Mars, cap. 4", url: "https://nap.nationalacademies.org/read/26336/chapter/7" },
-  { id: "hum", text: "NASA (2022) — Science objectives for human exploration of Mars: planetary protection guidelines", url: "https://ntrs.nasa.gov/api/citations/20220006192/downloads/ScienceObjectivesHumanMars_PPGuidelines_2022May.pdf" },
-  { id: "psr", text: "Paiva & Sinibaldi (2025, JGR Planets) — exaustão de módulos pode contaminar o gelo das regiões em sombra permanente da Lua", url: "https://astrobiology.com/2026/01/07/lunar-spacecraft-exhaust-could-obscure-clues-to-origins-of-life/" },
-  { id: "crism", text: "Valantinas et al. (2026) — unidades minerais CRISM + CaSSIS da borda oeste de Jezero", url: "https://zenodo.org/records/22257754" },
+  { id: "nid", en: "NASA NID 8715.129 — Biological Planetary Protection for Human Missions to Mars (2020)", text: "NASA NID 8715.129 — Biological Planetary Protection for Human Missions to Mars (2020)", url: "https://nodis3.gsfc.nasa.gov/OPD_docs/NID_8715-129_.pdf" },
+  { id: "nas", en: "National Academies (2021) — Evaluation of bioburden requirements / human missions to Mars, ch. 4", text: "National Academies (2021) — Evaluation of bioburden requirements / human missions to Mars, cap. 4", url: "https://nap.nationalacademies.org/read/26336/chapter/7" },
+  { id: "hum", en: "NASA (2022) — Science objectives for human exploration of Mars: planetary protection guidelines", text: "NASA (2022) — Science objectives for human exploration of Mars: planetary protection guidelines", url: "https://ntrs.nasa.gov/api/citations/20220006192/downloads/ScienceObjectivesHumanMars_PPGuidelines_2022May.pdf" },
+  { id: "psr", en: "Paiva & Sinibaldi (2025, JGR Planets) — lander exhaust can contaminate the ice of the Moon’s permanently shadowed regions", text: "Paiva & Sinibaldi (2025, JGR Planets) — exaustão de módulos pode contaminar o gelo das regiões em sombra permanente da Lua", url: "https://astrobiology.com/2026/01/07/lunar-spacecraft-exhaust-could-obscure-clues-to-origins-of-life/" },
+  { id: "crism", en: "Valantinas et al. (2026) — CRISM + CaSSIS mineral units of Jezero’s western rim", text: "Valantinas et al. (2026) — unidades minerais CRISM + CaSSIS da borda oeste de Jezero", url: "https://zenodo.org/records/22257754" },
 ];
 
 const KEY = "ara-mission-memory";

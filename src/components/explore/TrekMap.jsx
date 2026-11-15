@@ -4,6 +4,7 @@
 import { useState } from "react";
 import L from "leaflet";
 import { MapContainer, Rectangle, TileLayer } from "react-leaflet";
+import { T } from "../../lib/i18n.js";
 
 const MAX_ERRORS = 3;
 
@@ -21,8 +22,8 @@ export default function TrekMap({ site, layer }) {
   if (failed) {
     return (
       <p className="note mt-2.5 rounded-[14px] border border-dashed border-line-2 p-3">
-        Mapa de contexto do NASA Mars Trek indisponível agora (o servidor de tiles não respondeu).
-        {" "}<a href={`https://trek.nasa.gov/mars/#v=0.1&x=${(w + e) / 2}&y=${(s + n) / 2}&z=8`} target="_blank" rel="noopener noreferrer">Abrir no Mars Trek ↗</a>
+        {T("Mapa de contexto do NASA Mars Trek indisponível agora (o servidor de tiles não respondeu).", "NASA Mars Trek context map unavailable right now (the tile server did not respond).")}
+        {" "}<a href={`https://trek.nasa.gov/mars/#v=0.1&x=${(w + e) / 2}&y=${(s + n) / 2}&z=8`} target="_blank" rel="noopener noreferrer">{T("Abrir no Mars Trek ↗", "Open in Mars Trek ↗")}</a>
       </p>
     );
   }
@@ -30,7 +31,7 @@ export default function TrekMap({ site, layer }) {
     <>
       <MapContainer key={site.id} crs={L.CRS.EPSG4326} center={[(s + n) / 2, (w + e) / 2]} zoom={6}
                     attributionControl={false} className="mt-2.5 h-[190px] rounded-[14px] border border-line-2 !bg-[#2a1a10]"
-                    aria-label={`Mapa de contexto de ${site.name} (NASA Trek)`}>
+                    aria-label={T(`Mapa de contexto de ${site.name} (NASA Trek)`, `Context map of ${site.name} (NASA Trek)`)}>
         <TileLayer url={layer.url} maxNativeZoom={layer.max_native_zoom} maxZoom={12} noWrap
                    eventHandlers={{ tileerror: () => bump("errors"), tileload: () => bump("loaded") }} />
         <Rectangle bounds={[[s, w], [n, e]]} pathOptions={{ color: "#f2b53a", weight: 2, fillOpacity: 0.15 }} />

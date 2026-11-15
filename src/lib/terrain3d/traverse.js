@@ -1,14 +1,15 @@
 // Travessias: rota de menor custo com os limites da missão, perfil, custo físico e a "Travessia Gêmea"
 // (o trecho do análogo terrestre cujo perfil de subidas e descidas mais se parece com a rota planejada).
 import { heightAt } from "./data.js";
+import { T } from "../i18n.js";
 
 const RAD = Math.PI / 180;
 
 /** Limites por modo (fontes: NASA Artemis III — EVA < 20° em 2 km; JPL — rovers evitam > 30°). */
 export const MODES = {
-  eva: { label: "Caminhada (EVA Artemis)", maxSlope: 20, speed: 0.9, note: "Limite de declividade para EVA da Artemis III: 20° (escala de 2 km)." },
-  perseverance: { label: "Rover Perseverance", maxSlope: 30, speed: 0.042, note: "Rovers da JPL evitam declividades acima de ~30°; velocidade máx. 4,2 cm/s." },
-  lrv: { label: "Carro lunar (LRV Apollo)", maxSlope: 25, speed: 2.8, note: "O LRV subia rampas de até ~25°; média de ~10 km/h nas Apollo." },
+  eva: { get label() { return T("Caminhada (EVA Artemis)", "Walk (Artemis EVA)"); }, maxSlope: 20, speed: 0.9, get note() { return T("Limite de declividade para EVA da Artemis III: 20° (escala de 2 km).", "Artemis III EVA slope limit: 20° (2 km scale)."); } },
+  perseverance: { get label() { return T("Rover Perseverance", "Perseverance rover"); }, maxSlope: 30, speed: 0.042, get note() { return T("Rovers da JPL evitam declividades acima de ~30°; velocidade máx. 4,2 cm/s.", "JPL rovers avoid slopes above ~30°; top speed 4.2 cm/s."); } },
+  lrv: { get label() { return T("Carro lunar (LRV Apollo)", "Lunar rover (Apollo LRV)"); }, maxSlope: 25, speed: 2.8, get note() { return T("O LRV subia rampas de até ~25°; média de ~10 km/h nas Apollo.", "The LRV climbed slopes of up to ~25°; it averaged ~10 km/h on Apollo."); } },
 };
 
 /** Grade reduzida (N×N) com alturas médias, para o planejador. */

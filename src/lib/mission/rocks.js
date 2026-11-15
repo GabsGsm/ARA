@@ -6,10 +6,10 @@
 // com semente fixa: a mesma posição sempre tem as mesmas pedras (o simulador e o desenho 3D concordam).
 
 export const ROCK_SOURCES = [
-  { id: "gr97", text: "Golombek & Rapp (1997) — Size-frequency distributions of rocks on Mars and Earth analog sites, JGR 102: modelo F_k(D) = k·e^(−q(k)D)", url: "https://pure.psu.edu/en/publications/rock-size-frequency-distributions-on-mars-and-implications-for-ma/" },
-  { id: "g21", text: "Golombek et al. (2021) — Rock size-frequency distributions at the InSight landing site (fundo de terreno: 0–10% de cobertura; InSight ≈ 1–5%)", url: "https://authors.library.caltech.edu/records/d1t32-akr32/files/Earth_and_Space_Science_-_2021_-_Golombek_-_Rock_Size_u2010Frequency_Distributions_at_the_InSight_Landing_Site_Mars.pdf?download=1" },
-  { id: "b11", text: "Bandfield et al. (2011) — Lunar surface rock abundance from LRO Diviner: a maior parte da Lua tem pouca rocha exposta, exceto encostas íngremes", url: "https://gemelli.spacescience.org/jbandfield/publications/bandfield_diviner_ra.pdf" },
-  { id: "msl", text: "Rocker-bogie: passa por obstáculos maiores que o diâmetro da roda (MSL: rodas de 50 cm)", url: "https://science.nasa.gov/resource/new-wheels" },
+  { id: "gr97", en: "Golombek & Rapp (1997) — Size-frequency distributions of rocks on Mars and Earth analog sites, JGR 102: model F_k(D) = k·e^(−q(k)D)", text: "Golombek & Rapp (1997) — Size-frequency distributions of rocks on Mars and Earth analog sites, JGR 102: modelo F_k(D) = k·e^(−q(k)D)", url: "https://pure.psu.edu/en/publications/rock-size-frequency-distributions-on-mars-and-implications-for-ma/" },
+  { id: "g21", en: "Golombek et al. (2021) — Rock size-frequency distributions at the InSight landing site (background terrain: 0–10% cover; InSight ≈ 1–5%)", text: "Golombek et al. (2021) — Rock size-frequency distributions at the InSight landing site (fundo de terreno: 0–10% de cobertura; InSight ≈ 1–5%)", url: "https://authors.library.caltech.edu/records/d1t32-akr32/files/Earth_and_Space_Science_-_2021_-_Golombek_-_Rock_Size_u2010Frequency_Distributions_at_the_InSight_Landing_Site_Mars.pdf?download=1" },
+  { id: "b11", en: "Bandfield et al. (2011) — Lunar surface rock abundance from LRO Diviner: most of the Moon has little exposed rock, except on steep slopes", text: "Bandfield et al. (2011) — Lunar surface rock abundance from LRO Diviner: a maior parte da Lua tem pouca rocha exposta, exceto encostas íngremes", url: "https://gemelli.spacescience.org/jbandfield/publications/bandfield_diviner_ra.pdf" },
+  { id: "msl", en: "Heverly et al. (2013) — Traverse performance characterization for the Mars Science Laboratory rover, J. Field Robotics 30(6): up to 22° on smooth bedrock and 28° on cohesive soil", text: "Rocker-bogie: passa por obstáculos maiores que o diâmetro da roda (MSL: rodas de 50 cm)", url: "https://science.nasa.gov/resource/new-wheels" },
 ];
 
 const q = (k) => 1.79 + 0.152 / Math.max(k, 1e-4);

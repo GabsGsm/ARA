@@ -15,7 +15,7 @@ export default function VariantPicker({ value, onChange }) {
       <p className="note">
         {sim
           ? tr("Recalcula as mesmas células com dados piorados de propósito, para mostrar quanto o ranking depende da qualidade dos dados.", "Recomputes the same cells with deliberately degraded data, to show how much the ranking depends on data quality.")
-          : "Dados da simulação ainda não gerados (pipeline/build_simulation.py)."}
+          : tr("Dados da simulação ainda não gerados (pipeline/build_simulation.py).", "Simulation data not generated yet (pipeline/build_simulation.py).")}
       </p>
     </>
   );

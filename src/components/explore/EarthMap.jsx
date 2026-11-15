@@ -40,8 +40,8 @@ export default function EarthMap({ results, selected, focus, onPick }) {
   return (
     <div className="relative mt-3">
       <MapContainer center={[0, 0]} zoom={2} worldCopyJump className="h-[430px] rounded-2xl border border-line-2 max-md:h-[320px]"
-                    aria-label="Mapa das melhores células da Terra">
-        <TileLayer url={ESRI} maxZoom={17} attribution="Imagens © Esri" />
+                    aria-label={tr("Mapa das melhores células da Terra", "Map of the best Earth cells")}>
+        <TileLayer url={ESRI} maxZoom={17} attribution={tr("Imagens © Esri", "Imagery © Esri")} />
         {gibs && <TileLayer url={GIBS} maxNativeZoom={9} maxZoom={17} opacity={0.85} attribution="NASA GIBS / MODIS Terra" />}
         {sorted.map((r) => {
           const on = r.cell.id === selected;

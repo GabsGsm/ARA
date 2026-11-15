@@ -9,6 +9,7 @@ import { CSS2DRenderer, CSS2DObject } from "three/examples/jsm/renderers/CSS2DRe
 import { heightAt, slopeAt, slopeGrid, uvToLatLon } from "./data.js";
 import { GLB, PROCEDURAL, fitToLength, loadGLB } from "./models.js";
 import { rocksNear } from "../mission/rocks.js";
+import { T } from "../i18n.js";
 
 const LAYERS = { imagem: 0, declividade: 1, altitude: 2, relevo: 3, operacoes: 4, protecao: 5 };
 const EYE = 1.75;          // altura dos olhos (m)
@@ -304,7 +305,7 @@ reflectedLight.directSpecular *= vShadow;
           if (seen.has(k) || st.u < 0.03 || st.u > 0.97 || st.v < 0.03 || st.v > 0.97) continue;
           if ((meta.pois || []).some((q) => Math.hypot(q.u - st.u, q.v - st.v) < 0.04)) continue; // não cobre outro rótulo
           seen.add(k);
-          this.label(`Sol ${st.sol}`, st.u, st.v, "sol");
+          this.label(`${T("Sol", "Sol")} ${st.sol}`, st.u, st.v, "sol");
         }
       }
     }

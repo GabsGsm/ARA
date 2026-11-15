@@ -12,12 +12,13 @@ import Pill from "../ui/Pill.jsx";
 import InspectPanel from "./InspectPanel.jsx";
 import SiteFigure from "./SiteFigure.jsx";
 import TrekMap from "./TrekMap.jsx";
+import { T } from "../../lib/i18n.js";
 
 const TABS = [{ id: "resumo", label: "Resumo" }, { id: "comparacao", label: "Comparação" }, { id: "limitacoes", label: "Limitações" }, { id: "fontes", label: "Fontes" }];
 // Constantes físicas conhecidas (NASA Planetary Fact Sheets)
 const BODY_PHYS = {
-  mars: { g: 0.379, gText: "0,38 g", atm: "≈ 0,6% da Terra (≈ 6 mbar)" },
-  moon: { g: 0.165, gText: "0,17 g", atm: "praticamente vácuo" },
+  mars: { g: 0.379, get gText() { return `${fmt(0.38, 2)} g`; }, get atm() { return T("≈ 0,6% da Terra (≈ 6 mbar)", "≈ 0.6% of Earth (≈ 6 mbar)"); } },
+  moon: { g: 0.165, get gText() { return `${fmt(0.17, 2)} g`; }, get atm() { return T("praticamente vácuo", "practically vacuum"); } },
 };
 
 export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
@@ -62,7 +63,7 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h3 className="ex-pair">{site.name} <span aria-hidden="true">→</span> {data.cellName(cell)}</h3>
-                  <p className="m-0 text-[13px] text-ink-2">Célula selecionada: <b className="font-mono">{cell.id}</b> · {fmt(cell.lat, 2)}°, {fmt(cell.lon, 2)}° · {result.position}º lugar</p>
+                  <p className="m-0 text-[13px] text-ink-2">{T("Célula selecionada", "Selected cell")}: <b className="font-mono">{cell.id}</b> · {fmt(cell.lat, 2)}°, {fmt(cell.lon, 2)}° · {T(`${result.position}º lugar`, `#${result.position}`)}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <StatusChip status={overall}>{tr(overall === "analog" ? "Relevo análogo" : overall === "partial" ? "Parcialmente análogo" : "Relevo não análogo")}</StatusChip>
@@ -76,14 +77,14 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
                 <div className="ex-like ok">
                   <h4><span aria-hidden="true">✓</span> {tr("O que é análogo?")}</h4>
                   {like.length ? (
-                    <ul>{like.map((d) => <li key={d.attr}>{d.dimension}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}{d.status === "partial" ? " (parcial)" : ""}</li>)}</ul>
-                  ) : <p>Nenhuma das três medidas de relevo ficou dentro dos limites.</p>}
+                    <ul>{like.map((d) => <li key={d.attr}>{T(d.dimension)}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}{d.status === "partial" ? T(" (parcial)", " (partial)") : ""}</li>)}</ul>
+                  ) : <p>{T("Nenhuma das três medidas de relevo ficou dentro dos limites.", "None of the three relief measures fell within the limits.")}</p>}
                 </div>
                 <div className="ex-like bad">
                   <h4><span aria-hidden="true">✕</span> {tr("O que não é análogo?")}</h4>
                   <ul>
-                    {unlike.map((d) => <li key={d.attr}>{d.dimension}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}</li>)}
-                    <li>Gravidade ({phys.gText} × 1 g), atmosfera ({phys.atm}) e radiação — nenhum lugar da Terra reproduz.</li>
+                    {unlike.map((d) => <li key={d.attr}>{T(d.dimension)}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}</li>)}
+                    <li>{T(`Gravidade (${phys.gText} × 1 g), atmosfera (${phys.atm}) e radiação — nenhum lugar da Terra reproduz.`, `Gravity (${phys.gText} × 1 g), atmosphere (${phys.atm}) and radiation — no place on Earth reproduces them.`)}</li>
                   </ul>
                 </div>
               </div>
@@ -114,23 +115,23 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
           <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
             <div>
               <div className="ex-method">
-                <div><b>Célula</b><span>5 × 5 km</span></div>
-                <div><b>Dados</b><span>{ex.variant === "base" ? "Originais (100 m)" : (data.sim?.variants?.find((v) => v.id === ex.variant)?.label ?? ex.variant)}</span></div>
-                <div><b>Método</b><span>Distância ponderada em declividade, rugosidade e amplitude</span></div>
+                <div><b>{T("Célula", "Cell")}</b><span>5 × 5 km</span></div>
+                <div><b>{T("Dados", "Data")}</b><span>{ex.variant === "base" ? T("Originais (100 m)", "Original (100 m)") : (data.sim?.variants?.find((v) => v.id === ex.variant)?.label ?? ex.variant)}</span></div>
+                <div><b>{T("Método", "Method")}</b><span>{T("Distância ponderada em declividade, rugosidade e amplitude", "Weighted distance over slope, roughness and relief")}</span></div>
               </div>
               <p className="desc mt-3">
-                Análogo se a diferença normalizada ≤ {fmt(data.config.thresholds.good, 2)}; parcial até {fmt(data.config.thresholds.weak, 2)}; acima disso, não análogo.
-                A estabilidade sorteia {data.config.stability.draws.toLocaleString("pt-BR")} conjuntos de pesos ({data.config.stability.distribution}, semente {data.config.stability.seed}) — mede sensibilidade aos pesos, não probabilidade de ser análogo.
+                {T(`Análogo se a diferença normalizada ≤ ${fmt(data.config.thresholds.good, 2)}; parcial até ${fmt(data.config.thresholds.weak, 2)}; acima disso, não análogo. A estabilidade sorteia ${fmt(data.config.stability.draws, 0)} conjuntos de pesos (${data.config.stability.distribution}, semente ${data.config.stability.seed}) — mede sensibilidade aos pesos, não probabilidade de ser análogo.`,
+                   `Analog if the normalised difference ≤ ${fmt(data.config.thresholds.good, 2)}; partial up to ${fmt(data.config.thresholds.weak, 2)}; above that, not analog. Stability draws ${fmt(data.config.stability.draws, 0)} weight sets (${data.config.stability.distribution}, seed ${data.config.stability.seed}) — it measures sensitivity to the weights, not the probability of being an analog.`)}
               </p>
-              {ex.variant !== "base" && <p className="mt-2 inline-block rounded-full border border-dashed border-warn bg-warn/10 px-3 py-1 text-[13px] font-semibold text-warn">Simulação — não são medições reais</p>}
-              {site.center_pending_validation && <p className="mt-2 text-[13px] text-warn">O centro deste recorte ainda aguarda validação final.</p>}
+              {ex.variant !== "base" && <p className="mt-2 inline-block rounded-full border border-dashed border-warn bg-warn/10 px-3 py-1 text-[13px] font-semibold text-warn">{T("Simulação — não são medições reais", "Simulation — not real measurements")}</p>}
+              {site.center_pending_validation && <p className="mt-2 text-[13px] text-warn">{T("O centro deste recorte ainda aguarda validação final.", "The centre of this site is still awaiting final validation.")}</p>}
             </div>
             <div>
-              <h4 className="eyebrow mb-2">O que nenhum lugar da Terra reproduz</h4>
+              <h4 className="eyebrow mb-2">{T("O que nenhum lugar da Terra reproduz", "What no place on Earth reproduces")}</h4>
               <ul className="list-clean text-[13px] text-ink-2">
-                {data.config.earth_limits.map((l) => <li key={l.dimension}><b>{l.dimension}:</b> {l.text}</li>)}
+                {data.config.earth_limits.map((l) => <li key={l.dimension}><b>{T(l.dimension)}:</b> {T(l.text)}</li>)}
               </ul>
-              <p className="desc mt-3">Três estatísticas de relevo não descrevem orientação das encostas, drenagem nem textura em várias escalas. Pesos e escalas não foram calibrados por especialistas. Os DEMs da Terra e dos planetas vêm de instrumentos diferentes. Litologia mapeada não é mineralogia verificada.</p>
+              <p className="desc mt-3">{T("Três estatísticas de relevo não descrevem orientação das encostas, drenagem nem textura em várias escalas. Pesos e escalas não foram calibrados por especialistas. Os DEMs da Terra e dos planetas vêm de instrumentos diferentes. Litologia mapeada não é mineralogia verificada.", "Three relief statistics do not describe slope orientation, drainage or multi-scale texture. Weights and scales were not calibrated by experts. Earth and planetary DEMs come from different instruments. Mapped lithology is not verified mineralogy.")}</p>
             </div>
           </div>
         )}
@@ -142,19 +143,19 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
               <ul className="list-clean text-[13px]">
                 {(site.sources ?? []).map((s) => <li key={s.name}>{s.url ? <a href={s.url} target="_blank" rel="noopener noreferrer">{s.name} ↗</a> : s.name}</li>)}
               </ul>
-              <h4 className="eyebrow mb-2 mt-4">Terra</h4>
+              <h4 className="eyebrow mb-2 mt-4">{T("Terra", "Earth")}</h4>
               <ul className="list-clean text-[13px]">
-                <li>Relevo da grade: {data.grid.dem}</li>
-                {cell.context?.geology_source && <li>Geologia: {cell.context.geology_source}</li>}
-                <li>Imagens do mapa: Esri World Imagery; camada opcional NASA GIBS (MODIS)</li>
+                <li>{T("Relevo da grade", "Grid relief")}: {data.grid.dem}</li>
+                {cell.context?.geology_source && <li>{T("Geologia", "Geology")}: {cell.context.geology_source}</li>}
+                <li>{T("Imagens do mapa: Esri World Imagery; camada opcional NASA GIBS (MODIS)", "Map imagery: Esri World Imagery; optional NASA GIBS (MODIS) layer")}</li>
               </ul>
-              <h4 className="eyebrow mb-2 mt-4">Rastreio das execuções</h4>
+              <h4 className="eyebrow mb-2 mt-4">{T("Rastreio das execuções", "Run trace")}</h4>
               <p className="m-0 break-all font-mono text-[11px] text-muted">{(data.grid.run_ids ?? []).join(" · ")}</p>
             </div>
             <div>
-              <h4 className="eyebrow mb-2">Mapa de contexto (NASA Trek)</h4>
+              <h4 className="eyebrow mb-2">{T("Mapa de contexto (NASA Trek)", "Context map (NASA Trek)")}</h4>
               <TrekMap site={site} layer={data.config.planet_maps?.[site.body]} />
-              <p className="note mt-2">{site.why}</p>
+              <p className="note mt-2">{T(site.why)}</p>
             </div>
           </div>
         )}

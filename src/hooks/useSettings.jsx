@@ -2,7 +2,7 @@
 // cores seguras para daltonismo, narração e sons. Aplicadas como classes/variáveis no <html>.
 // Tradução: tr("texto em português", "English text") — os dois idiomas ficam juntos no código.
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { DICT } from "../lib/i18n-dict.js";
+import { lookup, setLang } from "../lib/i18n.js";
 
 const KEY = "ara-settings";
 const DEFAULTS = { lang: null, font: 100, dyslexia: false, colorblind: false, narration: true, sounds: true, underline: false };
@@ -18,6 +18,7 @@ const Ctx = createContext({ ...DEFAULTS, lang: "pt", set: () => {}, tr: (pt) => 
 
 export function SettingsProvider({ children }) {
   const [s, setS] = useState(load);
+  setLang(s.lang); // antes de desenhar os filhos: T() fora dos componentes já vê o idioma certo
   useEffect(() => {
     const h = document.documentElement;
     h.lang = s.lang === "en" ? "en" : "pt-BR";
@@ -31,7 +32,7 @@ export function SettingsProvider({ children }) {
     ...s,
     set: (k, v) => setS((o) => ({ ...o, [k]: v })),
     reset: () => setS({ ...DEFAULTS, lang: s.lang }),
-    tr: (pt, en) => (s.lang === "en" ? (en ?? DICT[pt] ?? pt) : pt),
+    tr: (pt, en) => (s.lang === "en" ? (en ?? lookup(pt)) : pt),
   }), [s]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

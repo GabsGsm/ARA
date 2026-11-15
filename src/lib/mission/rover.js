@@ -7,17 +7,18 @@
 //  • Tombamento: inclinação lateral ou longitudinal acima do limite estático (45° para rocker-bogie).
 //  • Rodas: blocos de relevo mais ásperos do que a altura livre do veículo desgastam as rodas (lição do Curiosity).
 import { heightAt } from "../terrain3d/data.js";
+import { T } from "../i18n.js";
 
 export const SOURCES = [
-  { id: "lrvgc", text: "NASA NSSDC — LRV: altura livre do chassi ≈ 36 cm; o LRV não tinha suspensão rocker-bogie", url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html" },
-  { id: "m2020", text: "NASA/JPL — Mars 2020 press kit: MMRTG ≈ 110 W no início da missão; 2 baterias Li-íon de ≈ 43 Ah", url: "https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/" },
-  { id: "msl", text: "Heverly et al. (2013) — Traverse performance characterization for the Mars Science Laboratory rover, J. Field Robotics 30(6): até 22° em rocha lisa e 28° em solo coeso", url: "https://doi.org/10.1002/rob.21481" },
-  { id: "mer", text: "Lindemann (JPL), ensaios de mobilidade dos MER em areia solta — patinagem moderada a 10°, atolamento a ≈ 17° (Keck Institute xTerramechanics)", url: "https://kiss.caltech.edu/workshops/xTerra/presentations1/lindemann.pdf" },
-  { id: "lrv", text: "NASA NSSDC — The Apollo Lunar Roving Vehicle: 2 baterias de 36 V e 121 Ah, não recarregáveis; 210 kg; carga 490 kg", url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html" },
-  { id: "ti", text: "Fergason, Christensen & Kieffer (2006) — High-resolution thermal inertia derived from THEMIS, JGR 111: inércia térmica baixa indica material fino/inconsolidado", url: "https://doi.org/10.1029/2006JE002735" },
-  { id: "wheel", text: "Arvidson et al. (2017) — Relating geologic units and mobility system kinematics contributing to Curiosity wheel damage at Gale Crater, Journal of Terramechanics; NASA — inspeção de desgaste das rodas", url: "https://science.nasa.gov/resource/routine-inspection-of-rover-wheel-wear-and-tear?site=msl" },
-  { id: "wong", text: "Wong, J. Y. — Theory of Ground Vehicles (Wiley): resistência ao rolamento em solo deformável", url: "https://www.wiley.com/en-us/Theory+of+Ground+Vehicles%2C+5th+Edition-p-9781119719892" },
-  { id: "autonav", text: "Carsten et al. (2007) — Global path planning on board the Mars Exploration Rovers, IEEE Aerospace Conf.", url: "https://www-robotics.jpl.nasa.gov/media/documents/IEEEAC-Carsten-1125.pdf" },
+  { id: "lrvgc", en: "NASA NSSDC — LRV: chassis ground clearance ≈ 36 cm; the LRV had no rocker-bogie suspension", text: "NASA NSSDC — LRV: altura livre do chassi ≈ 36 cm; o LRV não tinha suspensão rocker-bogie", url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html" },
+  { id: "m2020", en: "NASA/JPL — Mars 2020 press kit: MMRTG ≈ 110 W at the start of the mission; 2 Li-ion batteries of ≈ 43 Ah", text: "NASA/JPL — Mars 2020 press kit: MMRTG ≈ 110 W no início da missão; 2 baterias Li-íon de ≈ 43 Ah", url: "https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/" },
+  { id: "msl", en: "Heverly et al. (2013) — Traverse performance characterization for the Mars Science Laboratory rover, J. Field Robotics 30(6): up to 22° on smooth bedrock and 28° on cohesive soil", text: "Heverly et al. (2013) — Traverse performance characterization for the Mars Science Laboratory rover, J. Field Robotics 30(6): até 22° em rocha lisa e 28° em solo coeso", url: "https://doi.org/10.1002/rob.21481" },
+  { id: "mer", en: "Lindemann (JPL), MER mobility tests in loose sand — moderate slip at 10°, embedding at ≈ 17° (Keck Institute xTerramechanics)", text: "Lindemann (JPL), ensaios de mobilidade dos MER em areia solta — patinagem moderada a 10°, atolamento a ≈ 17° (Keck Institute xTerramechanics)", url: "https://kiss.caltech.edu/workshops/xTerra/presentations1/lindemann.pdf" },
+  { id: "lrv", en: "NASA NSSDC — The Apollo Lunar Roving Vehicle: 2 non-rechargeable 36 V, 121 Ah batteries; 210 kg; 490 kg payload", text: "NASA NSSDC — The Apollo Lunar Roving Vehicle: 2 baterias de 36 V e 121 Ah, não recarregáveis; 210 kg; carga 490 kg", url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html" },
+  { id: "ti", en: "Fergason, Christensen & Kieffer (2006) — High-resolution thermal inertia derived from THEMIS, JGR 111: low thermal inertia indicates fine/unconsolidated material", text: "Fergason, Christensen & Kieffer (2006) — High-resolution thermal inertia derived from THEMIS, JGR 111: inércia térmica baixa indica material fino/inconsolidado", url: "https://doi.org/10.1029/2006JE002735" },
+  { id: "wheel", en: "Arvidson et al. (2017) — Relating geologic units and mobility system kinematics contributing to Curiosity wheel damage at Gale Crater, Journal of Terramechanics; NASA — wheel wear inspection", text: "Arvidson et al. (2017) — Relating geologic units and mobility system kinematics contributing to Curiosity wheel damage at Gale Crater, Journal of Terramechanics; NASA — inspeção de desgaste das rodas", url: "https://science.nasa.gov/resource/routine-inspection-of-rover-wheel-wear-and-tear?site=msl" },
+  { id: "wong", en: "Wong, J. Y. — Theory of Ground Vehicles (Wiley): rolling resistance on deformable soil", text: "Wong, J. Y. — Theory of Ground Vehicles (Wiley): resistência ao rolamento em solo deformável", url: "https://www.wiley.com/en-us/Theory+of+Ground+Vehicles%2C+5th+Edition-p-9781119719892" },
+  { id: "autonav", en: "Carsten et al. (2007) — Global path planning on board the Mars Exploration Rovers, IEEE Aerospace Conf.", text: "Carsten et al. (2007) — Global path planning on board the Mars Exploration Rovers, IEEE Aerospace Conf.", url: "https://www-robotics.jpl.nasa.gov/media/documents/IEEEAC-Carsten-1125.pdf" },
 ];
 
 // Veículos. maxSlope = limite operacional usado no planejamento; tip = limite estático de tombamento.
@@ -29,7 +30,7 @@ export const ROVERS = {
     batteryWh: 2 * 42 * 28, rtgW: 110, solarW: 0, hotelW: 90, eta: 0.5, src: ["msl", "wheel"] },
   mer: { name: "Spirit / Opportunity", body: "mars", mass: 185, len: 1.6, width: 2.3, rockerBogie: true, vmax: 0.05, maxSlope: 25, tip: 45, wheelR: 0.125, clearance: 0.3,
     batteryWh: 2 * 8 * 32, rtgW: 0, solarW: 140, hotelW: 30, eta: 0.5, src: ["mer"] },
-  lrv: { name: "Carro lunar Apollo (LRV)", body: "moon", mass: 700, len: 3.1, width: 2.06, rockerBogie: false, vmax: 3.6, maxSlope: 25, tip: 45, wheelR: 0.41, clearance: 0.36,
+  lrv: { get name() { return T("Carro lunar Apollo (LRV)", "Apollo Lunar Roving Vehicle (LRV)"); }, body: "moon", mass: 700, len: 3.1, width: 2.06, rockerBogie: false, vmax: 3.6, maxSlope: 25, tip: 45, wheelR: 0.41, clearance: 0.36,
     batteryWh: 2 * 121 * 36, rtgW: 0, solarW: 0, hotelW: 50, eta: 0.8, src: ["lrv"] },
 };
 

@@ -2,6 +2,7 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { unpackGrid, rank, distance, contributions, explain, scalesFrom, normalizeWeights, cellsForVariant } from "../src/lib/core.js";
+import { localizeData, setLang, T } from "../src/lib/i18n.js";
 
 const root = new URL("../", import.meta.url);
 const read = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));
@@ -72,4 +73,14 @@ console.log("core.js: todos os testes passaram");
     }
   }
   console.log("Entrega de classificação: Marte idêntico (16), Lua mesma ordem (16)");
+}
+
+// 7) textos longos vindos dos dados seguem o idioma selecionado e nunca desaparecem.
+{
+  const caveat = "Água detectada pelo Landsat entre 1984 e 2021; não cobre depois de 2021 nem umidade do solo.​";
+  setLang("en");
+  assert.equal(T(caveat), "Water detected by Landsat between 1984 and 2021; does not cover after 2021 or soil moisture.");
+  assert.equal(localizeData({ caveats: [caveat] }).caveats[0], "Water detected by Landsat between 1984 and 2021; does not cover after 2021 or soil moisture.");
+  setLang("pt");
+  assert.equal(T(caveat), caveat);
 }

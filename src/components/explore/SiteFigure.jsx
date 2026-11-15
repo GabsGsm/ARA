@@ -5,6 +5,7 @@ import TrekMap from "./TrekMap.jsx";
 import ImageViewer from "./ImageViewer.jsx";
 import { useAraData } from "../../hooks/useAraData.jsx";
 import { dataUrl, fmt } from "../../lib/format.js";
+import { T } from "../../lib/i18n.js";
 
 export function useSiteImage(siteId) {
   const data = useAraData();
@@ -12,7 +13,7 @@ export function useSiteImage(siteId) {
   if (!site) return null;
   const img = site.image ?? {};
   const t = data.sites[site.id]?.terrain;
-  const alt = `${site.name}: recorte de 5 × 5 km. Declividade média ${fmt(t?.slope_mean_deg)}°, rugosidade média ${fmt(t?.roughness_mean_m)} m, amplitude ${fmt(t?.relief_m, 0)} m.`;
+  const alt = T(`${site.name}: recorte de 5 × 5 km. Declividade média ${fmt(t?.slope_mean_deg)}°, rugosidade média ${fmt(t?.roughness_mean_m)} m, amplitude ${fmt(t?.relief_m, 0)} m.`, `${site.name}: 5 × 5 km site. Mean slope ${fmt(t?.slope_mean_deg)}°, mean roughness ${fmt(t?.roughness_mean_m)} m, relief ${fmt(t?.relief_m, 0)} m.`);
   let box = null;
   if (img.box_px && img.frame_px) {
     const [x, y, w, h] = img.box_px;
@@ -35,21 +36,21 @@ export default function SiteFigure({ siteId, compact = false, showTrek = true })
       <div className="group relative overflow-hidden rounded-[14px] border border-line-2 bg-petrol-950/60">
         {ok
           ? <img src={dataUrl(img.src)} alt={alt} className="block h-auto w-full" onError={() => setBroken(img.src)} />
-          : <p className="note p-4">Imagem pendente</p>}
+          : <p className="note p-4">{T("Imagem pendente", "Image pending")}</p>}
         {box && <span className="absolute border-2 border-[#fff4d6] bg-gold/25 shadow-[0_0_12px_rgb(242_181_58/.6)]" style={box} />}
         {ok && (
-          <button type="button" onClick={() => setOpen(true)} className="ex-zoom-btn" aria-label={`Ampliar a imagem de ${site.name}`}>
+          <button type="button" onClick={() => setOpen(true)} className="ex-zoom-btn" aria-label={T(`Ampliar a imagem de ${site.name}`, `Enlarge the image of ${site.name}`)}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm-1 1v2H7v2h2v2h2v-2h2V9h-2V7H9z" fill="currentColor" /></svg>
             Ampliar
           </button>
         )}
       </div>
       <figcaption className="mt-1.5 text-xs text-muted">
-        {img.caption}{!compact && <><br />{site.why}</>}
-        {site.center_pending_validation && <><br /><span className="text-warn">Centro do recorte aguardando validação final.</span></>}
+        {T(img.caption)}{!compact && <><br />{T(site.why)}</>}
+        {site.center_pending_validation && <><br /><span className="text-warn">{T("Centro do recorte aguardando validação final.", "Site centre awaiting final validation.")}</span></>}
       </figcaption>
       {showTrek && <TrekMap site={site} layer={data.config.planet_maps?.[site.body]} />}
-      {open && <ImageViewer src={dataUrl(img.src)} alt={alt} caption={`${site.name} — ${img.caption ?? ""}`} overlay={box} onClose={() => setOpen(false)} />}
+      {open && <ImageViewer src={dataUrl(img.src)} alt={alt} caption={`${site.name} — ${T(img.caption ?? "")}`} overlay={box} onClose={() => setOpen(false)} />}
     </figure>
   );
 }

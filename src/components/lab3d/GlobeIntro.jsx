@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { dataUrl, fmt } from "../../lib/format.js";
+import { T } from "../../lib/i18n.js";
 
 const R_KM = { mars: 3389.5, moon: 1737.4 };
 const DUR = 5200;
@@ -81,11 +82,11 @@ export default function GlobeIntro({ body, lat, lon, name, onDone, slow = false 
     <div className={`t3-intro ${fade ? "out" : ""}`}>
       <div ref={box} className="absolute inset-0" />
       <div className="t3-intro-hud">
-        <small>Aproximando de</small>
+        <small>{T("Aproximando de", "Approaching")}</small>
         <strong>{name}</strong>
         <span>ALT {alt == null ? "…" : `${fmt(alt, alt > 100 ? 0 : 1)} km`}</span>
       </div>
-      <button type="button" className="t3-intro-skip" onClick={finish}>Pular ›</button>
+      <button type="button" className="t3-intro-skip" onClick={finish}>{T("Pular ›", "Skip ›")}</button>
     </div>
   );
 }
