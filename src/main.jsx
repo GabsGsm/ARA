@@ -11,6 +11,7 @@ import "./assets/css/ara.css";
 import "./assets/css/home.css";
 import "./assets/css/lab3d.css";
 import "./assets/css/explore.css";
+import "./assets/css/evidence.css";
 import App from "./App.jsx";
 import { AraDataProvider } from "./hooks/useAraData.jsx";
 import { ExplorerProvider } from "./hooks/useExplorer.jsx";

@@ -144,6 +144,15 @@ export default function Lab3D() {
     }
   };
 
+  // ---- ponto vindo do modo Descobrir do Explorar (?lat=&lon=&nome=)
+  const askedLive = useRef(false);
+  useEffect(() => {
+    const la = Number(params.get("lat")), lo = Number(params.get("lon"));
+    if (askedLive.current || !params.has("lat") || !Number.isFinite(la) || !Number.isFinite(lo)) return;
+    askedLive.current = true;
+    testLive(la, lo, params.get("nome") || `Ponto ${la.toFixed(3)}°, ${lo.toFixed(3)}°`);
+  }, [params]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ---- sincronização de câmeras
   const onCamera = useCallback((side, s) => {
     if (!sync) return;
