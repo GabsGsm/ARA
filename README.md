@@ -186,6 +186,14 @@ Deploy: every push to `main` runs `.github/workflows/pages.yml` (npm ci → npm 
 
 Colours: deep petrol blue `#071d24 → #123a40` fading to sage `#8fa98f`, gold accent `#f2b53a`, ink `#f4f1e8`. Fonts: Michroma (headings, logo) and Lexend (text), bundled via @fontsource. Design tokens live in the `@theme` block of `src/assets/css/ara.css` and are used as Tailwind classes (`bg-petrol-900`, `text-gold`, `font-display`…), so changing a colour there changes it everywhere. The home page (by Alessandra) mirrors the 1600 × 900 reference art: Mars and the Moon rotate 360° on canvas from equirectangular textures, with a starfield, occasional shooting star and light mouse parallax. "Pausar animações" in the ☰ menu (or the system's reduced-motion setting) stops all motion; "Alto contraste" switches to a black/yellow theme.
 
+## Use of AI (disclosure)
+
+- **Code and text:** parts of the code, interface text, documentation and the consolidated report were written or reviewed with AI assistants (Anthropic **Claude Code** and **GitHub Copilot**). Every change was reviewed by the team and checked by the automated tests (`npm test`) and browser tests.
+- **Data:** the scientific data are **not** AI-generated. They come from the public sources listed in [Data](#data); AI only helped write the code that downloads and processes them. The K-Means relief profiles are a classical, unsupervised machine-learning method trained by the team on those data (labelled *experimental* on the site).
+- **Audio and video:** the 30-second pitch video uses an **AI-generated synthetic voice** (Microsoft Edge neural TTS via edge-tts). The background music was composed programmatically for the project.
+- **Images:** the site screenshots are real captures of the platform; no AI image generator was used for the site's data views.
+- **NASA branding:** ARA does not use NASA logos, flags or mission emblems. The official NASA 3D models carry them in their textures, so the loader covers those areas (`src/lib/terrain3d/models.js`). ARA is not an official NASA product.
+
 ## Limitations
 
 Three summary statistics do not capture slope orientation, drainage or multi-scale texture. Weights and scales are not calibrated against expert labels. Earth and planetary DEMs come from different instruments with different vertical accuracy. Mapped lithology is not verified mineralogy, and 0% CRISM coverage means no map overlap, not absence of minerals. Earth cannot reproduce lunar/Martian gravity, vacuum or thin atmosphere, or radiation.
