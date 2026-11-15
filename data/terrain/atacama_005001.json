@@ -1,0 +1,54 @@
+{
+ "id": "atacama_005001",
+ "body": "earth",
+ "name": "Atacama · célula 005001",
+ "group": "Análogo terrestre",
+ "lat": -22.94494,
+ "lon": -68.53669,
+ "size_m": 10000,
+ "kind": "analog",
+ "cell_m": 5000,
+ "height": {
+  "file": "atacama_005001_h.png",
+  "n": 512,
+  "min": 2769.81,
+  "max": 3274.17,
+  "res_m": 19.53,
+  "native_res_m": 8.8,
+  "valid_pct": 100.0
+ },
+ "color": {
+  "file": "atacama_005001_c.jpg",
+  "n": 2048,
+  "native_res_m": 4.4
+ },
+ "stats_inner": {
+  "window_m": 5000,
+  "native": {
+   "slope_mean_deg": 4.653,
+   "roughness_mean_m": 1.334,
+   "relief_m": 204.4,
+   "res_m": 19.53
+  },
+  "at_100m": {
+   "slope_mean_deg": 3.454,
+   "roughness_mean_m": 4.858,
+   "relief_m": 190.1,
+   "res_m": 97.7
+  }
+ },
+ "pois": [],
+ "sources": [
+  {
+   "name": "Terrain Tiles (SRTM/NED/ETOPO, ~10–30 m)",
+   "by": "AWS Open Data · Mapzen",
+   "url": "https://registry.opendata.aws/terrain-tiles/"
+  },
+  {
+   "name": "World Imagery",
+   "by": "Esri, Maxar, Earthstar Geographics",
+   "url": "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"
+  }
+ ],
+ "built_utc": "2026-11-15T09:15:35Z"
+}

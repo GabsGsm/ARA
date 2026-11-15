@@ -1,0 +1,54 @@
+{
+ "id": "lut_000009",
+ "body": "earth",
+ "name": "Lut desert yardangs · célula 000009",
+ "group": "Análogo terrestre",
+ "lat": 30.79317,
+ "lon": 58.38488,
+ "size_m": 10000,
+ "kind": "analog",
+ "cell_m": 5000,
+ "height": {
+  "file": "lut_000009_h.png",
+  "n": 512,
+  "min": 200.43,
+  "max": 317.06,
+  "res_m": 19.53,
+  "native_res_m": 8.2,
+  "valid_pct": 100.0
+ },
+ "color": {
+  "file": "lut_000009_c.jpg",
+  "n": 2048,
+  "native_res_m": 4.1
+ },
+ "stats_inner": {
+  "window_m": 5000,
+  "native": {
+   "slope_mean_deg": 3.556,
+   "roughness_mean_m": 1.034,
+   "relief_m": 88.4,
+   "res_m": 19.53
+  },
+  "at_100m": {
+   "slope_mean_deg": 1.797,
+   "roughness_mean_m": 2.672,
+   "relief_m": 75.9,
+   "res_m": 97.7
+  }
+ },
+ "pois": [],
+ "sources": [
+  {
+   "name": "Terrain Tiles (SRTM/NED/ETOPO, ~10–30 m)",
+   "by": "AWS Open Data · Mapzen",
+   "url": "https://registry.opendata.aws/terrain-tiles/"
+  },
+  {
+   "name": "World Imagery",
+   "by": "Esri, Maxar, Earthstar Geographics",
+   "url": "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"
+  }
+ ],
+ "built_utc": "2026-11-15T09:19:57Z"
+}

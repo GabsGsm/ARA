@@ -88,7 +88,9 @@ export default function Lab3D() {
   // ranking do sítio contra as células da Terra que têm cena 3D
   const ranking = useMemo(() => {
     if (data.status !== "ready" || !data.sites[siteId]?.terrain) return [];
-    return core.rank(data.sites[siteId].terrain, data.cells.filter((c) => byId[c.id]), data.config.objectives.default.weights, data.scales, 20);
+    // posição real entre todas as células da grade; a lista mostra só as que têm cena 3D
+    const all = core.rank(data.sites[siteId].terrain, data.cells, data.config.objectives.default.weights, data.scales, data.cells.length);
+    return all.filter((r) => byId[r.cell.id]).slice(0, 12);
   }, [data, siteId, byId]);
 
   useEffect(() => {
@@ -97,6 +99,8 @@ export default function Lab3D() {
   }, [ranking]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const twin = !isOverview && analogId && byId[analogId];
+  const asked = params.get("analog");
+  const missing3d = asked && index && !byId[asked] ? (data.cells?.find((c) => c.id === asked) ? data.cellName(data.cells.find((c) => c.id === asked)) : asked) : null;
 
   const setSite = (id) => {
     const p = { site: id };
@@ -250,11 +254,12 @@ export default function Lab3D() {
             {!isOverview && (
               <>
                 <h2 className="t3-h">Análogo na Terra</h2>
+                {missing3d && <p className="t3-note mb-2">“{missing3d}” ainda não tem cena 3D. Mostrando o melhor análogo que tem relevo 3D gerado.</p>}
                 <div className="t3-list" role="radiogroup" aria-label="Análogo">
                   {ranking.map((r) => (
                     <button key={r.cell.id} type="button" role="radio" aria-checked={r.cell.id === analogId} onClick={() => setAnalogId(r.cell.id)}>
                       <span className="t3-rank">{r.position}º</span>
-                      <span><b>{byId[r.cell.id]?.name ?? r.cell.id}</b><small>distância {fmt(r.d, 3)}{r.position === 1 ? " · melhor" : ""}</small></span>
+                      <span><b>{byId[r.cell.id]?.name ?? r.cell.id}</b><small>distância {fmt(r.d, 3)} · {r.position}º de {data.cells.length} células{r.position === 1 ? " · o melhor" : ""}</small></span>
                     </button>
                   ))}
                   {!ranking.length && earthScenes.map((s) => (
@@ -280,7 +285,7 @@ export default function Lab3D() {
                     ))}
                   </tbody>
                 </table>
-                {rk && <p className="t3-note">Distância ARA {fmt(rk.d, 3)} ({rk.position}º lugar). Calculado a 100 m, como no ranking.</p>}
+                {rk && <p className="t3-note">Distância ARA {fmt(rk.d, 3)} — {rk.position}º lugar entre {data.cells.length} células da Terra. Calculado a 100 m, como no ranking.</p>}
                 {L?.stats_inner?.at_100m && R?.stats_inner?.at_100m && (
                   <p className="t3-note">Conferência no 3D (recalculado nesta cena, 100 m): declividade {fmt(L.stats_inner.at_100m.slope_mean_deg, 1)}° × {fmt(R.stats_inner.at_100m.slope_mean_deg, 1)}°,
                     amplitude {fmt(L.stats_inner.at_100m.relief_m, 0)} × {fmt(R.stats_inner.at_100m.relief_m, 0)} m.</p>

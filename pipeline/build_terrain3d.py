@@ -61,6 +61,7 @@ SRC = {
 VIKING = "https://trek.nasa.gov/tiles/Mars/EQ/Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg"
 TERRARIUM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
 ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+TOP_EARTH = 3  # cenas 3D para os 3 melhores análogos de cada sítio
 UA = {"User-Agent": "ARA-terrain3d/1.0 (NASA Space Apps 2026 project)"}
 
 CITE = {
@@ -345,11 +346,26 @@ def scenes():
     for s in cat["sites"]:
         out.append({"id": s["id"], "body": s["body"], "name": s["name"], "group": s.get("group", ""),
                     "lat": s["center"]["lat"], "lon": s["center"]["lon"], "size_m": 10000, "cell_m": 5000, "kind": "site"})
+    # Terra: as células do Protótipo 1 + as TOP_EARTH melhores de cada sítio no ranking do ARA (pesos padrão)
     cols = grid["columns"]
-    for row in grid["rows"]:
-        r = dict(zip(cols, row))
-        out.append({"id": r["id"], "body": "earth", "name": grid.get("known_analogs", {}).get(r["id"], r["id"]),
-                    "group": "Análogo terrestre", "lat": r["lat"], "lon": r["lon"], "size_m": 10000, "cell_m": 5000, "kind": "analog"})
+    cells = [dict(zip(cols, row)) for row in grid["rows"]]
+    cfg = json.loads((DATA / "config.json").read_text(encoding="utf-8"))
+    ps = json.loads((DATA / "planet_sites.json").read_text(encoding="utf-8"))
+    attrs, w = list(cfg["attributes"]), cfg["objectives"]["default"]["weights"]
+    scale = {a: cfg["attributes"][a]["scale"] for a in attrs}
+    wanted = {c["id"] for c in cells if c["id"].startswith("p1_")}
+    for site in ps.values():
+        t = site.get("terrain")
+        if t:
+            dist = lambda c: math.sqrt(sum(w[a] * ((t[a] - c[a]) / scale[a]) ** 2 for a in attrs))  # noqa: E731
+            wanted |= {c["id"] for c in sorted(cells, key=dist)[:TOP_EARTH]}
+    regions = {r["id"]: r["name"].split(",")[0].split(" (")[0] for r in grid["regions"]}
+    for r in cells:
+        if r["id"] not in wanted:
+            continue
+        name = grid.get("known_analogs", {}).get(r["id"]) or f"{regions.get(r['region'], r['region'])} · célula {r['id'].rsplit('_', 1)[-1]}"
+        out.append({"id": r["id"], "body": "earth", "name": name, "group": "Análogo terrestre",
+                    "lat": r["lat"], "lon": r["lon"], "size_m": 10000, "cell_m": 5000, "kind": "analog"})
     out.append({"id": "jezero_crater", "body": "mars", "name": "Cratera Jezero (visão geral)", "group": "Cratera Jezero",
                 "lat": 18.40, "lon": 77.58, "size_m": 60000, "overview": True, "n_h": 640, "n_c": 3072, "kind": "overview"})
     out.append({"id": "lunar_south_pole", "body": "moon", "name": "Polo sul da Lua (regiões Artemis III)", "group": "Regiões candidatas Artemis III",
