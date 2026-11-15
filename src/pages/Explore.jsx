@@ -1,21 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Card, { PageHeader } from "../components/ui/Card.jsx";
 import Segmented from "../components/ui/Segmented.jsx";
-import Pill from "../components/ui/Pill.jsx";
-import SitePicker from "../components/explore/SitePicker.jsx";
-import SiteFigure from "../components/explore/SiteFigure.jsx";
-import CriteriaPanel from "../components/explore/CriteriaPanel.jsx";
-import VariantPicker from "../components/explore/VariantPicker.jsx";
+import FilterBar from "../components/explore/FilterBar.jsx";
 import EarthMap from "../components/explore/EarthMap.jsx";
 import RankingList from "../components/explore/RankingList.jsx";
 import ResultsTable from "../components/explore/ResultsTable.jsx";
-import InspectPanel from "../components/explore/InspectPanel.jsx";
 import ExportButton from "../components/explore/ExportButton.jsx";
+import AnalogDetails from "../components/explore/AnalogDetails.jsx";
 import { useAraData } from "../hooks/useAraData.jsx";
 import { useExplorer } from "../hooks/useExplorer.jsx";
 import { useRanking } from "../hooks/useRanking.js";
-import { BODY_FROM_PARAM, BODY_LABEL, PARAM_FROM_BODY, fmt } from "../lib/format.js";
+import { BODY_FROM_PARAM, PARAM_FROM_BODY, fmt } from "../lib/format.js";
 
 const VIEWS = [{ value: "map", label: "Mapa" }, { value: "table", label: "Tabela" }];
 
@@ -50,24 +45,21 @@ export default function Explore() {
   const top = results[0];
 
   return (
-    <section aria-labelledby="exTitle" className="mx-auto max-w-[1640px] px-[clamp(12px,2vw,30px)] pt-8">
-      <PageHeader title={<span id="exTitle">Explorar</span>}
-                  lead="Escolha um local fixo, diga para que serve o análogo e veja quais células de 5 × 5 km da Terra mais se parecem — e em quê." />
-      <div className="grid items-start gap-[18px] xl:grid-cols-[320px_minmax(0,1.35fr)_minmax(330px,1fr)] md:grid-cols-[320px_1fr]">
-        <Card as="aside" title="1 · Local fixo" titleId="catTitle">
-          <SitePicker body={ex.body} onBody={onBody} siteId={ex.siteId} onSite={ex.setSiteId} />
-          {ex.siteId
-            ? <SiteFigure siteId={ex.siteId} />
-            : <p className="note mt-3">Os locais de {BODY_LABEL[ex.body]} ainda não têm atributos.</p>}
-          <h2 className="eyebrow mt-6">2 · Para que serve o análogo?</h2>
-          <CriteriaPanel objective={ex.objective} onObjective={ex.setObjective} weights={ex.weights} onWeight={ex.setWeight} />
-          <h2 className="eyebrow mt-6">3 · Qualidade dos dados</h2>
-          <VariantPicker value={ex.variant} onChange={ex.setVariant} />
-        </Card>
+    <section aria-labelledby="exTitle" className="ex-page mx-auto max-w-[1640px] px-[clamp(12px,2vw,30px)] pt-6">
+      <header className="ex-head">
+        <h1 id="exTitle" className="display ex-title">Explorar</h1>
+        <p className="ex-lead">Encontre células de 5 × 5 km da Terra parecidas com locais de exploração em Marte e na Lua — e veja, medida por medida, em que se parecem e em que não.</p>
+      </header>
 
-        <Card titleId="resTitle" className="min-w-0">
-          <div className="flex items-center justify-between gap-2.5">
-            <h2 id="resTitle" className="eyebrow mb-0">Análogos na Terra</h2>
+      <FilterBar ex={ex} onBody={onBody} />
+
+      <div className="ex-row">
+        <section className="card min-w-0" aria-labelledby="resTitle">
+          <div className="flex flex-wrap items-center justify-between gap-2.5">
+            <h2 id="resTitle" className="eyebrow mb-0 flex items-center gap-2">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor" /></svg>
+              Análogos na Terra
+            </h2>
             <Segmented label="Visualização" options={VIEWS} value={ex.viewMode} onChange={ex.setViewMode} />
           </div>
           {ex.variant !== "base" && (
@@ -78,22 +70,26 @@ export default function Explore() {
           {ex.viewMode === "map"
             ? <EarthMap results={results} selected={ex.selected} focus={focus} onPick={pick} />
             : <ResultsTable results={results} selected={ex.selected} onPick={pickFromTable} />}
+        </section>
+
+        <section className="card ex-cands min-w-0" aria-labelledby="candTitle">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 id="candTitle" className="eyebrow mb-0 flex items-center gap-2">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true"><path d="M7 3h10v3h3v3a5 5 0 0 1-5 5h-.3A5 5 0 0 1 13 16.9V19h3v2H8v-2h3v-2.1A5 5 0 0 1 9.3 14H9a5 5 0 0 1-5-5V6h3V3zm10 5v4a3 3 0 0 0 1-2V8h-1zM6 8v2a3 3 0 0 0 1 2V8H6z" fill="currentColor" /></svg>
+              Top candidatos
+            </h2>
+            <small className="text-[11px] text-muted">menor distância = mais parecido</small>
+          </div>
           <RankingList siteId={ex.siteId} results={results} selected={ex.selected} onSelect={pick} />
           {results.length > 0 && (
             <ExportButton siteId={ex.siteId} siteVec={siteVec} objective={ex.objective} weights={ex.weights}
                           variant={ex.variant} results={results} />
           )}
-        </Card>
-
-        <Card title="O que é análogo — e o que não é" titleId="inspTitle" className="min-w-0 md:col-span-2 xl:col-span-1">
-          <InspectPanel siteId={ex.siteId} siteVec={siteVec} result={selected} weights={ex.weights} />
-          {ex.siteId && selected && (
-            <Pill to={`/3d?site=${ex.siteId}&analog=${selected.cell.id}`} variant="gold" size="sm" className="mt-4">
-              Ver lado a lado em 3D
-            </Pill>
-          )}
-        </Card>
+        </section>
       </div>
+
+      <AnalogDetails ex={ex} siteVec={siteVec} result={selected} />
+
       <p className="sr-only" aria-live="polite">
         {top ? `Melhor correspondência: ${data.cellName(top.cell)}, distância ${fmt(top.d, 3)}.` : ""}
       </p>

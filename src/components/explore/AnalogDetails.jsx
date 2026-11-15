@@ -1,0 +1,164 @@
+// Detalhes do análogo selecionado, em abas: Resumo · Comparação · Limitações · Fontes.
+// Nada some do layout antigo: a tabela completa e as notas ficam em "Comparação"; método e
+// limites em "Limitações"; fontes, mapa de contexto do Trek e rastreio em "Fontes".
+import { useState } from "react";
+import * as core from "../../lib/core.js";
+import { useAraData } from "../../hooks/useAraData.jsx";
+import { useStabilityText } from "../../hooks/useRanking.js";
+import { BODY_LABEL, fmt, withUnit } from "../../lib/format.js";
+import StatusChip from "../ui/StatusChip.jsx";
+import Pill from "../ui/Pill.jsx";
+import InspectPanel from "./InspectPanel.jsx";
+import SiteFigure from "./SiteFigure.jsx";
+import TrekMap from "./TrekMap.jsx";
+
+const TABS = [{ id: "resumo", label: "Resumo" }, { id: "comparacao", label: "Comparação" }, { id: "limitacoes", label: "Limitações" }, { id: "fontes", label: "Fontes" }];
+// Constantes físicas conhecidas (NASA Planetary Fact Sheets)
+const BODY_PHYS = {
+  mars: { g: 0.379, gText: "0,38 g", atm: "≈ 0,6% da Terra (≈ 6 mbar)" },
+  moon: { g: 0.165, gText: "0,17 g", atm: "praticamente vácuo" },
+};
+
+export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
+  const data = useAraData();
+  const stabilityText = useStabilityText();
+  const [tab, setTab] = useState("resumo");
+  const tabs = [...TABS, ...extraTabs.map((t) => ({ id: t.id, label: t.label }))];
+  if (!result || !ex.siteId) {
+    return <section className="card ex-details"><p className="note m-0">Selecione um candidato para ver os detalhes.</p></section>;
+  }
+  const site = data.siteById(ex.siteId);
+  const cell = result.cell;
+  const dims = core.explain({ ...data.sites[ex.siteId], terrain: siteVec }, cell, data.config);
+  const topo = dims.filter((d) => d.attr in data.config.attributes);
+  const nGood = topo.filter((d) => d.status === "analog").length;
+  const overall = nGood === topo.length ? "analog" : topo.some((d) => d.status === "analog" || d.status === "partial") ? "partial" : "not_analog";
+  const like = topo.filter((d) => d.status === "analog" || d.status === "partial");
+  const unlike = topo.filter((d) => d.status === "not_analog");
+  const phys = BODY_PHYS[site.body];
+  const st = stabilityText(ex.siteId, cell.id);
+  const extra = extraTabs.find((t) => t.id === tab);
+
+  return (
+    <section className="card ex-details" aria-labelledby="exDetTitle">
+      <div className="ex-det-head">
+        <h2 id="exDetTitle" className="eyebrow mb-0">Detalhes do análogo selecionado</h2>
+        <div role="tablist" aria-label="Detalhes" className="ex-tabs">
+          {tabs.map((t) => (
+            <button key={t.id} type="button" role="tab" id={`tab-${t.id}`} aria-selected={tab === t.id} aria-controls="ex-det-panel" onClick={() => setTab(t.id)}>{t.label}</button>
+          ))}
+        </div>
+      </div>
+
+      <div id="ex-det-panel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="ex-det-body">
+        {tab === "resumo" && (
+          <div className="ex-resumo">
+            <div className="ex-thumb">
+              <SiteFigure siteId={ex.siteId} compact showTrek={false} />
+            </div>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="ex-pair">{site.name} <span aria-hidden="true">→</span> {data.cellName(cell)}</h3>
+                  <p className="m-0 text-[13px] text-ink-2">Célula selecionada: <b className="font-mono">{cell.id}</b> · {fmt(cell.lat, 2)}°, {fmt(cell.lon, 2)}° · {result.position}º lugar</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <StatusChip status={overall}>{overall === "analog" ? "Relevo análogo" : overall === "partial" ? "Parcialmente análogo" : "Relevo não análogo"}</StatusChip>
+                  <div className="text-right">
+                    <small className="block text-[11px] text-muted">Distância ARA</small>
+                    <b className="ex-bigscore">{fmt(result.d, 3)}</b>
+                  </div>
+                </div>
+              </div>
+              <div className="ex-likes">
+                <div className="ex-like ok">
+                  <h4><span aria-hidden="true">✓</span> O que é análogo?</h4>
+                  {like.length ? (
+                    <ul>{like.map((d) => <li key={d.attr}>{d.dimension}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}{d.status === "partial" ? " (parcial)" : ""}</li>)}</ul>
+                  ) : <p>Nenhuma das três medidas de relevo ficou dentro dos limites.</p>}
+                </div>
+                <div className="ex-like bad">
+                  <h4><span aria-hidden="true">✕</span> O que não é análogo?</h4>
+                  <ul>
+                    {unlike.map((d) => <li key={d.attr}>{d.dimension}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}</li>)}
+                    <li>Gravidade ({phys.gText} × 1 g), atmosfera ({phys.atm}) e radiação — nenhum lugar da Terra reproduz.</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <Pill to={`/3d?site=${ex.siteId}&analog=${cell.id}`} variant="gold" size="sm">Ver lado a lado em 3D</Pill>
+                {st && <small className="text-muted">Estabilidade em 2.000 conjuntos de pesos aleatórios: {st}.</small>}
+              </div>
+            </div>
+            <div className="ex-main-table">
+              <h4 className="eyebrow mb-2">Comparação principal</h4>
+              <table className="data-table m-0">
+                <thead><tr><th>Atributo</th><th>{BODY_LABEL[site.body]}</th><th>Terra</th><th>Avaliação</th></tr></thead>
+                <tbody>
+                  {topo.map((d) => (
+                    <tr key={d.attr}><th scope="row">{d.dimension}</th><td>{withUnit(d.site, d.unit)}</td><td>{withUnit(d.cell, d.unit)}</td><td><StatusChip status={d.status} /></td></tr>
+                  ))}
+                  <tr><th scope="row">Gravidade</th><td>{phys.gText}</td><td>1 g</td><td><StatusChip status="not_analog" /></td></tr>
+                  <tr><th scope="row">Atmosfera</th><td>{phys.atm}</td><td>1 atm</td><td><StatusChip status="not_analog" /></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {tab === "comparacao" && <InspectPanel siteId={ex.siteId} siteVec={siteVec} result={result} weights={ex.weights} />}
+
+        {tab === "limitacoes" && (
+          <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
+            <div>
+              <div className="ex-method">
+                <div><b>Célula</b><span>5 × 5 km</span></div>
+                <div><b>Dados</b><span>{ex.variant === "base" ? "Originais (100 m)" : (data.sim?.variants?.find((v) => v.id === ex.variant)?.label ?? ex.variant)}</span></div>
+                <div><b>Método</b><span>Distância ponderada em declividade, rugosidade e amplitude</span></div>
+              </div>
+              <p className="desc mt-3">
+                Análogo se a diferença normalizada ≤ {fmt(data.config.thresholds.good, 2)}; parcial até {fmt(data.config.thresholds.weak, 2)}; acima disso, não análogo.
+                A estabilidade sorteia {data.config.stability.draws.toLocaleString("pt-BR")} conjuntos de pesos ({data.config.stability.distribution}, semente {data.config.stability.seed}) — mede sensibilidade aos pesos, não probabilidade de ser análogo.
+              </p>
+              {ex.variant !== "base" && <p className="mt-2 inline-block rounded-full border border-dashed border-warn bg-warn/10 px-3 py-1 text-[13px] font-semibold text-warn">Simulação — não são medições reais</p>}
+              {site.center_pending_validation && <p className="mt-2 text-[13px] text-warn">O centro deste recorte ainda aguarda validação final.</p>}
+            </div>
+            <div>
+              <h4 className="eyebrow mb-2">O que nenhum lugar da Terra reproduz</h4>
+              <ul className="list-clean text-[13px] text-ink-2">
+                {data.config.earth_limits.map((l) => <li key={l.dimension}><b>{l.dimension}:</b> {l.text}</li>)}
+              </ul>
+              <p className="desc mt-3">Três estatísticas de relevo não descrevem orientação das encostas, drenagem nem textura em várias escalas. Pesos e escalas não foram calibrados por especialistas. Os DEMs da Terra e dos planetas vêm de instrumentos diferentes. Litologia mapeada não é mineralogia verificada.</p>
+            </div>
+          </div>
+        )}
+
+        {tab === "fontes" && (
+          <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
+            <div>
+              <h4 className="eyebrow mb-2">{site.name}</h4>
+              <ul className="list-clean text-[13px]">
+                {(site.sources ?? []).map((s) => <li key={s.name}>{s.url ? <a href={s.url} target="_blank" rel="noopener noreferrer">{s.name} ↗</a> : s.name}</li>)}
+              </ul>
+              <h4 className="eyebrow mb-2 mt-4">Terra</h4>
+              <ul className="list-clean text-[13px]">
+                <li>Relevo da grade: {data.grid.dem}</li>
+                {cell.context?.geology_source && <li>Geologia: {cell.context.geology_source}</li>}
+                <li>Imagens do mapa: Esri World Imagery; camada opcional NASA GIBS (MODIS)</li>
+              </ul>
+              <h4 className="eyebrow mb-2 mt-4">Rastreio das execuções</h4>
+              <p className="m-0 break-all font-mono text-[11px] text-muted">{(data.grid.run_ids ?? []).join(" · ")}</p>
+            </div>
+            <div>
+              <h4 className="eyebrow mb-2">Mapa de contexto (NASA Trek)</h4>
+              <TrekMap site={site} layer={data.config.planet_maps?.[site.body]} />
+              <p className="note mt-2">{site.why}</p>
+            </div>
+          </div>
+        )}
+
+        {extra && extra.render()}
+      </div>
+    </section>
+  );
+}
