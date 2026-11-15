@@ -1,13 +1,12 @@
-# ARA — Relatório consolidado / Consolidated report
+# ARA — Consolidated report
 
-| Arquivo / File | Idioma / Language |
+| File | Language |
 |---|---|
-| [ARA_Relatorio_Consolidado_2026_PT.pdf](ARA_Relatorio_Consolidado_2026_PT.pdf) | Português (PDF) |
-| [ARA_Relatorio_Consolidado_2026_PT.docx](ARA_Relatorio_Consolidado_2026_PT.docx) | Português (Word, editável) |
+| [ARA_Relatorio_Consolidado_2026_PT.pdf](ARA_Relatorio_Consolidado_2026_PT.pdf) | Portuguese (PDF) |
+| [ARA_Relatorio_Consolidado_2026_PT.docx](ARA_Relatorio_Consolidado_2026_PT.docx) | Portuguese (Word, editable) |
 | [ARA_Consolidated_Report_2026_EN.pdf](ARA_Consolidated_Report_2026_EN.pdf) | English (PDF) |
 | [ARA_Consolidated_Report_2026_EN.docx](ARA_Consolidated_Report_2026_EN.docx) | English (Word, editable) |
 
-Os anexos C a F trazem todos os links usados no projeto, conferidos em 15/11/2026 (também em [`links.json`](links.json)).
 Annexes C to F list every link used in the project, checked on 15 November 2026 (also in [`links.json`](links.json)).
 Publisher DOI links (USGS ScienceBase, AGU/Wiley) show an anti-bot check before the page but open normally in a browser.
 

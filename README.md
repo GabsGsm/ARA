@@ -43,15 +43,15 @@ The **3D Lab** (`#/3d`) puts a fixed planetary site and its Earth analog side by
 
 ## Explore: catalogue, discover, minerals — and the evidence behind each analog
 
-The **Explorar** page has three modes.
+The **Explore** page has three modes.
 
 - **Catálogo** — the 710-cell ranking (522 original cells + the Earth expansion below), now with filters on top, map + top candidates side by side and a details panel with tabs: *Resumo* (zoomable DEM image), *Comparação*, *Limitações*, *Fontes*, **Evidências** and **Robustez**.
-- **Descobrir novo local (ARA Anywhere)** — pick any point on Earth (map, place search via Nominatim, coordinates or a famous NASA/ESA analog). The browser fetches, live and step by step: AWS Terrain Tiles (the same three ARA measures at 100 m in a 5 km cell), Macrostrat geology, NASA POWER monthly climatology, SoilGrids 0–5 cm texture with q05–q95 uncertainty and JRC surface-water history 1984–2021. The result is labelled **exploratory** and never mixed into the official ranking; it can be opened side by side in 3D.
+- **Discover a new place (ARA Anywhere)** — pick any point on Earth (map, place search via Nominatim, coordinates or a famous NASA/ESA analog). The browser fetches, live and step by step: AWS Terrain Tiles (the same three ARA measures at 100 m in a 5 km cell), Macrostrat geology, NASA POWER monthly climatology, SoilGrids 0–5 cm texture with q05–q95 uncertainty and JRC surface-water history 1984–2021. The result is labelled **exploratory** and never mixed into the official ranking; it can be opened side by side in 3D.
 - **Minerais** — Mars: CRISM + CaSSIS mineral units of Jezero's western rim (Valantinas et al. 2026), filterable by class, and the **THEMIS 2026 thermal-inertia** map (Huang 2026, MC-13) with the upper-limit quality band, histograms and per-sector values (they reproduce the team's delivery exactly: 292.8 / 236.2 / 244.7 / 249.9 J m⁻² K⁻¹ s⁻½). Earth: Macrostrat geology with a unit sheet on click. Moon: per-target evidence (LOLA, illumination, Diviner, M3) keeping unit, material, spectral signature, hydrogen and ice as separate categories.
 
 **Evidence engine** (`src/lib/evidence/engine.js`, data from `pipeline/build_evidence.py` → `data/evidence/`): for every candidate and mission purpose (geomorphology, rover navigation, mineralogical instrument, geological training) each piece of evidence is *supporting*, *contradictory*, *unknown* or *context*, with origin (observed, derived, model estimate, contextual), source, resolution, period, rule and caveats. On top of it:
 
-- **O que o ranking não mostra? (Analog Mirage)** — flags candidates whose relief passes the ranking but whose land cover, flood history or climate contradict the purpose (e.g. for Jezero 01 the #2 cell, Pinacate, is flagged; #1 Death Valley is not).
+- **What doesn't the ranking show? (Analog Mirage)** — flags candidates whose relief passes the ranking but whose land cover, flood history or climate contradict the purpose (e.g. for Jezero 01 the #2 cell, Pinacate, is flagged; #1 Death Valley is not).
 - **O que falta saber? (Next Best Measurement)** — a transparent purpose × evidence matrix splitting *what we know*, *what is missing* and *the next test to run* (e.g. sampling + granulometry + bevameter before a rover test). Rules, not probabilities.
 - **Robustez** — position of the top candidates in 12 defined scenarios (3 weight sets × 4 data-quality versions).
 - **Analog Passport** — JSON export with identification, target, characterization, interpretation, provenance and conclusion.
@@ -60,18 +60,18 @@ The **Explorar** page has three modes.
 
 Earth evidence for the 522 cells: ESA WorldCover 2021 (10 m), ISRIC SoilGrids 2.0 (250 m, model estimate), Macrostrat, NASA POWER (~0.5°, regional context) and JRC Global Surface Water (30 m). Mineral spectroscopy of Earth (NASA EMIT) is **not** integrated yet: it requires a NASA Earthdata login.
 
-## Campo (Field Explorer)
+## Field Explorer
 
 `#/campo` turns a phone into a field companion: *use my location* (GPS via `watchPosition`, only while the session is active), *pick a point on the map* or *demonstration* (a clearly labelled simulated walk on real coordinates in Death Valley). It shows accuracy, a filtered track (fixes worse than 50 m or implying > 8 m/s are discarded), distance, Macrostrat geology re-queried only after 400 m, on-demand relief characterization against any of the 8 targets, missing data for the purpose, and **field notes** kept only on the device (exportable as JSON). Location is never sent anywhere except as the single point queried to the public data services.
 
-## Missão (rover mission planner)
+## Mission (rover mission planner)
 
 `#/missao` turns the real relief into a mission: pick a site (Jezero / Perseverance landing at HiRISE 1 m, the Artemis III south-pole regions, any Earth analog — or any point on Earth, live), a vehicle (Perseverance, Curiosity, Spirit/Opportunity, Apollo LRV) and the local solar hour, click **A** and **B**, and the ARA plans the safest route (Dijkstra/A* on a cost map, in the spirit of the JPL rovers' global planner — Carsten et al. 2007). Then **drive it yourself** with W A S D / arrows (C changes camera, space brakes), following the gold line or not.
 
 - **Soil decides if you get stuck.** On Mars the "softness" of the ground comes from **THEMIS thermal inertia** (low inertia = fine grains / sand; Fergason et al. 2006); on Earth from **SoilGrids** sand and coarse-fragment fractions of the cell; on the Moon, loose regolith. Wheel slip grows with the climb and reaches 100% at the soil's critical angle (≈ 17° in loose sand, ≈ 28° on cohesive soil — MER and MSL mobility tests); sustained high slip sinks the wheels (Spirit at Troy, 2009).
-- **Shadow decides if you can recharge.** Shadows are ray-cast on the DEM for the chosen hour; solar rovers only charge in sunlight, and the planner penalises shaded cells. The HUD warns "Na sombra: não pare aqui".
+- **Shadow decides if you can recharge.** Shadows are ray-cast on the DEM for the chosen hour; solar rovers only charge in sunlight, and the planner penalises shaded cells. The HUD warns "In shadow: do not stop here".
 - **Energy, tipping and wheels.** P = m·g·v·(Crr·cosθ + sinθ)/η + fixed load; recharge by MMRTG (110 W) or panels; batteries from NASA/JPL and NSSDC (Perseverance 2 × 43 Ah; LRV 2 × 121 Ah, non-rechargeable). Tilt above 45° tips the rover; relief breaks larger than the ground clearance wear the wheels (Curiosity, 2013).
-- **Mission report**: planned vs driven distance, time, energy and wheel wear, and the lesson behind each failure ("Você atolou", "Energia esgotada", "O rover tombou", "Rodas danificadas", "Missão cumprida"). The planning panel also compares the ARA route with the straight line.
+- **Mission report**: planned vs driven distance, time, energy and wheel wear, and the lesson behind each failure ("You got stuck", "Battery depleted", "The rover tipped over", "Damaged wheels", "Mission accomplished"). The planning panel also compares the ARA route with the straight line.
 - The fixed loads and drivetrain efficiencies are order-of-magnitude assumptions and are labelled as such; the DEM does not show rocks smaller than its pixel. Educational simulation, not NASA operations software.
 
 ### Mission v2 — strategies, sub-pixel rocks and planetary protection
@@ -88,13 +88,13 @@ Earth evidence for the 522 cells: ESA WorldCover 2021 (10 m), ISRIC SoilGrids 2.
 
 `#/configuracoes` (also in the ☰ menu) and a **PT/EN** button in the header: site language (Portuguese / English — navigation, home, Explore, 3D panel, Data lab, Mission, Vehicles, About and Settings are bilingual; some long explanatory notes in Evidence, Discover, Minerals, Field and Analyses remain in Portuguese), text size (90–130%), high contrast, colour-blind safe palette (blue/orange instead of green/red), easier reading (letter, word and line spacing), underlined links, pause animations, narration and terrain sounds. Everything is stored only in the browser.
 
-## Laboratório de dados — "how we got there"
+## Data lab — "how we got there"
 
-`#/laboratorio` is a guided, 8-step scientific experiment on the **real DEM and image** of an Earth analog cell (5 × 5 km), compared with the mission site: original data → **pixel size** (20 → 500 m, block mean) → **vertical noise** → **data gaps** → **smoothing filter** → **edges (Sobel)** → **texture** (local standard deviation) → **what the data supports**. Original and processed are shown side by side (image, hillshade, slope, edges, texture); degraded data is always labelled *simulação*. The verdict re-extracts the three ARA measures on the processed grid, recomputes the ARA distance and says, per measure, whether the comparison is *sustentada*, *incerta* or *não sustentada* and why (pixel larger than the 100 m measurement scale, coverage < 80%, noise comparable to the real roughness, classification changed). A free mode exposes all controls. References: Zhang & Montgomery 1994, Grohmann 2015, Farr et al. 2007, Kirk et al. 2008, Horn 1981.
+`#/laboratorio` is a guided, 8-step scientific experiment on the **real DEM and image** of an Earth analog cell (5 × 5 km), compared with the mission site: original data → **pixel size** (20 → 500 m, block mean) → **vertical noise** → **data gaps** → **smoothing filter** → **edges (Sobel)** → **texture** (local standard deviation) → **what the data supports**. Original and processed are shown side by side (image, hillshade, slope, edges, texture); degraded data is always labelled *simulation*. The verdict re-extracts the three ARA measures on the processed grid, recomputes the ARA distance and says, per measure, whether the comparison is *supported*, *uncertain* or *not supported* and why (pixel larger than the 100 m measurement scale, coverage < 80%, noise comparable to the real roughness, classification changed). A free mode exposes all controls. References: Zhang & Montgomery 1994, Grohmann 2015, Farr et al. 2007, Kirk et al. 2008, Horn 1981.
 
 **Accessibility:** keyboard-operable controls, live text description of every result for screen readers, **narration** (Web Speech API, pt-BR) and **sonification** of the terrain (Web Audio API: pitch = elevation, hiss = roughness, silence = gap), playing the mission site, the original analog and the processed analog in sequence — no external service.
 
-## Veículos (exploration fleet)
+## Vehicles (exploration fleet)
 
 `#/veiculos` shows Sojourner, Spirit/Opportunity, Curiosity, Perseverance, Ingenuity, the Apollo LRV, the Lunar Module and an EVA astronaut in a 3D viewer at real scale next to a 1.75 m person, with specs, curiosities and **the lesson each one leaves for a crewed mission** (soft soil that trapped Spirit, sharp rocks that damaged Curiosity's wheels, MOXIE oxygen, Ingenuity as aerial scout, the Apollo walk-back rule). Each vehicle opens in the 3D Lab on real relief.
 
