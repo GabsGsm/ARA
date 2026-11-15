@@ -69,7 +69,7 @@ export default function Vehicles() {
           <div className="mt-4 flex flex-wrap gap-2">
             <Link className="vh-btn gold" to={to3d}>{tr("Ver no relevo 3D, em escala", "See it on 3D relief, to scale")}</Link>
             {["perseverance", "curiosity", "mer", "lrv"].includes(v.key) && <Link className="vh-btn gold" to={`/missao?rover=${v.key}`}>{tr("Dirigir em missão", "Drive it in a mission")}</Link>}
-            <Link className="vh-btn" to="/explorar">{tr("Comparar pressão e temperatura", "Compare pressure and temperature")}</Link>
+            <Link className="vh-btn" to={`/explorar?corpo=${v.body === "moon" ? "lua" : "marte"}&aba=ambiente`}>{tr("Comparar pressão e temperatura", "Compare pressure and temperature")}</Link>
           </div>
           <p className="note mt-3">{tr("Modelo", "Model")}: {v.model}. {tr("Modelos oficiais em", "Official models at")} <a href="https://science.nasa.gov/3d-resources/" target="_blank" rel="noopener noreferrer">science.nasa.gov/3d-resources ↗</a> ({tr("domínio público", "public domain")}). {tr("Dados", "Data")}: NASA/JPL.</p>
         </article>

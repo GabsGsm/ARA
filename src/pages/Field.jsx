@@ -63,21 +63,29 @@ export default function Field() {
   const watch = useRef(null), demoTimer = useRef(null), lastGeo = useRef(null), t0 = useRef(null);
   const site = data.siteById(targetId), siteVec = data.sites[targetId]?.terrain;
 
-  useEffect(() => { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); }, [notes]);
+  const [notesErr, setNotesErr] = useState(false);
+  useEffect(() => {
+    try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); setNotesErr(false); }
+    catch { setNotesErr(true); } // armazenamento bloqueado ou cheio: o app continua, só avisa
+  }, [notes]);
 
   // um fix novo: filtra precisão e saltos, soma distância só com deslocamento real
+  const [lowAcc, setLowAcc] = useState(null);   // precisão do último fix rejeitado (aviso)
+  const lastOk = useRef(null);
   const accept = useCallback((lat, lon, acc, t) => {
-    setFix({ lat, lon, acc, t });
-    if (acc > MAX_ACC) { setRejected((n) => n + 1); return; }
-    setTrack((tr) => {
-      const last = tr[tr.length - 1];
-      if (!last) return [[lat, lon, t]];
+    // fixes rejeitados (precisão ruim ou salto impossível) não movem o mapa nem disparam consultas
+    if (acc > MAX_ACC) { setRejected((n) => n + 1); setLowAcc(acc); return; }
+    const last = lastOk.current;
+    if (last) {
       const d = hav(last, [lat, lon]), dt = Math.max((t - last[2]) / 1000, 0.5);
-      if (d / dt > MAX_SPEED) { setRejected((n) => n + 1); return tr; }
-      if (d < Math.max(acc / 2, 3)) return tr; // ruído parado
+      if (d / dt > MAX_SPEED) { setRejected((n) => n + 1); return; }
+      if (d < Math.max(acc / 2, 3)) { setFix({ lat, lon, acc, t }); setLowAcc(null); return; } // parado: atualiza só a leitura
       setDist((x) => x + d);
-      return [...tr, [lat, lon, t]];
-    });
+    }
+    lastOk.current = [lat, lon, t];
+    setLowAcc(null);
+    setFix({ lat, lon, acc, t });
+    setTrack((tr) => [...tr, [lat, lon, t]]);
   }, []);
 
   const stop = useCallback(() => {
@@ -92,7 +100,7 @@ export default function Field() {
     setErr(null);
     if (!("geolocation" in navigator)) { setErr(T("Este navegador não oferece localização.", "This browser does not provide location.")); return; }
     if (!window.isSecureContext) { setErr(T("A localização exige HTTPS.", "Location requires HTTPS.")); return; }
-    setMode("gps"); setRunning(true); t0.current = Date.now();
+    setMode("gps"); setRunning(true); if (t0.current == null || mode !== "gps") t0.current = Date.now();
     watch.current = navigator.geolocation.watchPosition(
       (p) => accept(p.coords.latitude, p.coords.longitude, p.coords.accuracy, p.timestamp),
       (e) => { setErr(e.code === 1 ? T("Permissão de localização negada. Você ainda pode escolher um local no mapa ou ver a demonstração.", "Location permission denied. You can still pick a place on the map or watch the demonstration.") : T(`GPS indisponível (${e.message}).`, `GPS unavailable (${e.message}).`)); stop(); },
@@ -100,8 +108,20 @@ export default function Field() {
     );
   };
 
+  const demo = useRef(null);  // { pts, i, fake } — permite pausar e retomar do mesmo ponto
+  const runDemo = () => {
+    setRunning(true);
+    clearInterval(demoTimer.current);
+    demoTimer.current = setInterval(() => {
+      const D = demo.current;
+      if (!D || D.i >= D.pts.length) { clearInterval(demoTimer.current); setRunning(false); return; }
+      D.fake += 5000; // 12 m em 5 s = 2,4 m/s (caminhada rápida), para o filtro de velocidade
+      accept(D.pts[D.i][0], D.pts[D.i][1], 6, D.fake);
+      D.i++;
+    }, 400);
+  };
   const startDemo = () => {
-    stop(); setErr(null); setMode("demo"); setTrack([]); setDist(0); setRejected(0); setRunning(true); t0.current = Date.now();
+    stop(); setErr(null); setMode("demo"); setTrack([]); setDist(0); setRejected(0); setFix(null); lastOk.current = null; t0.current = Date.now();
     // interpola a trilha a cada ~12 m e "anda" 1 passo a cada 0,4 s (≈ 30 m/s simulados, acelerado)
     const pts = [];
     for (let i = 0; i < DEMO.length - 1; i++) {
@@ -109,21 +129,16 @@ export default function Field() {
       for (let k = 0; k < n; k++) pts.push([DEMO[i][0] + (DEMO[i + 1][0] - DEMO[i][0]) * k / n, DEMO[i][1] + (DEMO[i + 1][1] - DEMO[i][1]) * k / n]);
     }
     pts.push(DEMO[DEMO.length - 1]);
-    let i = 0, fake = Date.now();
-    demoTimer.current = setInterval(() => {
-      if (i >= pts.length) { clearInterval(demoTimer.current); setRunning(false); return; }
-      fake += 5000; // 12 m em 5 s = 2,4 m/s (caminhada rápida), para o filtro de velocidade
-      accept(pts[i][0], pts[i][1], 6, fake);
-      i++;
-    }, 400);
+    demo.current = { pts, i: 0, fake: Date.now() };
+    runDemo();
   };
 
   const pause = () => {
     if (mode === "gps") { if (running) { stop(); } else startGps(); }
-    if (mode === "demo") { if (running) { clearInterval(demoTimer.current); setRunning(false); } else startDemo(); }
+    if (mode === "demo") { if (running) { clearInterval(demoTimer.current); setRunning(false); } else if (demo.current && demo.current.i < demo.current.pts.length) runDemo(); else startDemo(); }
   };
   const finish = () => { stop(); };
-  const erase = () => { stop(); setTrack([]); setDist(0); setRejected(0); setFix(null); setGeo(null); setTerr(null); setMode(null); };
+  const erase = () => { stop(); setTrack([]); setDist(0); setRejected(0); setFix(null); setGeo(null); setTerr(null); setMode(null); lastGeo.current = null; lastOk.current = null; demo.current = null; t0.current = null; setLowAcc(null); };
 
   const pos = fix ? [fix.lat, fix.lon] : null;
   // consulta geológica só quando o deslocamento é relevante
@@ -195,6 +210,7 @@ export default function Field() {
         <div className="fx-hud" role="status">
           <span>{mode === "gps" ? (running ? T("● Acompanhando", "● Tracking") : T("Pausado", "Paused")) : mode === "demo" ? (running ? T("● Simulando", "● Simulating") : T("Simulação parada", "Simulation stopped")) : T("Local escolhido no mapa", "Place picked on the map")}</span>
           {fix?.acc > 0 && <span>{T("Precisão", "Accuracy")} ± {fmt(fix.acc, 0)} m{fix.acc > MAX_ACC ? T(" (ignorado)", " (ignored)") : ""}</span>}
+          {lowAcc != null && <span className="text-warn">{T(`GPS impreciso agora (± ${fmt(lowAcc, 0)} m): ponto ignorado`, `Imprecise GPS right now (± ${fmt(lowAcc, 0)} m): point ignored`)}</span>}
           {mode !== "map" && <span>{T("Distância", "Distance")} {dist >= 1000 ? `${fmt(dist / 1000, 2)} km` : `${fmt(dist, 0)} m`}</span>}
           {mode !== "map" && <span>{track.length} {T("pontos", "points")} · {rejected} {T("descartados", "discarded")} · {elapsed} min</span>}
         </div>
@@ -253,7 +269,8 @@ export default function Field() {
             {notes.length > 0 && <button type="button" className="dv-btn" onClick={exportNotes}>{T("Exportar notas (JSON)", "Export notes (JSON)")}</button>}
             {notes.length > 0 && <button type="button" className="dv-btn" onClick={() => setNotes([])}>{T("Apagar todas", "Delete all")}</button>}
           </div>
-          <ul className="fx-notes">
+          {notesErr && <p className="note text-warn">{T("Não foi possível salvar as notas neste navegador (armazenamento bloqueado ou cheio). Exporte antes de sair.", "Notes could not be saved in this browser (storage blocked or full). Export them before leaving.")}</p>}
+            <ul className="fx-notes">
             {notes.map((n) => <li key={n.id}><b>{n.title || T("Sem título", "Untitled")}</b>{n.demo ? T(" (demonstração)", " (demonstration)") : ""}<small>{new Date(n.date).toLocaleString(T("pt-BR", "en-US"))} · {n.lat != null ? `${n.lat}°, ${n.lon}° (${T("aprox.", "approx.")})` : T("sem posição", "no position")}</small>{n.text && <p>{n.text}</p>}</li>)}
           </ul>
           <p className="note">{T("As notas ficam só neste aparelho. Identificação mineral por foto comum não é feita pelo ARA.", "Notes stay on this device only. ARA does not identify minerals from ordinary photos.")}</p>

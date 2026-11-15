@@ -91,6 +91,7 @@ export default function Lab3D() {
   const [jump, setJump] = useState(null);
   const [, setLocked] = useState(false);
   const [panels, setPanels] = useState({ left: true, right: true });
+  const [saving, setSaving] = useState(null); // null | "busy" | "error" (salvar imagem)
   // caminhando, os painéis laterais recolhem para a cena ficar livre (e voltam ao sair)
   const panelsBefore = useRef(null);
   // a ajuda aparece ao entrar na caminhada e recolhe sozinha quando a pessoa começa a andar
@@ -328,7 +329,7 @@ export default function Lab3D() {
   const onUser = useCallback(() => { if (nav === "tour") { stopTour(); setNav("orbit"); } }, [nav]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (err) return <p role="alert" className="m-5 rounded-2xl border border-bad bg-bad/10 px-4 py-3">{err}</p>;
-  if (!index) return <p className="note p-8" role="status">Carregando cenas 3D…</p>;
+  if (!index) return <p className="note p-8" role="status">{T("Carregando cenas 3D…", "Loading 3D scenes…")}</p>;
 
   const L = scenes.left?.meta, R = twin ? scenes.right?.meta : null;
   const sunL = sunFor(scenes.left), sunR = twin ? sunFor(scenes.right) : null;
@@ -357,17 +358,22 @@ export default function Lab3D() {
   const ss = SEASON[planetBody];
 
   const download = () => {
-    const a = left.current?.view?.snapshot(), b = twin ? right.current?.view?.snapshot() : null;
-    const imgs = [a, b].filter(Boolean).map((src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.src = src; }));
+    let shots = [];
+    try { shots = [left.current?.view?.snapshot(), twin ? right.current?.view?.snapshot() : null].filter(Boolean); } catch { shots = []; }
+    if (!shots.length) { setSaving("error"); return; }
+    setSaving("busy");
+    const imgs = shots.map((src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("snapshot")); i.src = src; }));
     Promise.all(imgs).then((list) => {
       const w = list.reduce((s, i) => s + i.width, 0), h = Math.max(...list.map((i) => i.height));
+      if (!w || !h) throw new Error("empty");
       const cv = document.createElement("canvas"); cv.width = w; cv.height = h + 40;
       const g = cv.getContext("2d"); g.fillStyle = "#041c28"; g.fillRect(0, 0, w, h + 40);
       let x = 0; list.forEach((i) => { g.drawImage(i, x, 0); x += i.width; });
       g.fillStyle = "#f2b53a"; g.font = "16px Michroma, sans-serif";
-      g.fillText(`ARA · ${L?.name ?? ""}${R ? `  ⇄  ${R.name}` : ""} · relevo real, mesma escala`, 14, h + 26);
+      g.fillText(`ARA · ${L?.name ?? ""}${R ? `  ⇄  ${R.name}` : ""} · ${T("relevo real, mesma escala", "real relief, same scale")}`, 14, h + 26);
       const link = document.createElement("a"); link.download = `ARA_3D_${siteId}${R ? `_${analogId}` : ""}.png`; link.href = cv.toDataURL("image/png"); link.click();
-    });
+      setSaving(null);
+    }).catch(() => setSaving("error"));
   };
 
   return (
@@ -572,7 +578,8 @@ export default function Lab3D() {
             <div className="t3-btns">
               <button type="button" aria-pressed={tool === "profile"} onClick={() => { setTool((t) => (t === "profile" ? null : "profile")); setPts([]); setTrav(null); }}>{tr("Perfil A→B")}</button>
               {!isOverview && <button type="button" className="gold" aria-pressed={tool === "travessia"} onClick={() => { setTool((t) => (t === "travessia" ? null : "travessia")); setTrav(null); setPts([]); }}>{tr("Travessia gêmea")}</button>}
-              <button type="button" onClick={download}>{tr("Salvar imagem")}</button>
+              <button type="button" onClick={download} disabled={!scenes.left || saving === "busy"}>{saving === "busy" ? tr("Salvando…", "Saving…") : tr("Salvar imagem", "Save image")}</button>
+              {saving === "error" && <span role="alert" className="t3-note" style={{ color: "var(--color-bad)" }}>{tr("Não foi possível gerar a imagem agora. Espere a cena carregar e tente de novo.", "Could not create the image now. Wait for the scene to load and try again.")}</span>}
               <button type="button" onClick={() => { left.current?.view?.resetView(); right.current?.view?.resetView(); }}>{tr("Recentrar")}</button>
               <button type="button" onClick={() => setShowSources((v) => !v)} aria-expanded={showSources}>{tr("Fontes dos dados")}</button>
             </div>
@@ -592,7 +599,7 @@ export default function Lab3D() {
                 ))}
               </ul>
             )}
-            <p className="t3-note mt-4"><Link to="/explorar">{tr("← Voltar ao ranking (Explorar)")}</Link></p>
+            <p className="t3-note mt-4"><Link to={`/explorar?corpo=${planetBody === "moon" ? "lua" : "marte"}&site=${siteId}`}>{tr("← Voltar ao ranking (Explorar)")}</Link></p>
           </div>
         </aside>
 

@@ -70,17 +70,19 @@ const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, 
     return () => view.current?.dispose();
   }, [side]);
 
+  const [failedId, setFailedId] = useState(null);
+  const [retry, setRetry] = useState(0);
   const show = (s) => { view.current.setScene(s); setScene(s); setStatus("ready"); onLoaded?.(side, s); };
 
   useEffect(() => {
     if (sceneData) { show(sceneData); return undefined; }
     if (!sceneId) return undefined;
     let alive = true;
-    setStatus("loading");
+    setStatus("loading"); setFailedId(null);
     loadScene(sceneId).then((s) => { if (alive) show(s); })
-      .catch((e) => { console.error(e); if (alive) setStatus("error"); });
+      .catch((e) => { console.error(e); if (alive) { setStatus("error"); setFailedId(sceneId); } });
     return () => { alive = false; };
-  }, [sceneId, sceneData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [sceneId, sceneData, retry]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // configurações visuais
   useEffect(() => {
@@ -105,7 +107,12 @@ const TerrainPane = forwardRef(function TerrainPane({ sceneId, sceneData, side, 
         {meta && <small>{fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} × {fmt(meta.size_m / 1000, meta.size_m < 5000 ? 1 : 0)} km · {T("relevo", "relief")} {fmt(meta.height.native_res_m, meta.height.native_res_m < 5 ? 1 : 0)} m{meta.color ? ` · ${T("imagem", "imagery")} ${fmt(meta.color.native_res_m, meta.color.native_res_m < 2 ? 2 : 0)} m` : T(" · sem imagem: luz e sombra calculadas", " · no imagery: computed light and shade")}</small>}
       </div>
       {status === "loading" && <div className="t3-loading" role="status"><span className="t3-spinner" />{tr("Carregando relevo real…")}</div>}
-      {status === "error" && <div className="t3-loading" role="alert">{T("Não consegui carregar esta cena. Rode", "Could not load this scene. Run")} <code>python pipeline/build_terrain3d.py</code>.</div>}
+      {status === "error" && (
+        <div className="t3-loading" role="alert">
+          <span>{T("Não consegui carregar esta cena", "Could not load this scene")}{failedId ? ` (${failedId})` : ""}.{scene ? T(` Ainda aparece a última cena carregada: ${scene.meta.name}.`, ` The last loaded scene is still shown: ${scene.meta.name}.`) : ""}</span>
+          <button type="button" className="t3-retry" onClick={() => setRetry((n) => n + 1)}>{T("Tentar de novo", "Try again")}</button>
+        </div>
+      )}
       {walking && coarse() && <TouchControls view={() => view.current} />}
       <div className="t3-readout" aria-live="off">
         {hover ? (

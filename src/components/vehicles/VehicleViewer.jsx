@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { GLB, PROCEDURAL, fitToLength, loadGLB } from "../../lib/terrain3d/models.js";
+import { GLB, PROCEDURAL, fitModel, loadGLB } from "../../lib/terrain3d/models.js";
 import { useTr } from "../../hooks/useSettings.jsx";
 import "../../assets/css/vehicles.css";
 
@@ -72,7 +72,7 @@ export default function VehicleViewer({ vehicle, calm, spotlight = false }) {
     const load = PROCEDURAL[vehicle.key] ? Promise.resolve(PROCEDURAL[vehicle.key]()) : loadGLB(GLB[vehicle.key], (f) => alive && setStatus(`${tr("Carregando modelo…", "Loading model…")} ${Math.round(f * 100)}%`));
     load.then((obj) => {
       if (!alive) return;
-      const g = fitToLength(obj, vehicle.len);
+      const g = fitModel(obj, vehicle.key, vehicle.len);
       s.holder.add(g);
       const box = new THREE.Box3().setFromObject(g), size = box.getSize(new THREE.Vector3());
       const big = Math.max(size.x, size.y, size.z, 1.75);

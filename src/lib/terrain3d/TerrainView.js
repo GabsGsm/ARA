@@ -7,7 +7,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import { CSS2DRenderer, CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { heightAt, slopeAt, slopeGrid, uvToLatLon } from "./data.js";
-import { GLB, PROCEDURAL, fitToLength, loadGLB } from "./models.js";
+import { GLB, PROCEDURAL, fitModel, loadGLB } from "./models.js";
 import { rockAbundance, rocksNear, setRockCorridor } from "../mission/rocks.js";
 import { T } from "../i18n.js";
 
@@ -461,11 +461,24 @@ reflectedLight.directSpecular *= vShadow;
       }
     }
     if (this.profilePts) this.drawProfile(...this.profilePts);
+    // rotas e trilhas "coladas" no relevo: pontos a cada ~1 célula do modelo, pouco acima do chão
+    // (segmentos longos e altos atravessavam morros ou ficavam flutuando atrás do rover)
+    const drape = (pts, h) => {
+      const out = [], stepUV = 1 / this.data.n;
+      for (let i = 0; i < pts.length; i++) {
+        const a = pts[i], b = pts[i + 1];
+        out.push(this.uvToWorld(a.u, a.v, h));
+        if (!b) break;
+        const k = Math.min(400, Math.floor(Math.hypot(b.u - a.u, b.v - a.v) / stepUV));
+        for (let j = 1; j < k; j++) out.push(this.uvToWorld(a.u + ((b.u - a.u) * j) / k, a.v + ((b.v - a.v) * j) / k, h));
+      }
+      return out;
+    };
     for (const r of this.routes || []) {
       if (!r?.pts?.length) continue;
-      const lift = Math.max(0.5, Math.min(2, this.S / 5000));
+      const lift = Math.max(0.25, Math.min(2, this.S / 6000));
       if (r.corridorWidth > 0) this.corridor(r.pts, r.corridorWidth, r.color ?? 0x59e0ff, lift);
-      this.line(r.pts.map((p) => this.uvToWorld(p.u, p.v, r.corridorWidth > 0 ? lift + 0.05 : this.S / 700)), r.color ?? 0x59e0ff, 1);
+      if (r.pts.length > 1) this.line(drape(r.pts, r.corridorWidth > 0 ? lift + 0.05 : lift), r.color ?? 0x59e0ff, 1);
       if (r.label) this.label(r.label, r.pts[0].u, r.pts[0].v, "pin");
     }
     this.dirty = true;
@@ -544,7 +557,7 @@ reflectedLight.directSpecular *= vShadow;
       obj = PROCEDURAL[spec.key] ? PROCEDURAL[spec.key]() : await loadGLB(GLB[spec.key]);
     } catch (e) { console.error(e); return; }
     if (this._vehReq !== spec) return;
-    const g = fitToLength(obj, spec.length);
+    const g = fitModel(obj, spec.key, spec.length);
     g.rotation.y = ((spec.heading ?? 0) * Math.PI) / 180;
     g.traverse((m) => { if (m.isMesh) { m.castShadow = false; m.receiveShadow = false; } });
     this.vehicle = g;

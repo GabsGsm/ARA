@@ -46,7 +46,7 @@ export default function App() {
           </p>
         )}
         {data.status === "ready" && (
-          <div key={`${pathname}|${lang}`} className={pathname === "/" ? undefined : "page-enter"}>
+          <div key={pathname} className={pathname === "/" ? undefined : "page-enter"}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/explorar" element={<Explore />} />

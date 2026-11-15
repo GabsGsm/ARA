@@ -58,10 +58,16 @@ export function startState(spec, at) {
     sink: 0, wheel: 0, slip: 0, pitch: 0, roll: 0, status: "ok", events: [], track: [{ u: at.u, v: at.v }], sinkRisk: 0 };
 }
 
-export function steerForWarp(steer, warp) {
+export function steerForWarp(steer, warp, turnRate = 0.1) {
   const safeWarp = Math.max(1, warp);
-  // Cap steering response at three simulation seconds per real second.
-  return steer * Math.min(safeWarp, 3) / safeWarp;
+  // giro aparente no máximo ~1,2 rad/s reais, para a pessoa conseguir mirar mesmo com o tempo acelerado
+  return (steer * Math.min(safeWarp, 1.2 / turnRate)) / safeWarp;
+}
+
+/** Aceleração efetiva: a velocidade aparente na tela fica até ~10 m/s reais para o veículo continuar controlável. */
+export const MAX_SCREEN_SPEED = 10;
+export function effectiveWarp(warp, vmax) {
+  return Math.max(1, Math.min(warp, MAX_SCREEN_SPEED / Math.max(vmax, 1e-3)));
 }
 
 export function withinTargetRadius(previous, current, target, radius, size) {

@@ -39,7 +39,7 @@ export const VEHICLES = [
   {
     key: "lrv", name: "Carro lunar Apollo (LRV)", body: "moon", mission: "Apollo 15, 16 e 17", year: 1971, len: 3.1,
     site: "haworth_01", model: "Simplificado no ARA com as dimensões reais",
-    specs: [["Massa", "210 kg"], ["Carga", "490 kg (2 astronautas + equipamentos)"], ["Tamanho", "3,1 m, bitola 1,8 m"], ["Velocidade", "≈ 13 km/h"], ["Energia", "Baterias de prata-zinco"]],
+    specs: [["Massa", "210 kg"], ["Carga", "490 kg (2 astronautas + equipamentos)"], ["Tamanho", "3,1 m de comprimento, 1,14 m de altura, bitola 1,8 m"], ["Velocidade", "≈ 13 km/h"], ["Energia", "Baterias de prata-zinco"]],
     lesson: "Regra do 'walkback': o carro nunca ia mais longe do que os astronautas conseguiriam voltar a pé com o oxigênio do traje. O alcance do veículo é limitado pelo consumível do pior caso — a Travessia gêmea do ARA estima esse gasto.",
     facts: ["Dobrável: ia preso na lateral do módulo lunar.", "Na Apollo 17 rodou cerca de 36 km no total."],
   },
@@ -85,7 +85,7 @@ const EN = {
     lesson: "Aerial scout: it photographed the way ahead of Perseverance. For a crew, a drone that maps the route before the walk saves EVA time and reduces risk.",
     facts: ["First powered flight on another planet, on 19 April 2021.", "The rotors spin at more than 2,400 rpm to stay aloft in such thin air."] },
   lrv: { name: "Apollo Lunar Roving Vehicle (LRV)", mission: "Apollo 15, 16 and 17", model: "Simplified in ARA with the real dimensions",
-    specs: [["Mass", "210 kg"], ["Payload", "490 kg (2 astronauts + equipment)"], ["Size", "3.1 m, 1.8 m track"], ["Speed", "≈ 13 km/h"], ["Power", "Silver-zinc batteries"]],
+    specs: [["Mass", "210 kg"], ["Payload", "490 kg (2 astronauts + equipment)"], ["Size", "3.1 m long, 1.14 m tall, 1.8 m track"], ["Speed", "≈ 13 km/h"], ["Power", "Silver-zinc batteries"]],
     lesson: "The walk-back rule: the rover never went farther than the astronauts could walk back with their suit's oxygen. Vehicle range is limited by the worst-case consumable — ARA's Twin Traverse estimates that cost.",
     facts: ["Foldable: it rode strapped to the side of the lunar module.", "On Apollo 17 it covered about 36 km in total."] },
   lunar_module: { name: "Apollo Lunar Module", model: OFFICIAL,

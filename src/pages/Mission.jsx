@@ -7,7 +7,7 @@ import TerrainView from "../lib/terrain3d/TerrainView.js";
 import { BODIES, heightAt, loadIndex, loadScene, slopeGrid, uvToLatLon } from "../lib/terrain3d/data.js";
 import { buildLiveScene } from "../lib/terrain3d/liveEarth.js";
 import { SEASON, fmtHour, shadowMask, sunPosition } from "../lib/terrain3d/sun.js";
-import { ROVERS, SOURCES, critAngle, softFromTI, startState, steerForWarp, step, tiSampler, withinTargetRadius } from "../lib/mission/rover.js";
+import { ROVERS, SOURCES, critAngle, softFromTI, startState, steerForWarp, step, tiSampler, withinTargetRadius, effectiveWarp } from "../lib/mission/rover.js";
 import { STRATEGIES, describeRoute, hazardGrid, obstacleLimit, planRover, routeEnergy } from "../lib/mission/planner.js";
 import { ROCK_SOURCES, clearRockCache, rockAbundance, rocksNear, setRockCorridor } from "../lib/mission/rocks.js";
 import { PP_SOURCES, at, consequences, loadMemory, permanentShadow, rasterTracks, rasterZones, saveMemory, sceneMemory, scienceFromMinerals } from "../lib/mission/pristine.js";
@@ -82,6 +82,7 @@ export default function Mission() {
   const [hour, setHour] = useState(10);
   const [pts, setPts] = useState({});
   const [pickMode, setPickMode] = useState(null);         // a | b | zona | null
+  const [pickWarn, setPickWarn] = useState(null);
   const [routes, setRoutes] = useState(null);             // { rapida, segura, pristina, straight }
   const [strategy, setStrategy] = useState("segura");
   const [phase, setPhase] = useState("plan");             // plan | drive | end
@@ -110,7 +111,7 @@ export default function Mission() {
 
   // ---- dados de apoio
   useEffect(() => {
-    loadIndex().then((ix) => setIndex(ix.scenes.filter((s) => s.kind !== "overview")));
+    loadIndex().then((ix) => setIndex(ix.scenes.filter((s) => s.kind !== "overview"))).catch(() => setLoadErr("index"));
     fetch(dataUrl("data/minerals/jezero.json")).then((r) => (r.ok ? r.json() : null)).then((d) => setThemis(d?.themis ?? null)).catch(() => {});
     fetch(dataUrl("data/evidence/earth_cells.json")).then((r) => (r.ok ? r.json() : null)).then((d) => setSoilCells(d?.cells ?? null)).catch(() => {});
   }, []);
@@ -129,13 +130,15 @@ export default function Mission() {
     clearRockCache();
     setScene(s); setPts({}); setRoutes(null); setPhase("plan"); setReport(null); setPickMode("a");
   };
+  const [loadErr, setLoadErr] = useState(null);
+  const [loadTry, setLoadTry] = useState(0);
   useEffect(() => {
     if (!sceneId) return;
     let alive = true;
-    setScene(null);
-    loadScene(sceneId).then((s) => alive && show(s)).catch(console.error);
+    setScene(null); setLoadErr(null);
+    loadScene(sceneId).then((s) => alive && show(s)).catch((e) => { console.error(e); if (alive) setLoadErr(navigator.onLine === false ? "offline" : "scene"); });
     return () => { alive = false; };
-  }, [sceneId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [sceneId, loadTry]); // eslint-disable-line react-hooks/exhaustive-deps
   const testLive = async (lat, lon, name) => {
     setLive({ busy: true, error: null, progress: { f: 0, text: "…" } });
     try {
@@ -274,7 +277,12 @@ export default function Mission() {
       setMem(m); saveMemory(m); return;
     }
     if (pickMode === "a") { setPts({ a: p }); setRoutes(null); setPickMode("b"); }
-    else { setPts((c) => ({ ...c, b: p })); setPickMode(null); }
+    else {
+      // destino colado na partida não é uma rota: pede outro ponto (evita contas com distância zero)
+      const minM = Math.max(10, spec.len * 4);
+      if (pts.a && Math.hypot(p.u - pts.a.u, p.v - pts.a.v) * S < minM) { setPickWarn(tr(`O destino precisa ficar a pelo menos ${Math.round(minM)} m da partida.`, `The destination must be at least ${Math.round(minM)} m from the start.`)); return; }
+      setPickWarn(null); setPts((c) => ({ ...c, b: p })); setPickMode(null);
+    }
   };
 
   // ---- planejar: três estratégias + linha reta
@@ -290,7 +298,7 @@ export default function Mission() {
         if (r) { r.energy = routeEnergy(r, spec, g); r.pts = [{ ...r.pts[0], u: pts.a.u, v: pts.a.v }, ...r.pts.slice(1)]; }
         out[st.id] = r;
       }
-      const N = grid.N, cells = [], steps = Math.ceil(Math.hypot(pts.b.u - pts.a.u, pts.b.v - pts.a.v) * N * 2);
+      const N = grid.N, cells = [], steps = Math.max(1, Math.ceil(Math.hypot(pts.b.u - pts.a.u, pts.b.v - pts.a.v) * N * 2));
       for (let i = 0; i <= steps; i++) {
         const u = pts.a.u + ((pts.b.u - pts.a.u) * i) / steps, w = pts.a.v + ((pts.b.v - pts.a.v) * i) / steps;
         const c = Math.min(N - 1, Math.floor(w * N)) * N + Math.min(N - 1, Math.floor(u * N));
@@ -351,7 +359,7 @@ export default function Mission() {
       const M = sim.current;
       if (!M) return null;
       if (M.st.status !== "ok") return M.st;
-      const W = warpRef.current, sdt = dt * W;
+      const W = effectiveWarp(warpRef.current, spec.vmax), sdt = dt * W;
       const hNow = M.hour0 + (M.st.t / (scene.body.day_h * 3600)) * 24;
       const sp = sunPosition(scene.meta.lat, scene.meta.body, SEASON[scene.meta.body].def, ((hNow % 24) + 24) % 24);
       const env = { scene, soft: ground.softAt, sunElev: sp.elevation, hits,
@@ -362,7 +370,7 @@ export default function Mission() {
       const nsub = Math.max(1, Math.ceil(sdt / maxStep));
       for (let i = 0; i < nsub; i++) {
         const previous = M.st;
-        M.st = step(M.st, spec, { throttle: thr, steer: steerForWarp(input.steer, W) }, sdt / nsub, env);
+        M.st = step(M.st, spec, { throttle: thr, steer: steerForWarp(input.steer, W, spec.vmax > 1 ? 0.6 : 0.1) }, sdt / nsub, env);
         if (pts.b && M.startTargetDistance > M.arrivalRadius && M.st.status === "ok" &&
             withinTargetRadius(previous, M.st, pts.b, M.arrivalRadius, S)) {
           M.st = { ...M.st, status: "chegou" };
@@ -373,13 +381,15 @@ export default function Mission() {
       if (M.acc > 0.12 || M.st.status !== "ok") {
         M.acc = 0;
         const off = route?.pts ? segDist(route.pts, M.st) * S : null;
+        const nowMs = performance.now();
         setHud({ ...M.st, hour: ((hNow % 24) + 24) % 24, sunElev: sp.elevation, inSun: env.sunlit(M.st.u, M.st.v), soft: ground.softAt(M.st.u, M.st.v),
           toB: pts.b ? Math.hypot(M.st.u - pts.b.u, M.st.v - pts.b.v) * S : null, off });
-        v.setRoutes([
+        // redesenhar linhas e rótulos é caro: a trilha é atualizada no máximo 1 vez por segundo
+        if (M.st.status !== "ok" || nowMs - (M.lastRoutes ?? 0) > 1000) { M.lastRoutes = nowMs; v.setRoutes([
           ...(route?.pts ? [{ pts: route.pts, color: 0xffd166, corridorWidth: spec.width + 2 }] : []),
           ...(pts.b ? [{ pts: [pts.b], label: "B", color: 0x59e0ff }] : []),
           ...(M.st.track.length > 1 ? [{ pts: [...M.st.track, { u: M.st.u, v: M.st.v }], color: 0x7dffb0 }] : []),
-        ]);
+        ]); }
         if (M.st.status !== "ok") finishRef.current?.(M.st);
       }
       return M.st;
@@ -438,7 +448,13 @@ export default function Mission() {
       <div className={`t3-stage single ${pickMode ? "ms-picking" : ""}`}>
         <div className="t3-pane">
           <div ref={box} className="t3-canvas" tabIndex={0} aria-label={tr("Visão 3D do terreno. No modo direção use W A S D ou as setas; C troca a câmera; espaço freia.", "3D terrain view. In drive mode use W A S D or arrow keys; C switches camera; space brakes.")} />
-          {!scene && <div className="t3-loading" role="status"><span className="t3-spinner" />{tr("Carregando relevo real…", "Loading real terrain…")}</div>}
+          {!scene && !loadErr && <div className="t3-loading" role="status"><span className="t3-spinner" />{tr("Carregando relevo real…", "Loading real terrain…")}</div>}
+          {!scene && loadErr && (
+            <div className="t3-loading" role="alert">
+              <span>{loadErr === "offline" ? tr("Sem conexão: não foi possível baixar o relevo.", "No connection: the terrain could not be downloaded.") : tr("Não foi possível carregar o relevo deste local.", "Could not load the terrain for this site.")}</span>
+              <button type="button" className="ms-quick" onClick={() => setLoadTry((n) => n + 1)}>{tr("Tentar de novo", "Try again")}</button>
+            </div>
+          )}
         </div>
 
         {/* ---------- esquerda: configurar ---------- */}
@@ -519,6 +535,7 @@ export default function Mission() {
                   </button>
                 </li>
               </ol>
+              {pickWarn && <p className="ms-hint" role="alert" style={{ color: "var(--color-warn)" }}>{pickWarn}</p>}
               {pickMode && pickMode !== "zona" && <p className="ms-hint">{tr("Arraste para girar e role para aproximar; um clique curto marca o ponto.", "Drag to rotate and scroll to zoom; a short click sets the point.")}</p>}
 
               {routes && (
@@ -588,7 +605,7 @@ export default function Mission() {
             {!hud.inSun && spec.solarW > 0 && <p className="ms-alert">{tr("Na sombra: os painéis não carregam. Não pare aqui.", "In shade: panels are not charging. Do not stop here.")}</p>}
             {hud.slip > 0.6 && <p className="ms-alert">{tr("Patinando muito: pare, dê ré e suba em ângulo menor.", "Slipping hard: stop, back up and climb at a lower angle.")}</p>}
             {at(sci, NG, hud.u, hud.v) ? <p className="ms-alert pp">{tr("Você está numa zona científica protegida.", "You are inside a protected science zone.")}</p> : null}
-            <label className="t3-range"><span>{tr("Aceleração do tempo", "Time warp")} <b>×{warp}</b></span>
+            <label className="t3-range"><span>{tr("Aceleração do tempo", "Time warp")} <b>×{warp}</b>{effectiveWarp(warp, spec.vmax) < warp && <small className="block opacity-75">{tr(`efetiva ×${Math.round(effectiveWarp(warp, spec.vmax))} para manter o controle`, `effective ×${Math.round(effectiveWarp(warp, spec.vmax))} to keep control`)}</small>}</span>
               <input type="range" min="0" max={WARPS.length - 1} step="1" value={WARPS.indexOf(warp)} onChange={(e) => setWarp(WARPS[Number(e.target.value)])} /></label>
             {body === "moon" && <p className="t3-note">{tr("Luz ambiente realçada para enxergar o chão; sombras e energia seguem o Sol real.", "Ambient light boosted so you can see the ground; shadows and energy follow the real Sun.")}</p>}
             <div className="t3-btns">
