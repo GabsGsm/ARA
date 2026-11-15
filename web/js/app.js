@@ -66,17 +66,6 @@ function go() {
   window.scrollTo({ top: 0 });
 }
 
-// ---------- início ----------
-function renderGlobes() {
-  $$(".planet[data-body]").forEach((el) => {
-    const url = D.config.globes?.[el.dataset.body];
-    if (!url) return;
-    const img = new Image();
-    img.onload = () => el.style.setProperty("--tex", `url("${url}")`);
-    img.src = url; // sem internet, fica o degradê de reserva
-  });
-}
-
 // ---------- explorar: painel esquerdo ----------
 const sitesOf = (body) => D.catalog.sites.filter((s) => s.body === body);
 
@@ -356,6 +345,9 @@ function bind() {
     const open = $("#navLinks").classList.toggle("open");
     e.currentTarget.setAttribute("aria-expanded", open);
   });
+  const closeMenu = () => { $("#navLinks").classList.remove("open"); $(".nav-toggle").setAttribute("aria-expanded", "false"); };
+  document.addEventListener("click", (e) => { if (!e.target.closest(".nav")) closeMenu(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
   $$("[role=tab]").forEach((t) => t.addEventListener("click", () => setBody(t.dataset.body)));
   $(".tabs").addEventListener("keydown", (e) => {
     if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
@@ -396,7 +388,7 @@ function bind() {
 }
 
 load().then(() => {
-  initMap(); bind(); renderGlobes(); renderCriteria(); go();
+  initMap(); bind(); renderCriteria(); go();
 }).catch((e) => {
   $("#conteudo").insertAdjacentHTML("afterbegin", `<p class="error" role="alert">${esc(e.message)}. Rode <code>python tools/dev.py</code> na raiz do projeto.</p>`);
 });
