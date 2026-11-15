@@ -1,0 +1,42 @@
+/* ARA — Missão (planejar e dirigir) */
+.ms-live { margin-top: 8px; font-size: 12px; color: var(--color-ink-2); }
+.ms-live summary { cursor: pointer; color: var(--color-gold-2); }
+.ms-seg { margin-top: 10px; border: 1px solid var(--color-line-2); border-radius: 10px; overflow: hidden; }
+.ms-seg button { border: 0; background: transparent; color: var(--color-ink-2); font: 500 11px var(--font-body); cursor: pointer; }
+.ms-seg button[aria-checked=true] { background: rgb(242 181 58 / .2); color: var(--color-gold-3); }
+.ms-plan { width: 100%; margin-top: 8px; border-collapse: collapse; font-size: 12px; }
+.ms-plan th, .ms-plan td { padding: 4px 6px; border-bottom: 1px solid var(--color-line-2); text-align: left; }
+.ms-plan thead th { color: var(--color-gold-2); font-weight: 500; font-size: 11px; }
+.ms-plan tbody th { color: var(--color-muted); font-weight: 400; }
+.ms-plan .bad, .ms-tele .bad { color: #ff7b7b; }
+.ms-tele .warn { color: #f9d64d; }
+.ms-alert { margin: 8px 0 0; padding: 7px 10px; border-radius: 10px; border: 1px solid rgb(255 107 107 / .5); background: rgb(255 107 107 / .1); color: #ffd0d0; font-size: 12px; }
+.ms-src-btn { margin-top: 14px; background: none; border: 0; padding: 0; color: var(--color-gold-2); font: 500 12px var(--font-body); cursor: pointer; text-decoration: underline; }
+.ms-srclist { margin: 8px 0 0; padding-left: 16px; font-size: 11px; display: grid; gap: 4px; }
+.ms-hud { position: absolute; top: 12px; right: 12px; z-index: 5; width: 290px; max-height: calc(100% - 56px); overflow-y: auto; padding: 14px 16px; border-radius: 14px;
+  border: 1px solid var(--color-line-2); background: rgb(2 16 22 / .86); backdrop-filter: blur(6px); }
+.ms-hud-top { display: flex; flex-direction: column; margin-bottom: 8px; }
+.ms-hud-top b { font: 400 13px var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--color-gold-3); }
+.ms-hud-top span { font-size: 11px; color: var(--color-muted); }
+.ms-bar { margin-top: 7px; font-size: 12px; }
+.ms-bar span { display: flex; justify-content: space-between; color: var(--color-ink-2); }
+.ms-bar b { font: 500 11px ui-monospace, Consolas, monospace; color: var(--color-ink); }
+.ms-bar i { display: block; height: 6px; margin-top: 3px; border-radius: 3px; background: rgb(255 255 255 / .1); overflow: hidden; }
+.ms-bar em { display: block; height: 100%; background: #33c780; transition: width .2s; }
+.ms-bar.warn em { background: #f9d64d; }
+.ms-bar.bad em { background: #ff6b6b; }
+.ms-tele { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0 0; }
+.ms-tele div { padding: 5px 7px; border-radius: 8px; border: 1px solid var(--color-line-2); }
+.ms-tele dt { font-size: 10px; color: var(--color-muted); }
+.ms-tele dd { margin: 1px 0 0; font: 500 12px ui-monospace, Consolas, monospace; color: var(--color-ink); }
+.ms-end { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 8; width: min(440px, 92%); padding: 20px 22px; border-radius: 16px;
+  border: 1px solid #ff6b6b; background: rgb(8 14 18 / .95); box-shadow: 0 20px 60px rgb(0 0 0 / .6); }
+.ms-end.ok { border-color: var(--color-gold); }
+.ms-end h2 { margin: 0 0 6px; font: 400 18px var(--font-display); letter-spacing: .08em; color: var(--color-gold-3); }
+.ms-end p { margin: 0 0 8px; font-size: 13px; color: var(--color-ink-2); }
+.ms-keys { padding: 5px 12px; border-radius: 999px; background: rgb(2 16 22 / .78); border: 1px solid var(--color-line-2); font-size: 12px; color: var(--color-ink-2); }
+.ms-keys kbd { display: inline-block; min-width: 18px; padding: 0 5px; margin: 0 1px; border-radius: 4px; border: 1px solid var(--color-line); font: 500 11px ui-monospace, Consolas, monospace; color: var(--color-gold-3); text-align: center; }
+.ms-foot { position: absolute; left: 0; right: 0; bottom: 6px; margin: 0; text-align: center; font-size: 11px; color: var(--color-muted); pointer-events: none; }
+.ms-foot a { pointer-events: auto; }
+.t3-canvas:focus { outline: none; }
+@media (max-width: 760px) { .ms-hud { top: auto; bottom: 30px; left: 8px; right: 8px; width: auto; max-height: 45%; } }

@@ -66,6 +66,7 @@ export default function Vehicles() {
           <ul className="vh-facts">{v.facts.map((f) => <li key={f}>{f}</li>)}</ul>
           <div className="mt-4 flex flex-wrap gap-2">
             <Link className="vh-btn gold" to={to3d}>Ver no relevo 3D, em escala</Link>
+            {["perseverance", "curiosity", "mer", "lrv"].includes(v.key) && <Link className="vh-btn gold" to={`/missao?rover=${v.key}`}>Dirigir em missão</Link>}
             <Link className="vh-btn" to="/explorar">Comparar pressão e temperatura</Link>
           </div>
           <p className="note mt-3">Modelo: {v.model}. Modelos oficiais em <a href="https://science.nasa.gov/3d-resources/" target="_blank" rel="noopener noreferrer">science.nasa.gov/3d-resources ↗</a> (domínio público). Dados: NASA/JPL.</p>
