@@ -1,0 +1,1061 @@
+{
+ "topografia": [
+  {
+   "regiao": "Jezero_01",
+   "planeta": "Marte",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 8.272554252740965,
+   "declividade_mediana_graus": 6.395989063757717,
+   "declividade_p90_graus": 17.407180748084716,
+   "rugosidade_media_m": 12.318923726947702,
+   "rugosidade_p90_m": 25.20280424064268,
+   "amplitude_topografica_m": 561.7489013671875
+  },
+  {
+   "regiao": "Jezero_02",
+   "planeta": "Marte",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 3.495211453795263,
+   "declividade_mediana_graus": 2.3677386493942105,
+   "declividade_p90_graus": 8.151959289479615,
+   "rugosidade_media_m": 5.273794138142695,
+   "rugosidade_p90_m": 12.324120256612256,
+   "amplitude_topografica_m": 176.698974609375
+  },
+  {
+   "regiao": "Jezero_03",
+   "planeta": "Marte",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 1.6143525086121835,
+   "declividade_mediana_graus": 1.2864469339319518,
+   "declividade_p90_graus": 3.2586474118313493,
+   "rugosidade_media_m": 2.446155429691371,
+   "rugosidade_p90_m": 4.651343946652447,
+   "amplitude_topografica_m": 80.28076171875
+  },
+  {
+   "regiao": "Atacama_01",
+   "planeta": "Terra",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 3.669438462564168,
+   "declividade_mediana_graus": 1.6731456210047813,
+   "declividade_p90_graus": 10.072607049890284,
+   "rugosidade_media_m": 5.500499113417956,
+   "rugosidade_p90_m": 14.145931438898252,
+   "amplitude_topografica_m": 247.786865234375
+  },
+  {
+   "regiao": "Death_Valley_01",
+   "planeta": "Terra",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 9.183905499636422,
+   "declividade_mediana_graus": 6.432287628147568,
+   "declividade_p90_graus": 19.596650127489987,
+   "rugosidade_media_m": 13.919135764761736,
+   "rugosidade_p90_m": 29.142746154381463,
+   "amplitude_topografica_m": 549.3060913085938
+  },
+  {
+   "regiao": "Timanfaya_01",
+   "planeta": "Terra",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 2.7662116965119194,
+   "declividade_mediana_graus": 2.752344659740464,
+   "declividade_p90_graus": 3.9859567603478103,
+   "rugosidade_media_m": 3.995617087597776,
+   "rugosidade_p90_m": 5.486969261421401,
+   "amplitude_topografica_m": 307.95640563964844
+  },
+  {
+   "regiao": "Wadi_Rum_01",
+   "planeta": "Terra",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 8.735121908735755,
+   "declividade_mediana_graus": 5.387144225764519,
+   "declividade_p90_graus": 20.950717807098115,
+   "rugosidade_media_m": 13.081120308351275,
+   "rugosidade_p90_m": 29.79930796455141,
+   "amplitude_topografica_m": 427.57757568359375
+  },
+  {
+   "regiao": "Jezero_04",
+   "planeta": "Marte",
+   "area_km2": 25,
+   "resolucao_m": 100,
+   "declividade_media_graus": 8.046635605770284,
+   "declividade_mediana_graus": 7.389995074902544,
+   "declividade_p90_graus": 14.210174530130923,
+   "rugosidade_media_m": 11.510680806449772,
+   "rugosidade_p90_m": 20.21075246818515,
+   "amplitude_topografica_m": 516.9652099609375
+  }
+ ],
+ "ranking": [
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Death_Valley_01",
+   "posicao": 1,
+   "distancia_topografica": 0.08637329258691402,
+   "contrib_declividade_pct": 44.532043511132706,
+   "contrib_rugosidade_pct": 53.39267031641821,
+   "contrib_amplitude_pct": 2.0752861724490788
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Wadi_Rum_01",
+   "posicao": 2,
+   "distancia_topografica": 0.14057563825313776,
+   "contrib_declividade_pct": 4.331021983878457,
+   "contrib_rugosidade_pct": 4.572980940627802,
+   "contrib_amplitude_pct": 91.09599707549374
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Atacama_01",
+   "posicao": 3,
+   "distancia_topografica": 0.505614536901964,
+   "contrib_declividade_pct": 33.15314147045271,
+   "contrib_rugosidade_pct": 28.28879893693401,
+   "contrib_amplitude_pct": 38.558059592613276
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Timanfaya_01",
+   "posicao": 4,
+   "distancia_topografica": 0.5417146487713264,
+   "contrib_declividade_pct": 41.32808515342195,
+   "contrib_rugosidade_pct": 36.722831200632456,
+   "contrib_amplitude_pct": 21.94908364594559
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Atacama_01",
+   "posicao": 1,
+   "distancia_topografica": 0.07249038833149278,
+   "contrib_declividade_pct": 2.3106283613730705,
+   "contrib_rugosidade_pct": 1.5214117857448177,
+   "contrib_amplitude_pct": 96.1679598528821
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Timanfaya_01",
+   "posicao": 2,
+   "distancia_topografica": 0.1479717668573033,
+   "contrib_declividade_pct": 9.708609644769753,
+   "contrib_rugosidade_pct": 11.606728838236553,
+   "contrib_amplitude_pct": 78.6846615169937
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Wadi_Rum_01",
+   "posicao": 3,
+   "distancia_topografica": 0.5172857856171055,
+   "contrib_declividade_pct": 41.04371210807891,
+   "contrib_rugosidade_pct": 35.434726396957416,
+   "contrib_amplitude_pct": 23.52156149496369
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Death_Valley_01",
+   "posicao": 4,
+   "distancia_topografica": 0.6201179327448992,
+   "contrib_declividade_pct": 33.661740198083166,
+   "contrib_rugosidade_pct": 30.23439369215162,
+   "contrib_amplitude_pct": 36.10386610976521
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Atacama_01",
+   "posicao": 1,
+   "distancia_topografica": 0.24385161361963067,
+   "contrib_declividade_pct": 28.409834627505195,
+   "contrib_rugosidade_pct": 24.404508518699963,
+   "contrib_amplitude_pct": 47.185656853794846
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Timanfaya_01",
+   "posicao": 2,
+   "distancia_topografica": 0.24673456153856155,
+   "contrib_declividade_pct": 8.71763732265299,
+   "contrib_rugosidade_pct": 6.134613673169391,
+   "contrib_amplitude_pct": 85.14774900417763
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Wadi_Rum_01",
+   "posicao": 3,
+   "distancia_topografica": 0.7066637760228851,
+   "contrib_declividade_pct": 40.615160652008555,
+   "contrib_rugosidade_pct": 35.23156919388321,
+   "contrib_amplitude_pct": 24.153270154108228
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Death_Valley_01",
+   "posicao": 4,
+   "distancia_topografica": 0.808661823038378,
+   "contrib_declividade_pct": 35.04826932821877,
+   "contrib_rugosidade_pct": 31.31151948502433,
+   "contrib_amplitude_pct": 33.6402111867569
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Wadi_Rum_01",
+   "posicao": 1,
+   "distancia_topografica": 0.11714366662849733,
+   "contrib_declividade_pct": 13.816975061761815,
+   "contrib_rugosidade_pct": 27.95698418575516,
+   "contrib_amplitude_pct": 58.22604075248302
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Death_Valley_01",
+   "posicao": 2,
+   "distancia_topografica": 0.12346135188251697,
+   "contrib_declividade_pct": 33.94103019952315,
+   "contrib_rugosidade_pct": 59.197113074248755,
+   "contrib_amplitude_pct": 6.861856726228102
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Atacama_01",
+   "posicao": 3,
+   "distancia_topografica": 0.4530856653230233,
+   "contrib_declividade_pct": 37.33288573639977,
+   "contrib_rugosidade_pct": 27.371593675384798,
+   "contrib_amplitude_pct": 35.29552058821543
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Timanfaya_01",
+   "posicao": 4,
+   "distancia_topografica": 0.49301929646085846,
+   "contrib_declividade_pct": 45.88489410474167,
+   "contrib_rugosidade_pct": 36.1429024425887,
+   "contrib_amplitude_pct": 17.972203452669632
+  }
+ ],
+ "estabilidade": [
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Atacama_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Death_Valley_01",
+   "frequencia_primeiro_pct": 81.85
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Timanfaya_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Wadi_Rum_01",
+   "frequencia_primeiro_pct": 18.15
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Atacama_01",
+   "frequencia_primeiro_pct": 100.0
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Death_Valley_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Timanfaya_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Wadi_Rum_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Atacama_01",
+   "frequencia_primeiro_pct": 59.25
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Death_Valley_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Timanfaya_01",
+   "frequencia_primeiro_pct": 40.75
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Wadi_Rum_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Atacama_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Death_Valley_01",
+   "frequencia_primeiro_pct": 51.7
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Timanfaya_01",
+   "frequencia_primeiro_pct": 0.0
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Wadi_Rum_01",
+   "frequencia_primeiro_pct": 48.3
+  }
+ ],
+ "analise_integrada": [
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Death_Valley_01",
+   "ranking_topografico": 1,
+   "distancia_topografica": 0.086373292586914,
+   "contrib_declividade_pct": 44.53204351113271,
+   "contrib_rugosidade_pct": 53.39267031641821,
+   "contrib_amplitude_pct": 2.0752861724490788,
+   "cobertura_crism_pct": 11.818931836001779,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)"
+   ],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Wadi_Rum_01",
+   "ranking_topografico": 2,
+   "distancia_topografica": 0.1405756382531377,
+   "contrib_declividade_pct": 4.331021983878457,
+   "contrib_rugosidade_pct": 4.572980940627802,
+   "contrib_amplitude_pct": 91.09599707549374,
+   "cobertura_crism_pct": 11.818931836001779,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)"
+   ],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Atacama_01",
+   "ranking_topografico": 3,
+   "distancia_topografica": 0.505614536901964,
+   "contrib_declividade_pct": 33.15314147045271,
+   "contrib_rugosidade_pct": 28.28879893693401,
+   "contrib_amplitude_pct": 38.55805959261328,
+   "cobertura_crism_pct": 11.818931836001779,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)"
+   ],
+   "litologias_terra": [],
+   "classes_geologicas_terra": [
+    "Siliciclástica",
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Contexto geologico geral; dados mineralogicos insuficientes.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_01",
+   "candidato_terra": "Timanfaya_01",
+   "ranking_topografico": 4,
+   "distancia_topografica": 0.5417146487713264,
+   "contrib_declividade_pct": 41.32808515342195,
+   "contrib_rugosidade_pct": 36.722831200632456,
+   "contrib_amplitude_pct": 21.94908364594559,
+   "cobertura_crism_pct": 11.818931836001779,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)"
+   ],
+   "litologias_terra": [
+    "Basalto"
+   ],
+   "classes_geologicas_terra": [
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha basaltica mapeada; minerais individuais nao confirmados.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Atacama_01",
+   "ranking_topografico": 1,
+   "distancia_topografica": 0.0724903883314927,
+   "contrib_declividade_pct": 2.3106283613730705,
+   "contrib_rugosidade_pct": 1.5214117857448175,
+   "contrib_amplitude_pct": 96.1679598528821,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [],
+   "classes_geologicas_terra": [
+    "Siliciclástica",
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Contexto geologico geral; dados mineralogicos insuficientes.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Timanfaya_01",
+   "ranking_topografico": 2,
+   "distancia_topografica": 0.1479717668573033,
+   "contrib_declividade_pct": 9.708609644769751,
+   "contrib_rugosidade_pct": 11.606728838236553,
+   "contrib_amplitude_pct": 78.6846615169937,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [
+    "Basalto"
+   ],
+   "classes_geologicas_terra": [
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha basaltica mapeada; minerais individuais nao confirmados.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Wadi_Rum_01",
+   "ranking_topografico": 3,
+   "distancia_topografica": 0.5172857856171055,
+   "contrib_declividade_pct": 41.04371210807891,
+   "contrib_rugosidade_pct": 35.434726396957416,
+   "contrib_amplitude_pct": 23.52156149496369,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_02",
+   "candidato_terra": "Death_Valley_01",
+   "ranking_topografico": 4,
+   "distancia_topografica": 0.6201179327448992,
+   "contrib_declividade_pct": 33.661740198083166,
+   "contrib_rugosidade_pct": 30.23439369215162,
+   "contrib_amplitude_pct": 36.10386610976521,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Atacama_01",
+   "ranking_topografico": 1,
+   "distancia_topografica": 0.2438516136196306,
+   "contrib_declividade_pct": 28.409834627505195,
+   "contrib_rugosidade_pct": 24.404508518699963,
+   "contrib_amplitude_pct": 47.185656853794846,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [],
+   "classes_geologicas_terra": [
+    "Siliciclástica",
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Contexto geologico geral; dados mineralogicos insuficientes.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Timanfaya_01",
+   "ranking_topografico": 2,
+   "distancia_topografica": 0.2467345615385615,
+   "contrib_declividade_pct": 8.71763732265299,
+   "contrib_rugosidade_pct": 6.134613673169391,
+   "contrib_amplitude_pct": 85.14774900417763,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [
+    "Basalto"
+   ],
+   "classes_geologicas_terra": [
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha basaltica mapeada; minerais individuais nao confirmados.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Wadi_Rum_01",
+   "ranking_topografico": 3,
+   "distancia_topografica": 0.7066637760228851,
+   "contrib_declividade_pct": 40.61516065200856,
+   "contrib_rugosidade_pct": 35.23156919388321,
+   "contrib_amplitude_pct": 24.153270154108228,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_03",
+   "candidato_terra": "Death_Valley_01",
+   "ranking_topografico": 4,
+   "distancia_topografica": 0.808661823038378,
+   "contrib_declividade_pct": 35.04826932821877,
+   "contrib_rugosidade_pct": 31.31151948502433,
+   "contrib_amplitude_pct": 33.6402111867569,
+   "cobertura_crism_pct": 0.0,
+   "status_crism": "Sem cobertura neste mapa",
+   "classes_crism": [],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Wadi_Rum_01",
+   "ranking_topografico": 1,
+   "distancia_topografica": 0.1171436666284973,
+   "contrib_declividade_pct": 13.816975061761816,
+   "contrib_rugosidade_pct": 27.95698418575516,
+   "contrib_amplitude_pct": 58.22604075248302,
+   "cobertura_crism_pct": 80.33,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)",
+    "Olivine-bearing (weak)",
+    "Pyroxene-rich (LCP)"
+   ],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Death_Valley_01",
+   "ranking_topografico": 2,
+   "distancia_topografica": 0.1234613518825169,
+   "contrib_declividade_pct": 33.94103019952315,
+   "contrib_rugosidade_pct": 59.19711307424876,
+   "contrib_amplitude_pct": 6.861856726228102,
+   "cobertura_crism_pct": 80.33,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)",
+    "Olivine-bearing (weak)",
+    "Pyroxene-rich (LCP)"
+   ],
+   "litologias_terra": [
+    "Arenito"
+   ],
+   "classes_geologicas_terra": [
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha arenitica mapeada; composicao mineral detalhada desconhecida.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Atacama_01",
+   "ranking_topografico": 3,
+   "distancia_topografica": 0.4530856653230233,
+   "contrib_declividade_pct": 37.33288573639977,
+   "contrib_rugosidade_pct": 27.3715936753848,
+   "contrib_amplitude_pct": 35.29552058821543,
+   "cobertura_crism_pct": 80.33,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)",
+    "Olivine-bearing (weak)",
+    "Pyroxene-rich (LCP)"
+   ],
+   "litologias_terra": [],
+   "classes_geologicas_terra": [
+    "Siliciclástica",
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Contexto geologico geral; dados mineralogicos insuficientes.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  },
+  {
+   "setor_marte": "Jezero_04",
+   "candidato_terra": "Timanfaya_01",
+   "ranking_topografico": 4,
+   "distancia_topografica": 0.4930192964608584,
+   "contrib_declividade_pct": 45.88489410474167,
+   "contrib_rugosidade_pct": 36.1429024425887,
+   "contrib_amplitude_pct": 17.972203452669632,
+   "cobertura_crism_pct": 80.33,
+   "status_crism": "Parcial",
+   "classes_crism": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)",
+    "Olivine-bearing (weak)",
+    "Pyroxene-rich (LCP)"
+   ],
+   "litologias_terra": [
+    "Basalto"
+   ],
+   "classes_geologicas_terra": [
+    "Vulcânica (geral)"
+   ],
+   "status_mineralogia_terra": "Litologia mapeada; mineralogia não verificada",
+   "interpretacao_geologica": "Rocha basaltica mapeada; minerais individuais nao confirmados.",
+   "similaridade_mineralogica": null,
+   "fontes": [
+    "NASA/USGS CTX",
+    "CRISM",
+    "Macrostrat"
+   ]
+  }
+ ],
+ "geologia_terra": [
+  {
+   "regiao": "Atacama_01",
+   "fonte": "Macrostrat API v2",
+   "pontos_consultados": 5,
+   "tipo_evidencia": "litologia_mapeada",
+   "mineralogia_espectral_verificada": false,
+   "litologias_especificas": [],
+   "classes_gerais": [
+    {
+     "classe": "Siliciclástica",
+     "pontos": 5
+    },
+    {
+     "classe": "Sedimentar (geral)",
+     "pontos": 1
+    },
+    {
+     "classe": "Vulcânica (geral)",
+     "pontos": 4
+    }
+   ],
+   "minerais_confirmados": [],
+   "observacao": "Registros de mapas geológicos sobrepostos; frequências não representam abundância."
+  },
+  {
+   "regiao": "Death_Valley_01",
+   "fonte": "Macrostrat API v2",
+   "pontos_consultados": 5,
+   "tipo_evidencia": "litologia_mapeada",
+   "mineralogia_espectral_verificada": false,
+   "litologias_especificas": [
+    {
+     "classe": "Arenito",
+     "pontos": 4,
+     "frequencia_amostral_pct": 80.0
+    }
+   ],
+   "classes_gerais": [
+    {
+     "classe": "Sedimentar (geral)",
+     "pontos": 5
+    },
+    {
+     "classe": "Vulcânica (geral)",
+     "pontos": 1
+    }
+   ],
+   "minerais_confirmados": [],
+   "observacao": "Registros de mapas geológicos sobrepostos; frequências não representam abundância."
+  },
+  {
+   "regiao": "Timanfaya_01",
+   "fonte": "Macrostrat API v2",
+   "pontos_consultados": 5,
+   "tipo_evidencia": "litologia_mapeada",
+   "mineralogia_espectral_verificada": false,
+   "litologias_especificas": [
+    {
+     "classe": "Basalto",
+     "pontos": 5,
+     "frequencia_amostral_pct": 100.0
+    }
+   ],
+   "classes_gerais": [
+    {
+     "classe": "Vulcânica (geral)",
+     "pontos": 4
+    }
+   ],
+   "minerais_confirmados": [],
+   "observacao": "Registros de mapas geológicos sobrepostos; frequências não representam abundância."
+  },
+  {
+   "regiao": "Wadi_Rum_01",
+   "fonte": "Macrostrat API v2",
+   "pontos_consultados": 5,
+   "tipo_evidencia": "litologia_mapeada",
+   "mineralogia_espectral_verificada": false,
+   "litologias_especificas": [
+    {
+     "classe": "Arenito",
+     "pontos": 5,
+     "frequencia_amostral_pct": 100.0
+    }
+   ],
+   "classes_gerais": [
+    {
+     "classe": "Sedimentar (geral)",
+     "pontos": 5
+    }
+   ],
+   "minerais_confirmados": [],
+   "observacao": "Registros de mapas geológicos sobrepostos; frequências não representam abundância."
+  }
+ ],
+ "mineralogia_jezero_01_03": {
+  "fonte": "Jezero Western Rim Mineral Maps - CRISM",
+  "cobertura": [
+   {
+    "regiao": "Jezero_01",
+    "poligonos": 28,
+    "area_setor_km2": 25.0,
+    "area_mapeada_km2": 2.954732959000445,
+    "cobertura_pct": 11.818931836001779
+   },
+   {
+    "regiao": "Jezero_02",
+    "poligonos": 0,
+    "area_setor_km2": 25.0,
+    "area_mapeada_km2": 0.0,
+    "cobertura_pct": 0.0
+   },
+   {
+    "regiao": "Jezero_03",
+    "poligonos": 0,
+    "area_setor_km2": 25.0,
+    "area_mapeada_km2": 0.0,
+    "cobertura_pct": 0.0
+   }
+  ],
+  "classes": [
+   {
+    "regiao": "Jezero_01",
+    "classe": "altered olivine (1.9 + 2.3)",
+    "nome_classe": "Fe/Mg phyllosilicates",
+    "numero_poligonos": 13,
+    "area_km2": 0.153853,
+    "pct_setor": 0.6154,
+    "pct_area_mapeada": 5.207
+   },
+   {
+    "regiao": "Jezero_01",
+    "classe": "bulk rim",
+    "nome_classe": "Bulk rim",
+    "numero_poligonos": 5,
+    "area_km2": 2.299862,
+    "pct_setor": 9.1994,
+    "pct_area_mapeada": 77.8365
+   },
+   {
+    "regiao": "Jezero_01",
+    "classe": "olivine-rich + carbonate (2.5)",
+    "nome_classe": "Olivine-bearing (strong)",
+    "numero_poligonos": 10,
+    "area_km2": 0.501018,
+    "pct_setor": 2.0041,
+    "pct_area_mapeada": 16.9565
+   }
+  ]
+ },
+ "mineralogia_jezero_04": [
+  {
+   "regiao": "Jezero_04",
+   "classe": "altered olivine (1.9 + 2.3)",
+   "nome_classe": "Fe/Mg phyllosilicates",
+   "numero_poligonos": 44,
+   "area_km2": 2.17615,
+   "pct_setor": 8.705,
+   "pct_area_mapeada": 10.837
+  },
+  {
+   "regiao": "Jezero_04",
+   "classe": "bulk rim",
+   "nome_classe": "Bulk rim",
+   "numero_poligonos": 28,
+   "area_km2": 13.860384,
+   "pct_setor": 55.442,
+   "pct_area_mapeada": 69.021
+  },
+  {
+   "regiao": "Jezero_04",
+   "classe": "olivine, weak",
+   "nome_classe": "Olivine-bearing (weak)",
+   "numero_poligonos": 107,
+   "area_km2": 3.372275,
+   "pct_setor": 13.489,
+   "pct_area_mapeada": 16.793
+  },
+  {
+   "regiao": "Jezero_04",
+   "classe": "olivine-rich + carbonate (2.5)",
+   "nome_classe": "Olivine-bearing (strong)",
+   "numero_poligonos": 11,
+   "area_km2": 0.151369,
+   "pct_setor": 0.605,
+   "pct_area_mapeada": 0.754
+  },
+  {
+   "regiao": "Jezero_04",
+   "classe": "pyroxene-rich (LCP)",
+   "nome_classe": "Pyroxene-rich (LCP)",
+   "numero_poligonos": 31,
+   "area_km2": 0.521177,
+   "pct_setor": 2.085,
+   "pct_area_mapeada": 2.595
+  }
+ ],
+ "coordenadas_jezero": [
+  {
+   "regiao": "Jezero_01",
+   "planeta": "Marte",
+   "latitude_centro": 18.592978,
+   "longitude_centro": 77.268437,
+   "latitude_min": 18.550801,
+   "latitude_max": 18.635154,
+   "longitude_min": 77.226261,
+   "longitude_max": 77.310614,
+   "area_km2": 25,
+   "resolucao_m": 100.0,
+   "cobertura_valida_pct": 100.0,
+   "crs_origem": "ESRI:103885",
+   "fonte": "NASA/USGS Mars 2020 CTX DEM"
+  },
+  {
+   "regiao": "Jezero_02",
+   "planeta": "Marte",
+   "latitude_centro": 18.478258,
+   "longitude_centro": 77.416899,
+   "latitude_min": 18.436081,
+   "latitude_max": 18.520434,
+   "longitude_min": 77.374722,
+   "longitude_max": 77.459075,
+   "area_km2": 25,
+   "resolucao_m": 100.0,
+   "cobertura_valida_pct": 100.0,
+   "crs_origem": "ESRI:103885",
+   "fonte": "NASA/USGS Mars 2020 CTX DEM"
+  },
+  {
+   "regiao": "Jezero_03",
+   "planeta": "Marte",
+   "latitude_centro": 18.350041,
+   "longitude_centro": 77.56536,
+   "latitude_min": 18.307865,
+   "latitude_max": 18.392218,
+   "longitude_min": 77.523183,
+   "longitude_max": 77.607536,
+   "area_km2": 25,
+   "resolucao_m": 100.0,
+   "cobertura_valida_pct": 100.0,
+   "crs_origem": "ESRI:103885",
+   "fonte": "NASA/USGS Mars 2020 CTX DEM"
+  }
+ ],
+ "coordenadas_jezero_04": {
+  "regiao": "Jezero_04",
+  "latitude_centro": 18.367755,
+  "longitude_centro": 77.27333,
+  "linha_inicial": 922,
+  "coluna_inicial": 209,
+  "tamanho_pixels": 250,
+  "area_km2": 25,
+  "cobertura_crism_pct_aprox": 80.37,
+  "cobertura_dem_pct": 100.0
+ },
+ "metadata": {
+  "projeto": "TerraMatch AI",
+  "versao_dados": "1.0-mvp",
+  "metodo_topografico": "Distancia euclidiana ponderada",
+  "resolucao_analise_m": 100,
+  "area_por_regiao_km2": 25,
+  "mineralogia_terra_verificada": false,
+  "fontes": [
+   "NASA/USGS CTX",
+   "CRISM",
+   "Mapzen",
+   "Macrostrat"
+  ],
+  "limitacao": "Ranking topografico experimental; mineralogia terrestre nao determinada."
+ }
+}

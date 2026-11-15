@@ -1,0 +1,9 @@
+numpy
+scipy
+rasterio
+pyproj
+mercantile
+requests
+pillow
+# opcional (Macrostrat já usa requests; NASADEM na fase 2):
+# earthaccess

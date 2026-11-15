@@ -1,0 +1,106 @@
+{
+ "jezero_01": {
+  "terrain": {
+   "slope_mean_deg": 8.272554252740965,
+   "slope_median_deg": 6.395989063757717,
+   "slope_p90_deg": 17.407180748084716,
+   "roughness_mean_m": 12.318923726947702,
+   "roughness_p90_m": 25.20280424064268,
+   "relief_m": 561.7489013671875,
+   "valid_pct": 100.0
+  },
+  "thermal": null,
+  "mineralogy": {
+   "source": "CRISM",
+   "coverage_pct": 11.818931836001779,
+   "classes": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)"
+   ],
+   "note": "0% coverage means no overlap with the map, not absence of minerals"
+  },
+  "run_id": "prototype1-colab"
+ },
+ "jezero_02": {
+  "terrain": {
+   "slope_mean_deg": 3.495211453795263,
+   "slope_median_deg": 2.3677386493942105,
+   "slope_p90_deg": 8.151959289479615,
+   "roughness_mean_m": 5.273794138142695,
+   "roughness_p90_m": 12.324120256612256,
+   "relief_m": 176.698974609375,
+   "valid_pct": 100.0
+  },
+  "thermal": null,
+  "mineralogy": {
+   "source": "CRISM",
+   "coverage_pct": 0.0,
+   "classes": [],
+   "note": "0% coverage means no overlap with the map, not absence of minerals"
+  },
+  "run_id": "prototype1-colab"
+ },
+ "jezero_03": {
+  "terrain": {
+   "slope_mean_deg": 1.6143525086121835,
+   "slope_median_deg": 1.2864469339319518,
+   "slope_p90_deg": 3.2586474118313493,
+   "roughness_mean_m": 2.446155429691371,
+   "roughness_p90_m": 4.651343946652447,
+   "relief_m": 80.28076171875,
+   "valid_pct": 100.0
+  },
+  "thermal": null,
+  "mineralogy": {
+   "source": "CRISM",
+   "coverage_pct": 0.0,
+   "classes": [],
+   "note": "0% coverage means no overlap with the map, not absence of minerals"
+  },
+  "run_id": "prototype1-colab"
+ },
+ "jezero_04": {
+  "terrain": {
+   "slope_mean_deg": 8.046635605770284,
+   "slope_median_deg": 7.389995074902544,
+   "slope_p90_deg": 14.210174530130923,
+   "roughness_mean_m": 11.510680806449772,
+   "roughness_p90_m": 20.21075246818515,
+   "relief_m": 516.9652099609375,
+   "valid_pct": 100.0
+  },
+  "thermal": null,
+  "mineralogy": {
+   "source": "CRISM",
+   "coverage_pct": 80.33,
+   "classes": [
+    "Bulk rim",
+    "Fe/Mg phyllosilicates",
+    "Olivine-bearing (strong)",
+    "Olivine-bearing (weak)",
+    "Pyroxene-rich (LCP)"
+   ],
+   "note": "0% coverage means no overlap with the map, not absence of minerals"
+  },
+  "run_id": "prototype1-colab"
+ },
+ "moon_mons_mouton": {
+  "terrain": null,
+  "thermal": null,
+  "mineralogy": null,
+  "run_id": null
+ },
+ "moon_malapert_massif": {
+  "terrain": null,
+  "thermal": null,
+  "mineralogy": null,
+  "run_id": null
+ },
+ "moon_haworth": {
+  "terrain": null,
+  "thermal": null,
+  "mineralogy": null,
+  "run_id": null
+ }
+}

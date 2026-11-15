@@ -1,0 +1,262 @@
+{
+ "version": "1.0",
+ "sites": [
+  {
+   "id": "moon_mons_mouton",
+   "body": "moon",
+   "name": "Mons Mouton",
+   "group": "Artemis III candidate region",
+   "kind": "landing_region",
+   "why": "NASA candidate landing region for Artemis III near the lunar south pole",
+   "center": null,
+   "bbox": null,
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "img/moon_mons_mouton.png",
+    "caption": "LOLA hillshade (NASA Goddard PGDA)"
+   },
+   "status": "pending",
+   "sources": [
+    {
+     "name": "NASA: Artemis III candidate landing regions (Oct 2024)",
+     "url": "https://www.nasa.gov/?p=748006"
+    },
+    {
+     "name": "LRO LOLA polar DEM (NASA Goddard PGDA)",
+     "url": "https://pgda.gsfc.nasa.gov/products/90"
+    }
+   ]
+  },
+  {
+   "id": "moon_malapert_massif",
+   "body": "moon",
+   "name": "Malapert Massif",
+   "group": "Artemis III candidate region",
+   "kind": "landing_region",
+   "why": "NASA candidate landing region for Artemis III near the lunar south pole",
+   "center": null,
+   "bbox": null,
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "img/moon_malapert_massif.png",
+    "caption": "LOLA hillshade (NASA Goddard PGDA)"
+   },
+   "status": "pending",
+   "sources": [
+    {
+     "name": "NASA: Artemis III candidate landing regions (Oct 2024)",
+     "url": "https://www.nasa.gov/?p=748006"
+    },
+    {
+     "name": "LRO LOLA polar DEM (NASA Goddard PGDA)",
+     "url": "https://pgda.gsfc.nasa.gov/products/90"
+    }
+   ]
+  },
+  {
+   "id": "moon_haworth",
+   "body": "moon",
+   "name": "Haworth",
+   "group": "Artemis III candidate region",
+   "kind": "landing_region",
+   "why": "NASA candidate landing region for Artemis III near the lunar south pole",
+   "center": null,
+   "bbox": null,
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "img/moon_haworth.png",
+    "caption": "LOLA hillshade (NASA Goddard PGDA)"
+   },
+   "status": "pending",
+   "sources": [
+    {
+     "name": "NASA: Artemis III candidate landing regions (Oct 2024)",
+     "url": "https://www.nasa.gov/?p=748006"
+    },
+    {
+     "name": "LRO LOLA polar DEM (NASA Goddard PGDA)",
+     "url": "https://pgda.gsfc.nasa.gov/products/90"
+    }
+   ]
+  },
+  {
+   "id": "jezero_01",
+   "body": "mars",
+   "name": "Jezero 01",
+   "group": "Jezero crater",
+   "kind": "landing_site",
+   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "center": {
+    "lat": 18.592978,
+    "lon": 77.268437
+   },
+   "bbox": [
+    77.226261,
+    18.550801,
+    77.310614,
+    18.635154
+   ],
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "img/jezero_ctx_dem.png",
+    "frame_px": [
+     1512,
+     1596
+    ],
+    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "box_px": [
+     195,
+     255,
+     250,
+     250
+    ]
+   },
+   "sources": [
+    {
+     "name": "NASA/USGS Mars 2020 TRN CTX DTM mosaic (Jezero, 20 m)",
+     "url": "https://astrogeology.usgs.gov/search/map/mars_2020_science_investigation_ctx_dem_mosaic"
+    },
+    {
+     "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
+     "url": "https://doi.org/10.5281/zenodo.22257754"
+    }
+   ]
+  },
+  {
+   "id": "jezero_02",
+   "body": "mars",
+   "name": "Jezero 02",
+   "group": "Jezero crater",
+   "kind": "landing_site",
+   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "center": {
+    "lat": 18.478258,
+    "lon": 77.416899
+   },
+   "bbox": [
+    77.374722,
+    18.436081,
+    77.459075,
+    18.520434
+   ],
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "img/jezero_ctx_dem.png",
+    "frame_px": [
+     1512,
+     1596
+    ],
+    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "box_px": [
+     635,
+     595,
+     250,
+     250
+    ]
+   },
+   "sources": [
+    {
+     "name": "NASA/USGS Mars 2020 TRN CTX DTM mosaic (Jezero, 20 m)",
+     "url": "https://astrogeology.usgs.gov/search/map/mars_2020_science_investigation_ctx_dem_mosaic"
+    },
+    {
+     "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
+     "url": "https://doi.org/10.5281/zenodo.22257754"
+    }
+   ]
+  },
+  {
+   "id": "jezero_03",
+   "body": "mars",
+   "name": "Jezero 03",
+   "group": "Jezero crater",
+   "kind": "landing_site",
+   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "center": {
+    "lat": 18.350041,
+    "lon": 77.56536
+   },
+   "bbox": [
+    77.523183,
+    18.307865,
+    77.607536,
+    18.392218
+   ],
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "img/jezero_ctx_dem.png",
+    "frame_px": [
+     1512,
+     1596
+    ],
+    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "box_px": [
+     1075,
+     975,
+     250,
+     250
+    ]
+   },
+   "sources": [
+    {
+     "name": "NASA/USGS Mars 2020 TRN CTX DTM mosaic (Jezero, 20 m)",
+     "url": "https://astrogeology.usgs.gov/search/map/mars_2020_science_investigation_ctx_dem_mosaic"
+    },
+    {
+     "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
+     "url": "https://doi.org/10.5281/zenodo.22257754"
+    }
+   ]
+  },
+  {
+   "id": "jezero_04",
+   "body": "mars",
+   "name": "Jezero 04",
+   "group": "Jezero crater",
+   "kind": "landing_site",
+   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "center": {
+    "lat": 18.367755,
+    "lon": 77.27333
+   },
+   "bbox": [
+    77.228802,
+    18.325495,
+    77.317858,
+    18.410015
+   ],
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "img/jezero_ctx_dem.png",
+    "frame_px": [
+     1512,
+     1596
+    ],
+    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "box_px": [
+     209,
+     922,
+     250,
+     250
+    ]
+   },
+   "sources": [
+    {
+     "name": "NASA/USGS Mars 2020 TRN CTX DTM mosaic (Jezero, 20 m)",
+     "url": "https://astrogeology.usgs.gov/search/map/mars_2020_science_investigation_ctx_dem_mosaic"
+    },
+    {
+     "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
+     "url": "https://doi.org/10.5281/zenodo.22257754"
+    }
+   ]
+  }
+ ]
+}

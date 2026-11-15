@@ -1,0 +1,127 @@
+{
+ "version": "1.0",
+ "cell_km": 5,
+ "res_m": 100,
+ "dem": "Mapzen Terrain Tiles z12 (Prototype 1)",
+ "regions": [
+  {
+   "id": "prototipo1",
+   "name": "Prototype 1 sites (hand-picked)",
+   "why": "Known analogs used in Prototype 1; kept as baseline"
+  }
+ ],
+ "columns": [
+  "id",
+  "region",
+  "lat",
+  "lon",
+  "slope_mean_deg",
+  "slope_p90_deg",
+  "roughness_mean_m",
+  "roughness_p90_m",
+  "relief_m",
+  "valid_pct"
+ ],
+ "rows": [
+  [
+   "p1_atacama_01",
+   "prototipo1",
+   -22.9112,
+   -68.323,
+   3.669438,
+   10.072607,
+   5.500499,
+   14.145931,
+   247.786865,
+   100.0
+  ],
+  [
+   "p1_death_valley_01",
+   "prototipo1",
+   36.42,
+   -116.812,
+   9.183905,
+   19.59665,
+   13.919136,
+   29.142746,
+   549.306091,
+   100.0
+  ],
+  [
+   "p1_timanfaya_01",
+   "prototipo1",
+   29.035,
+   -13.783,
+   2.766212,
+   3.985957,
+   3.995617,
+   5.486969,
+   307.956406,
+   100.0
+  ],
+  [
+   "p1_wadi_rum_01",
+   "prototipo1",
+   29.64,
+   35.434,
+   8.735122,
+   20.950718,
+   13.08112,
+   29.799308,
+   427.577576,
+   100.0
+  ]
+ ],
+ "known_analogs": {
+  "p1_atacama_01": "Valle de la Luna, Atacama (Chile)",
+  "p1_death_valley_01": "Death Valley (USA)",
+  "p1_timanfaya_01": "Timanfaya, Lanzarote (Spain)",
+  "p1_wadi_rum_01": "Wadi Rum (Jordan)"
+ },
+ "context": {
+  "p1_atacama_01": {
+   "lithology": [],
+   "geology_classes": [
+    "Siliciclástica",
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "geology_source": "Macrostrat API v2",
+   "mineralogy_verified": false
+  },
+  "p1_death_valley_01": {
+   "lithology": [
+    "Arenito"
+   ],
+   "geology_classes": [
+    "Sedimentar (geral)",
+    "Vulcânica (geral)"
+   ],
+   "geology_source": "Macrostrat API v2",
+   "mineralogy_verified": false
+  },
+  "p1_timanfaya_01": {
+   "lithology": [
+    "Basalto"
+   ],
+   "geology_classes": [
+    "Vulcânica (geral)"
+   ],
+   "geology_source": "Macrostrat API v2",
+   "mineralogy_verified": false
+  },
+  "p1_wadi_rum_01": {
+   "lithology": [
+    "Arenito"
+   ],
+   "geology_classes": [
+    "Sedimentar (geral)"
+   ],
+   "geology_source": "Macrostrat API v2",
+   "mineralogy_verified": false
+  }
+ },
+ "run_ids": [
+  "prototype1-mock-v7.3"
+ ]
+}

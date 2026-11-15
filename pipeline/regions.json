@@ -1,0 +1,33 @@
+{
+  "_comment": "Regiões da Terra para a grade de 5 x 5 km. bbox = [oeste, sul, leste, norte] em graus. Comece pequeno (~50 x 50 km = ~100 células) e aumente depois de medir o tempo. 'known' marca análogos já conhecidos (a célula que contém o ponto recebe o selo).",
+  "regions": [
+    {
+      "id": "atacama",
+      "name": "Atacama, Chile",
+      "bbox": [-68.60, -23.20, -68.05, -22.70],
+      "why": "Baseline: contains the Prototype 1 site (Valle de la Luna)",
+      "known": [{ "name": "Valle de la Luna (Prototype 1)", "lat": -22.9112, "lon": -68.3230 }]
+    },
+    {
+      "id": "death_valley",
+      "name": "Death Valley, USA",
+      "bbox": [-117.10, 36.20, -116.55, 36.65],
+      "why": "Baseline: contains the Prototype 1 site",
+      "known": [{ "name": "Death Valley (Prototype 1)", "lat": 36.420, "lon": -116.812 }]
+    },
+    {
+      "id": "lut",
+      "name": "Lut desert yardangs (Kaluts), Iran",
+      "bbox": [57.90, 30.30, 58.45, 30.80],
+      "why": "Example of a less-used hyper-arid candidate. Check the bbox on a map before running",
+      "known": []
+    },
+    {
+      "id": "pinacate",
+      "name": "Pinacate volcanic field, Mexico",
+      "bbox": [-113.75, 31.60, -113.25, 32.05],
+      "why": "Example of a volcanic candidate (team to confirm)",
+      "known": []
+    }
+  ]
+}

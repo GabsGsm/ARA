@@ -1,0 +1,22 @@
+# segredos
+.netrc
+.env
+*.token
+
+# cache e dados brutos grandes
+pipeline/cache/
+*.tif
+*.tiff
+*.img
+*.IMG
+*.jp2
+!web/img/*.png
+
+# cópia gerada no deploy
+web/data/
+
+# Python / sistema
+__pycache__/
+.venv/
+.ipynb_checkpoints/
+.DS_Store

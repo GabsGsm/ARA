@@ -1,0 +1,20 @@
+{
+  "attributes": {
+    "slope_mean_deg":   { "label": "Mean slope",     "unit": "°", "scale": 10 },
+    "roughness_mean_m": { "label": "Mean roughness", "unit": "m", "scale": 15 },
+    "relief_m":         { "label": "Relief",         "unit": "m", "scale": 500 }
+  },
+  "objectives": {
+    "default":   { "label": "Prototype 1 (default)", "weights": { "slope_mean_deg": 0.40, "roughness_mean_m": 0.35, "relief_m": 0.25 } },
+    "rover":     { "label": "Rover mobility tests",  "weights": { "slope_mean_deg": 0.50, "roughness_mean_m": 0.40, "relief_m": 0.10 } },
+    "landscape": { "label": "Landscape / relief",    "weights": { "slope_mean_deg": 0.25, "roughness_mean_m": 0.25, "relief_m": 0.50 } }
+  },
+  "thresholds": { "good": 0.15, "weak": 0.40 },
+  "stability": { "draws": 2000, "seed": 42, "distribution": "Dirichlet(1,1,1)", "top_k": 10 },
+  "top_n": 10,
+  "earth_limits": [
+    { "dimension": "Gravity", "text": "Earth gravity is 6x the Moon's and 2.6x Mars'. Mobility and dust behaviour differ." },
+    { "dimension": "Atmosphere", "text": "The Moon has no atmosphere and Mars has less than 1% of Earth's surface pressure. Earth sites cannot reproduce this." },
+    { "dimension": "Radiation", "text": "Without a global magnetic field and thick atmosphere, surface radiation on the Moon and Mars is far higher." }
+  ]
+}
