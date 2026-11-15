@@ -23,7 +23,7 @@ export function useStabilityText() {
   const data = useAraData();
   return (siteId, cellId) => {
     const s = data.stability?.sites?.[siteId]?.[cellId];
-    if (!s) return null;
+    if (!s) return /^(holuhraun|mauna_kea|erg_chebbi)_/.test(cellId) ? (lang === "en" ? "new expansion cell · robustness not computed yet" : "célula nova da expansão · robustez ainda não calculada") : null;
     const pct = (v) => Math.round(v).toLocaleString("pt-BR");
     return lang === "en" ? `top ${data.stability.method.top_k} in ${pct(s.topk_pct)}% of draws · #1 in ${pct(s.top1_pct)}%` : `${pct(s.topk_pct)}% das vezes no top ${data.stability.method.top_k} · ${pct(s.top1_pct)}% em 1º`;
   };

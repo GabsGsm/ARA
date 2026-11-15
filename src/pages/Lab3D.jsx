@@ -89,10 +89,21 @@ export default function Lab3D() {
   const [tourStep, setTourStep] = useState(-1);
   const [walkInfo, setWalkInfo] = useState(null);
   const [jump, setJump] = useState(null);
-  const [locked, setLocked] = useState(false);
+  const [, setLocked] = useState(false);
   const [panels, setPanels] = useState({ left: true, right: true });
+  // caminhando, os painéis laterais recolhem para a cena ficar livre (e voltam ao sair)
+  const panelsBefore = useRef(null);
+  // a ajuda aparece ao entrar na caminhada e recolhe sozinha quando a pessoa começa a andar
+  useEffect(() => { if (nav === "walk") setWalkHelp(true); }, [nav]);
+  const walkingNow = (walkInfo?.speed ?? 0) > 1;
+  useEffect(() => { if (walkingNow) setWalkHelp(false); }, [walkingNow]);
+  useEffect(() => {
+    if (nav === "walk") { panelsBefore.current = panels; setPanels({ left: false, right: false }); }
+    else if (panelsBefore.current) { setPanels(panelsBefore.current); panelsBefore.current = null; }
+  }, [nav]); // eslint-disable-line react-hooks/exhaustive-deps
   const [walkSide, setWalkSide] = useState("left");
   const [walkSolo, setWalkSolo] = useState(false);
+  const [walkHelp, setWalkHelp] = useState(true);
   const [showSources, setShowSources] = useState(false);
   const [lib, setLib] = useState({ lat: 0, lon: 0 });   // libração (ponto sub-Terra) para a Lua
   const [ops, setOps] = useState({});
@@ -103,6 +114,7 @@ export default function Lab3D() {
   const [live, setLive] = useState({ scene: null, busy: false, progress: { f: 0, text: "" }, error: null });
   const { calm } = useMotion();
   const left = useRef(null), right = useRef(null);
+  const walkView = () => (walkSide === "right" ? right.current?.view : left.current?.view);
 
   useEffect(() => { loadIndex().then(setIndex).catch((e) => setErr(e.message)); }, []);
 
@@ -405,12 +417,12 @@ export default function Lab3D() {
             {!isOverview && (
               <>
                 <h2 className="t3-h">{tr("Análogo na Terra")}</h2>
-                {missing3d && <p className="t3-note mb-2">“{missing3d}” ainda não tem cena 3D. Mostrando o melhor análogo que tem relevo 3D gerado.</p>}
-                <div className="t3-list" role="radiogroup" aria-label="Análogo">
+                {missing3d && <p className="t3-note mb-2">{T(`“${missing3d}” ainda não tem cena 3D. Mostrando o melhor análogo que tem relevo 3D gerado.`, `“${missing3d}” has no 3D scene yet. Showing the best analog with generated 3D relief.`)}</p>}
+                <div className="t3-list" role="radiogroup" aria-label={T("Análogo", "Analog")}>
                   {ranking.map((r) => (
                     <button key={r.cell.id} type="button" role="radio" aria-checked={!live.scene && r.cell.id === analogId} onClick={() => { setLive((l) => ({ ...l, scene: null })); setAnalogId(r.cell.id); }}>
                       <span className="t3-rank">{r.position}º</span>
-                      <span><b>{byId[r.cell.id]?.name ?? r.cell.id}</b><small>distância {fmt(r.d, 3)} · {r.position}º de {data.cells.length} células{r.position === 1 ? " · o melhor" : ""}</small></span>
+                      <span><b>{byId[r.cell.id]?.name ?? r.cell.id}</b><small>{T(`distância ${fmt(r.d, 3)} · ${r.position}º de ${data.cells.length} células${r.position === 1 ? " · o melhor" : ""}`, `distance ${fmt(r.d, 3)} · #${r.position} of ${data.cells.length} cells${r.position === 1 ? " · the best" : ""}`)}</small></span>
                     </button>
                   ))}
                   {!ranking.length && earthScenes.map((s) => (
@@ -608,14 +620,19 @@ export default function Lab3D() {
               <button type="button" aria-pressed={walkSide === "right"} onClick={() => setWalkSide("right")}>{R?.name ?? T("Direita", "Right")}</button>
               <button type="button" onClick={() => setWalkSolo((v) => !v)}>{focusedWalk ? T("Voltar à comparação", "Back to comparison") : T("Ampliar lado escolhido", "Expand selected side")}</button>
             </div>}
-            {!locked
-              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {gB.label}.</b> <kbd>W</kbd>/<kbd>↑</kbd> {T("anda", "walk")} · <kbd>A D</kbd>/<kbd>← →</kbd> {T("vira", "turn")} · <kbd>Q E</kbd> {T("de lado", "sidestep")} · <kbd>Shift</kbd> {T("corre", "run")} · <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}. {T("Clique no relevo para olhar com o mouse.", "Click the terrain to look around with the mouse.")}</p>
-              : <p className="m-0">{T("Olhando com o mouse", "Mouse look on")} · <kbd>W A S D</kbd> {T("anda", "walk")} · <kbd>Esc</kbd> {T("solta o mouse", "releases the mouse")}</p>}
-            {walkInfo && <p className="m-0 mt-1 text-[13px]">{T("Altitude", "Altitude")} {fmt(walkInfo.h, 0)} m · {T("declividade sob os pés", "slope underfoot")} {fmt(walkInfo.slope, 1)}°</p>}
-            <p className="m-0 mt-1 text-[13px]">
+            {walkHelp && <p className="m-0"><b>{T("Caminhada em", "Walking on")} {gB.label}.</b> <kbd>W A S D</kbd>/<kbd>{T("setas", "arrows")}</kbd> {T("andam para onde a câmera olha", "move where the camera looks")} · <kbd>Shift</kbd> {T("corre", "run")} · <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")} · {T("arraste para olhar ao redor", "drag to look around")} · {T("roda do mouse aproxima", "mouse wheel zooms")} · <kbd>C</kbd> {T("troca a câmera", "changes camera")}</p>}
+            <div className="t3-walk-controls mt-1" role="group" aria-label={T("Câmera da caminhada", "Walk camera")}>
+              <span>{T("Câmera", "Camera")}:</span>
+              {[["atras", T("Atrás", "Behind")], ["alto", T("De cima", "From above")], ["perto", T("Perto", "Close")]].map(([k, label]) => (
+                <button key={k} type="button" aria-pressed={(walkInfo?.view ?? "atras") === k} onClick={() => walkView()?.setWalkView(k)}>{label}</button>
+              ))}
+              <button type="button" aria-pressed={walkHelp} aria-label={T("Mostrar ou ocultar os comandos", "Show or hide the controls")} onClick={() => setWalkHelp((v) => !v)}>?</button>
+            </div>
+            {walkInfo && <p className="m-0 mt-1 text-[13px]">{T("Velocidade", "Speed")} <b>{fmt(walkInfo.speed ?? 0, 1)} m/s</b> · {T("altitude", "altitude")} {fmt(walkInfo.h, 0)} m · {T("declividade sob os pés", "slope underfoot")} {fmt(walkInfo.slope, 1)}° · <span className="opacity-75">{T("pedras: modelo estatístico", "rocks: statistical model")}</span></p>}
+            {walkHelp && <p className="m-0 mt-1 text-[13px]">
               {T("Mesmo impulso de pulo (2,5 m/s):", "Same jump impulse (2.5 m/s):")} <b>{fmt(jumpH(gB.g), 2)} m {T("em", "on")} {gB.label}</b>{walkBody !== "earth" && <> · {fmt(jumpH(9.807), 2)} m {T("na Terra", "on Earth")}</>}
               {jump != null && <> · {T("seu último pulo", "your last jump")}: <b>{fmt(jump, 2)} m</b></>}
-            </p>
+            </p>}
             <button type="button" className="t3-walk-back" onClick={() => setNav("orbit")}>{T("Voltar à órbita", "Back to orbit")}</button>
           </div>
         )}

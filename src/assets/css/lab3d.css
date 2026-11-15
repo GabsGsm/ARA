@@ -134,7 +134,7 @@
 /* caixas flutuantes: tour, caminhada, perfil */
 .t3-caption, .t3-walk, .t3-profile { position: absolute; left: 50%; transform: translateX(-50%); z-index: 7; width: min(640px, calc(100% - 660px)); min-width: 320px; }
 .t3-caption { bottom: 62px; padding: 14px 18px; }
-.t3-walk { top: auto; bottom: 34px; padding: 10px 14px; font-size: 13px; background: rgb(2 16 22 / .84); backdrop-filter: blur(6px); }
+.t3-walk { top: auto; bottom: 34px; left: 18px; transform: none; width: min(520px, calc(100% - 36px)); padding: 10px 14px; font-size: 12.5px; background: rgb(2 16 22 / .8); backdrop-filter: blur(6px); }
 .t3-walk p { line-height: 1.45; }
 .t3-walk-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
 .t3-walk-controls span { color: var(--color-muted); font-size: 12px; }
