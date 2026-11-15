@@ -22,15 +22,19 @@ const draco = new DRACOLoader();
 draco.setDecoderPath("./draco/");
 loader.setDRACOLoader(draco);
 
-// Os modelos oficiais trazem os logos da NASA e do JPL pintados nas texturas. O ARA não usa a marca da NASA
-// (só a do NASA Space Apps Challenge), então cobrimos essas áreas com a cor do entorno ao carregar.
-// Retângulos em fração da imagem (x0, y0, x1, y1), origem no canto superior esquerdo; chave = nome da imagem no GLB.
+// Os modelos oficiais trazem pintados nas texturas os logos da NASA e do JPL, emblemas de missão e bandeiras.
+// Pelas regras do NASA Space Apps, o projeto não usa elementos de marca da NASA: cobrimos essas áreas com a
+// cor do entorno ao carregar. Retângulos em fração da imagem (x0, y0, x1, y1), origem no canto superior
+// esquerdo; chave = nome da imagem no GLB.
 const LOGO_PATCHES = {
-  arm_graphics: [[0.2, 0.52, 0.365, 0.685], [0.37, 0.545, 0.575, 0.67]],     // Perseverance: NASA + JPL
-  blade: [[0.855, 0.76, 1, 1], [0, 0.245, 0.18, 0.45]],                      // Ingenuity: NASA + JPL
-  "tex_05.jpg": [[0.805, 0.28, 1, 0.48], [0.805, 0.67, 1, 0.87]],            // Curiosity: JPL + NASA
-  "tex_instruments.jpg": [[0.2, 0.105, 0.335, 0.23]],                         // Spirit/Opportunity: NASA
-  astnt1_1: [[0.86, 0.165, 0.94, 0.24], [0.765, 0.365, 0.85, 0.44]],          // astronauta: NASA + emblema
+  arm_graphics: [[0, 0.04, 1, 0.42], [0.2, 0.52, 0.365, 0.685], [0.37, 0.545, 0.575, 0.67]], // Perseverance: marca Mars 2020, NASA, JPL
+  blade: [[0.855, 0.4, 1, 1], [0, 0.245, 0.18, 0.45]],                                      // Ingenuity: bandeira + NASA, JPL
+  "tex_05.jpg": [[0.805, 0.08, 1, 0.27], [0.805, 0.28, 1, 0.48], [0.805, 0.475, 1, 0.665], [0.805, 0.67, 1, 0.87]], // Curiosity: MSL, JPL, bandeira, NASA
+  "tex_instruments.jpg": [[0.08, 0.13, 0.19, 0.21], [0.2, 0.105, 0.335, 0.23]],             // Spirit/Opportunity: bandeira, NASA
+  "tex_arm.jpg": [[0.035, 0.87, 0.225, 0.97]],                                               // Spirit/Opportunity: bandeira
+  astnt1_1: [[0.855, 0.02, 0.94, 0.085], [0.86, 0.165, 0.94, 0.24], [0.765, 0.365, 0.85, 0.44], [0.78, 0.695, 0.84, 0.75]], // astronauta: bandeiras, NASA, emblema
+  TEXTUREA: [[0.08, 0.55, 0.625, 0.885]],                                                    // Módulo Lunar: "UNITED STATES"
+  TEXTURE_: [[0.085, 0.6, 0.565, 0.86]],                                                     // Módulo Lunar: bandeira
 };
 const patched = new WeakSet();
 function hideLogos(scene) {
