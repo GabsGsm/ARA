@@ -3,6 +3,7 @@
 // porque a NASA não publica um GLB gratuito deles.
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 const NASA = "https://assets.science.nasa.gov/content/dam/science";
 export const GLB = {
@@ -16,11 +17,55 @@ export const GLB = {
 
 const cache = new Map();
 const loader = new GLTFLoader();
+// O Módulo Lunar e o astronauta da NASA vêm comprimidos com Draco: o decodificador fica em public/draco/.
+const draco = new DRACOLoader();
+draco.setDecoderPath("./draco/");
+loader.setDRACOLoader(draco);
+
+// Os modelos oficiais trazem os logos da NASA e do JPL pintados nas texturas. O ARA não usa a marca da NASA
+// (só a do NASA Space Apps Challenge), então cobrimos essas áreas com a cor do entorno ao carregar.
+// Retângulos em fração da imagem (x0, y0, x1, y1), origem no canto superior esquerdo; chave = nome da imagem no GLB.
+const LOGO_PATCHES = {
+  arm_graphics: [[0.2, 0.52, 0.365, 0.685], [0.37, 0.545, 0.575, 0.67]],     // Perseverance: NASA + JPL
+  blade: [[0.855, 0.76, 1, 1], [0, 0.245, 0.18, 0.45]],                      // Ingenuity: NASA + JPL
+  "tex_05.jpg": [[0.805, 0.28, 1, 0.48], [0.805, 0.67, 1, 0.87]],            // Curiosity: JPL + NASA
+  "tex_instruments.jpg": [[0.2, 0.105, 0.335, 0.23]],                         // Spirit/Opportunity: NASA
+  astnt1_1: [[0.86, 0.165, 0.94, 0.24], [0.765, 0.365, 0.85, 0.44]],          // astronauta: NASA + emblema
+};
+const patched = new WeakSet();
+function hideLogos(scene) {
+  scene.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+      const tex = m?.map, rects = tex && LOGO_PATCHES[tex.name];
+      if (!rects || patched.has(tex) || !tex.image?.width) continue;
+      const img = tex.image, w = img.width, h = img.height;
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+      const g = cv.getContext("2d", { willReadFrequently: true });
+      g.drawImage(img, 0, 0);
+      for (const [x0, y0, x1, y1] of rects) {
+        const X = Math.floor(x0 * w), Y = Math.floor(y0 * h), RW = Math.ceil((x1 - x0) * w), RH = Math.ceil((y1 - y0) * h);
+        // cor média da borda do retângulo, para o remendo se misturar ao entorno
+        const px = (x, y) => g.getImageData(Math.min(w - 1, Math.max(0, x)), Math.min(h - 1, Math.max(0, y)), 1, 1).data;
+        let r = 0, gg = 0, b = 0, n = 0;
+        for (let k = 0; k <= 20; k++) {
+          for (const [x, y] of [[X + (RW * k) / 20, Y - 2], [X + (RW * k) / 20, Y + RH + 1], [X - 2, Y + (RH * k) / 20], [X + RW + 1, Y + (RH * k) / 20]]) {
+            const d = px(Math.round(x), Math.round(y)); r += d[0]; gg += d[1]; b += d[2]; n++;
+          }
+        }
+        g.fillStyle = `rgb(${Math.round(r / n)},${Math.round(gg / n)},${Math.round(b / n)})`;
+        g.fillRect(X, Y, RW, RH);
+      }
+      tex.image = cv; tex.needsUpdate = true; patched.add(tex);
+    }
+  });
+  return scene;
+}
 
 /** Carrega um GLB (com cache) e devolve um clone da cena. onProgress(0..1). */
 export function loadGLB(url, onProgress) {
   if (!cache.has(url)) {
-    cache.set(url, new Promise((res, rej) => loader.load(url, (g) => res(g.scene), (e) => e.total && onProgress?.(e.loaded / e.total), rej)));
+    cache.set(url, new Promise((res, rej) => loader.load(url, (g) => res(hideLogos(g.scene)), (e) => e.total && onProgress?.(e.loaded / e.total), rej)));
   }
   return cache.get(url).then((s) => s.clone(true));
 }
