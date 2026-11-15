@@ -30,6 +30,9 @@ The **3D Lab** (`#/3d`) puts a fixed planetary site and its Earth analog side by
 - **Guided tour** (static mode) that flies both cameras through the three ARA measures — slope, roughness, relief — with captions using the real numbers; **free orbit**; and **walk mode** (first person, W A S D, Shift, Space) with each body's gravity: the same 2.5 m/s jump reaches 0.32 m on Earth, 0.84 m on Mars and 1.93 m on the Moon.
 - **Perseverance traverse** (NASA/JPL MMGIS, sols 14 → 2022, 45 km) and sol markers draped on the Jezero scenes; **overview scenes** of the whole Jezero crater (60 km) and the lunar south pole (180 km) with clickable site boxes.
 - **Cross-check:** the 3D scene recomputes the ARA measures at 100 m in the 5 km cell and shows them next to the catalogue values.
+- **Twin Traverse** (tool *Travessia gêmea*). Click A and B on the mission terrain: the ARA plans the least-cost route (Dijkstra on a ~78 m grid) that never exceeds the mobility limit of the chosen mode — astronaut EVA (20°, Artemis III), Perseverance-class rover (30°) or Apollo LRV (25°) — and then searches the Earth analog for the stretch with the **same climbs and descents** (grade profile matched by RMS degrees). It reports length, climb, steepest stretch, time, share of the route in sunlight, Earth visibility for direct-to-Earth comms (Moon) and the **metabolic cost** (Pandolf 1977 with weight scaled by gravity): e.g. Jezero 01, 3.3 km → Death Valley twin with 4.4° RMS profile difference costs 2.9× the energy on Earth, so the rehearsal must use less load or partial weight offload to feel like the mission.
+- **Operational window** (Moon, layer *Janela operacional*): every point coloured by how many Artemis III criteria it meets at the chosen hour — sunlight, Earth above the local horizon (ray-cast on the DEM, with adjustable libration) and slope < 10° for landing. At Haworth, noon: 55% of the scene meets all three.
+- **Vehicles at real scale**: official NASA GLB models (Perseverance, Curiosity, Spirit/Opportunity, Ingenuity, Apollo Lunar Module, astronaut — public domain, loaded from science.nasa.gov) and simplified Sojourner and LRV built from published dimensions, placed on the terrain (`#/3d?site=haworth_01&veiculo=lrv`).
 - Cursor read-out (lat, lon, elevation, slope), PNG snapshot of both views, data-source list per scene, and URLs that reopen a view (`#/3d?site=haworth_01&layer=declividade&hour=7.5&exag=3`).
 
 | Lunar south pole, Sun at 3° | Slope classes + contours on Jezero |
@@ -53,11 +56,17 @@ The **Explorar** page has three modes.
 - **Robustez** — position of the top candidates in 12 defined scenarios (3 weight sets × 4 data-quality versions).
 - **Analog Passport** — JSON export with identification, target, characterization, interpretation, provenance and conclusion.
 
+- **Pressão e temperatura** — the two things no desert reproduces, measured per pair: mission pressure (Mars: 6.1 hPa × e^(−h/11.1 km) with h from the site DEM; Moon: vacuum) against the analog's barometric pressure at its real altitude (Terrain Tiles), on a log scale with the Armstrong limit (63 hPa) and the EVA suit pressure (296 hPa); mission temperature (THEMIS brightness temperature on Mars, Diviner PRP on the Moon) against NASA POWER climatology, with the coldest month to rehearse in; gravity and load. Each row says how to close the gap in the rehearsal (pressurized suit/gloves, cold or thermal-vacuum chamber, weight offload).
+
 Earth evidence for the 522 cells: ESA WorldCover 2021 (10 m), ISRIC SoilGrids 2.0 (250 m, model estimate), Macrostrat, NASA POWER (~0.5°, regional context) and JRC Global Surface Water (30 m). Mineral spectroscopy of Earth (NASA EMIT) is **not** integrated yet: it requires a NASA Earthdata login.
 
 ## Campo (Field Explorer)
 
 `#/campo` turns a phone into a field companion: *use my location* (GPS via `watchPosition`, only while the session is active), *pick a point on the map* or *demonstration* (a clearly labelled simulated walk on real coordinates in Death Valley). It shows accuracy, a filtered track (fixes worse than 50 m or implying > 8 m/s are discarded), distance, Macrostrat geology re-queried only after 400 m, on-demand relief characterization against any of the 8 targets, missing data for the purpose, and **field notes** kept only on the device (exportable as JSON). Location is never sent anywhere except as the single point queried to the public data services.
+
+## Veículos (exploration fleet)
+
+`#/veiculos` shows Sojourner, Spirit/Opportunity, Curiosity, Perseverance, Ingenuity, the Apollo LRV, the Lunar Module and an EVA astronaut in a 3D viewer at real scale next to a 1.75 m person, with specs, curiosities and **the lesson each one leaves for a crewed mission** (soft soil that trapped Spirit, sharp rocks that damaged Curiosity's wheels, MOXIE oxygen, Ingenuity as aerial scout, the Apollo walk-back rule). Each vehicle opens in the 3D Lab on real relief.
 
 ## Method
 

@@ -190,3 +190,14 @@
 .t3-minlegend span { display: flex; align-items: center; gap: 8px; color: var(--color-ink-2); }
 .t3-minlegend span::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--c); flex: none; }
 .t3-minlegend b { margin-left: auto; font-weight: 500; font-family: ui-monospace, Consolas, monospace; color: var(--color-gold-2); }
+
+/* janela operacional, veículo e travessia gêmea */
+.t3-ops { margin-top: 8px; }
+.t3-linkbtn { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-line); border-radius: 10px; padding: 7px 10px;
+  font: 500 11px var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: var(--color-ink); text-decoration: none; }
+.t3-linkbtn:hover { border-color: var(--color-gold); }
+.t3-trav { width: min(720px, calc(100% - 640px)); max-height: 44%; overflow-y: auto; bottom: 46px; }
+.t3-trav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; font-size: 12.5px; }
+.t3-trav-grid > div { display: grid; gap: 3px; padding: 8px 10px; border-radius: 10px; background: rgb(255 255 255 / .03); border: 1px solid var(--color-line-2); }
+.t3-trav-grid span { color: var(--color-ink-2); }
+@media (max-width: 1100px) { .t3-trav { width: calc(100% - 40px); } .t3-trav-grid { grid-template-columns: 1fr; } }

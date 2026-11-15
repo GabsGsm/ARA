@@ -150,3 +150,22 @@ export async function water(lat, lon) {
 }
 
 export { araMetrics, cellBox };
+
+/** Altitude (m) num ponto, lida de um único Terrain Tile (Terrarium, z11 ≈ 60 m no equador). */
+export async function elevationAt(lat, lon) {
+  try {
+    const z = 11, n = 2 ** z, r = (lat * Math.PI) / 180;
+    const fx = ((lon + 180) / 360) * n, fy = ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * n;
+    const x = Math.floor(fx), y = Math.floor(fy);
+    const res = await withTimeout(fetch(`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`, { mode: "cors" }), 20000, "Altitude");
+    if (!res.ok) throw new Error(`Altitude: HTTP ${res.status}`);
+    const im = await createImageBitmap(await res.blob(), { colorSpaceConversion: "none", premultiplyAlpha: "none" });
+    const cv = new OffscreenCanvas(256, 256), ctx = cv.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(im, 0, 0);
+    const px = Math.min(255, Math.floor((fx - x) * 256)), py = Math.min(255, Math.floor((fy - y) * 256));
+    const d = ctx.getImageData(px, py, 1, 1).data;
+    return { ok: true, data: { elevation_m: d[0] * 256 + d[1] + d[2] / 256 - 32768 }, meta: SOURCES.terrain };
+  } catch (e) {
+    return { ok: false, error: e.message, meta: SOURCES.terrain };
+  }
+}
