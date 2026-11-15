@@ -1,5 +1,15 @@
 # ARA
 
+<h2 align="center">
+  🚀 <a href="https://gabsgsm.github.io/ARA/">Try ARA live → gabsgsm.github.io/ARA</a>
+</h2>
+
+<p align="center">
+  <a href="https://gabsgsm.github.io/ARA/"><img src="https://img.shields.io/badge/OPEN%20THE%20PLATFORM-gabsgsm.github.io%2FARA-F2B53A?style=for-the-badge&labelColor=06222C" alt="Open the ARA platform" height="56"></a>
+</p>
+
+<p align="center">Runs in any modern browser, on desktop or phone — no installation needed.</p>
+
 **ARA finds places on Earth that resemble fixed Moon and Mars exploration sites — and shows, dimension by dimension, what is analogous, what is not, and where data is missing.**
 
 NASA Space Apps Challenge 2026 · Challenge: *Identify Earth locations analogous to permanent base sites on the Moon and Mars.*
