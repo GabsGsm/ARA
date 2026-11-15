@@ -37,7 +37,7 @@ export const DICT = {
   "Carregando relevo real…": "Loading real terrain…", "Área ao sol (sombras calculadas no relevo real): ": "Sunlit area (shadows computed on real relief): ",
   "Clique no relevo da esquerda para começar.": "Click the left terrain to start.",
   // Sobre
-  Sobre: "About", "O que é": "What it is", "Como ler um resultado": "How to read a result", "Equipe e uso de IA": "Team and use of AI",
+  Sobre: "About", "O que é": "What it is", "Como ler um resultado": "How to read a result",
   "diferença pequena naquela dimensão": "small difference in that dimension", "diferença moderada": "moderate difference",
   "diferença grande ou impossível na Terra": "large difference or impossible on Earth", "a dimensão ainda não foi medida": "the dimension has not been measured yet",
 };
