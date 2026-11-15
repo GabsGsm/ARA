@@ -26,9 +26,6 @@ export default function About() {
             {tr("Três estatísticas de relevo não descrevem orientação das encostas, drenagem nem textura em várias escalas. Pesos e escalas não foram calibrados por especialistas. Os DEMs da Terra e dos planetas vêm de instrumentos diferentes. Litologia mapeada não é mineralogia verificada, e os indicadores do M3 na Lua são exploratórios.", "Three relief statistics do not describe slope orientation, drainage or multi-scale texture. Weights and scales were not calibrated by experts. Earth and planetary DEMs come from different instruments. Mapped lithology is not verified mineralogy, and the Moon M3 indicators are exploratory.")}
           </p>
         </Card>
-        <Card as="article" title="Equipe e uso de IA" titleId="ab4">
-          <p className="text-[13px] text-ink-2">{tr("Preencher antes da entrega: integrantes, papéis, link do repositório e onde ferramentas de IA foram usadas.", "To be filled in before submission: members, roles, repository link and where AI tools were used.")}</p>
-        </Card>
       </div>
     </section>
   );

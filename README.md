@@ -181,7 +181,3 @@ Colours: deep petrol blue `#071d24 → #123a40` fading to sage `#8fa98f`, gold a
 ## Limitations
 
 Three summary statistics do not capture slope orientation, drainage or multi-scale texture. Weights and scales are not calibrated against expert labels. Earth and planetary DEMs come from different instruments with different vertical accuracy. Mapped lithology is not verified mineralogy, and 0% CRISM coverage means no map overlap, not absence of minerals. Earth cannot reproduce lunar/Martian gravity, vacuum or thin atmosphere, or radiation.
-
-## Use of AI
-
-<!-- Fill in before submitting: which tools, where, how. Mark AI-generated images with a visible watermark. -->
