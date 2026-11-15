@@ -84,7 +84,7 @@ def main():
             if attrs:
                 ids.append(s["id"])
                 dems.append(z.astype(np.float32))
-                images.save_png(z, ROOT / "web" / "img" / f"{s['id']}.png")
+                images.relief_png(z, ROOT / "data" / "img" / f"{s['id']}.png")
     if dems:
         (HERE / "cache").mkdir(exist_ok=True)
         np.savez_compressed(HERE / "cache" / "planet_moon.npz", ids=np.array(ids), dems=np.stack(dems))

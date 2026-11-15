@@ -1,0 +1,28 @@
+{
+  "name": "ara",
+  "private": true,
+  "version": "1.0.0",
+  "description": "ARA — Analog Research & Analysis (NASA Space Apps 2026)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node tests/test_core.mjs"
+  },
+  "dependencies": {
+    "@fontsource/lexend": "^5.3.0",
+    "@fontsource/michroma": "^5.3.0",
+    "leaflet": "^1.9.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-leaflet": "^5.0.0",
+    "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@vitejs/plugin-react": "^6.3.0",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.8"
+  }
+}

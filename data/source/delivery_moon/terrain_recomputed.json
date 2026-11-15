@@ -1,0 +1,41 @@
+{
+ "method": "terrain.py (Prototype 1): slope incl. 1-px border, roughness std 3x3, relief max-min",
+ "sites": {
+  "mons_mouton_01": {
+   "slope_mean_deg": 8.86894170271177,
+   "slope_median_deg": 8.874137034432902,
+   "slope_p90_deg": 13.971651535529046,
+   "roughness_mean_m": 12.75465954343047,
+   "roughness_p90_m": 20.068719860219804,
+   "relief_m": 441.9599609375,
+   "valid_pct": 100.0
+  },
+  "malapert_massif_01": {
+   "slope_mean_deg": 13.298593956365902,
+   "slope_median_deg": 12.07491175226152,
+   "slope_p90_deg": 23.628997141463916,
+   "roughness_mean_m": 19.28191051910964,
+   "roughness_p90_m": 35.619405180102184,
+   "relief_m": 1039.78955078125,
+   "valid_pct": 100.0
+  },
+  "haworth_01": {
+   "slope_mean_deg": 7.379734017905232,
+   "slope_median_deg": 7.3838486668487935,
+   "slope_p90_deg": 12.517361972452962,
+   "roughness_mean_m": 10.77709532699715,
+   "roughness_p90_m": 18.091514671073828,
+   "relief_m": 446.984130859375,
+   "valid_pct": 100.0
+  },
+  "nobile_rim_01": {
+   "slope_mean_deg": 12.99216877487925,
+   "slope_median_deg": 12.382870832078094,
+   "slope_p90_deg": 22.764341702427526,
+   "roughness_mean_m": 19.083373884619245,
+   "roughness_p90_m": 34.19784692793853,
+   "relief_m": 1090.732421875,
+   "valid_pct": 100.0
+  }
+ }
+}

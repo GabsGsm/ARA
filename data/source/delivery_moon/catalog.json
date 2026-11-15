@@ -1,0 +1,117 @@
+{
+  "version": "1.0",
+  "sites": [
+    {
+      "id": "mons_mouton_01",
+      "body": "moon",
+      "name": "Mons Mouton 01",
+      "kind": "candidate_region",
+      "why": "Lunar south polar region selected for topographic analog analysis",
+      "center": {
+        "lat": -85.4,
+        "lon": 31.7
+      },
+      "bbox": [
+        30.295922,
+        -85.513209,
+        33.120533,
+        -85.286644
+      ],
+      "cell_km": 5,
+      "res_m": 100,
+      "sources": [
+        {
+          "name": "NASA LRO LOLA",
+          "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+        }
+      ]
+    },
+    {
+      "id": "malapert_massif_01",
+      "body": "moon",
+      "name": "Malapert Massif",
+      "kind": "candidate_region",
+      "site_reference": "MMA01",
+      "center": {
+        "lat": -85.942,
+        "lon": -0.944
+      },
+      "bbox": [
+        -2.1505,
+        -86.024863,
+        0.224193,
+        -85.857523
+      ],
+      "cell_km": 5,
+      "res_m": 100,
+      "sources": [
+        {
+          "name": "NASA LRO LOLA",
+          "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+        },
+        {
+          "name": "NASA LRO Diviner PRP",
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"
+        }
+      ]
+    },
+    {
+      "id": "haworth_01",
+      "body": "moon",
+      "name": "Haworth",
+      "kind": "candidate_region",
+      "site_reference": "HW01",
+      "center": {
+        "lat": -86.768,
+        "lon": -20.514
+      },
+      "bbox": [
+        -22.422382,
+        -86.873653,
+        -18.661791,
+        -86.66163
+      ],
+      "cell_km": 5,
+      "res_m": 100,
+      "sources": [
+        {
+          "name": "NASA LRO LOLA",
+          "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+        },
+        {
+          "name": "NASA LRO Diviner PRP",
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"
+        }
+      ]
+    },
+    {
+      "id": "nobile_rim_01",
+      "body": "moon",
+      "name": "Nobile Rim 1",
+      "kind": "candidate_region",
+      "site_reference": "NR101",
+      "center": {
+        "lat": -85.295,
+        "lon": 36.917
+      },
+      "bbox": [
+        35.517205,
+        -85.410217,
+        38.326574,
+        -85.179735
+      ],
+      "cell_km": 5,
+      "res_m": 100,
+      "sources": [
+        {
+          "name": "NASA LRO LOLA",
+          "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+        },
+        {
+          "name": "NASA LRO Diviner PRP",
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"
+        }
+      ]
+    }
+  ]
+}

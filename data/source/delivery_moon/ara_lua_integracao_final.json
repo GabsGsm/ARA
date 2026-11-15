@@ -1,0 +1,19 @@
+{
+  "project": "ARA - Analog Research and Analysis",
+  "body": "moon",
+  "integrated_at": "2026-11-15T05:17:49.379989+00:00",
+  "number_of_lunar_regions": 4,
+  "regions": [
+    "haworth_01",
+    "malapert_massif_01",
+    "mons_mouton_01",
+    "nobile_rim_01"
+  ],
+  "terrain_source": "NASA LRO LOLA",
+  "thermal_source": "NASA LRO Diviner PRP",
+  "terrain_resolution_m": 100,
+  "region_size_km": 5,
+  "thermal_area_coverage_verified": false,
+  "thermal_used_in_matching": false,
+  "site_centers_pending_final_validation": true
+}

@@ -1,0 +1,36 @@
+{
+  "sites": [
+    {
+      "id": "jezero_01",
+      "name": "Jezero 01",
+      "body": "mars",
+      "latitude": 18.592978,
+      "longitude": 77.268437,
+      "area_km2": 25.0
+    },
+    {
+      "id": "jezero_02",
+      "name": "Jezero 02",
+      "body": "mars",
+      "latitude": 18.478258,
+      "longitude": 77.416899,
+      "area_km2": 25.0
+    },
+    {
+      "id": "jezero_03",
+      "name": "Jezero 03",
+      "body": "mars",
+      "latitude": 18.350041,
+      "longitude": 77.56536,
+      "area_km2": 25.0
+    },
+    {
+      "id": "jezero_04",
+      "name": "Jezero 04",
+      "body": "mars",
+      "latitude": 18.367755,
+      "longitude": 77.27333,
+      "area_km2": 25.0
+    }
+  ]
+}

@@ -72,13 +72,31 @@ export function explain(siteAttrs, cell, config) {
     ...dimensionStatus(siteAttrs?.terrain?.[attr], cell[attr], meta.scale, config.thresholds),
   }));
   dims.push({ dimension: "Temperatura da superfície", attr: "thermal", status: "no_data", diff: null,
-              note: siteAttrs?.thermal ? "Valor planetário disponível; valor da Terra ainda não calculado" : "Ainda não calculada" });
+              note: thermalNote(siteAttrs?.thermal) });
   dims.push({ dimension: "Mineralogia", attr: "mineralogy", status: "no_data", diff: null,
-              note: cell.context?.lithology?.length
-                ? `Terra: litologia mapeada (${cell.context.lithology.join(", ")}); minerais não verificados`
-                : "Mineralogia da Terra não verificada" });
+              note: mineralNote(siteAttrs?.mineralogy, cell) });
   config.earth_limits.forEach((l) => dims.push({ dimension: l.dimension, attr: "limit", status: "not_analog", diff: null, note: l.text }));
   return dims;
+}
+
+function thermalNote(thermal) {
+  const shown = (thermal?.display ?? []).filter((d) => d.value != null)
+    .map((d) => `${d.label} ${br(d.value, d.unit === "K" ? 0 : 0)} ${d.unit}`);
+  const planet = shown.length ? `Planeta: ${shown.join("; ")}.` : "Planeta: sem dado térmico.";
+  return `${planet} Terra: ainda não calculada, por isso não entra no ranking.`;
+}
+
+function mineralNote(mineral, cell) {
+  let planet = "Planeta: sem dado mineralógico.";
+  if (mineral?.summary) planet = `Planeta: ${mineral.summary}.`;
+  else if (mineral?.source === "CRISM") {
+    const cls = (mineral.classes ?? []).filter(Boolean);
+    planet = `Planeta (CRISM): ${br(mineral.coverage_pct, 0)}% do recorte mapeado${cls.length ? ` — ${cls.join(", ")}` : ""}.`;
+  }
+  const earth = cell.context?.lithology?.length
+    ? `Terra: litologia mapeada (${cell.context.lithology.join(", ")}), minerais não verificados.`
+    : "Terra: mineralogia não verificada.";
+  return `${planet} ${earth}`;
 }
 
 export function siteVector(siteAttrs, variant, simulation, siteId) {

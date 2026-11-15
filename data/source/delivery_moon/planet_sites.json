@@ -1,0 +1,219 @@
+{
+  "mons_mouton_01": {
+    "terrain": {
+      "slope_mean_deg": 8.78831,
+      "slope_p90_deg": 13.898059,
+      "roughness_mean_m": 12.75466,
+      "roughness_p90_m": 20.06872,
+      "relief_m": 441.959961,
+      "valid_pct": 100.0
+    },
+    "thermal": {
+      "source": "NASA LRO Diviner PRP",
+      "product": "DLRE_PRP_SOUTH.TAB",
+      "type": "modeled_annual_surface_temperature",
+      "unit": "K",
+      "temp_mean_annual_k": 129.123642,
+      "temp_max_annual_mean_k": 235.541532,
+      "temp_max_annual_highest_k": 284.984,
+      "temp_mean_annual_lowest_k": 73.791,
+      "temp_mean_annual_range_k": [
+        73.791,
+        168.133
+      ],
+      "temp_max_annual_range_k": [
+        161.111,
+        284.984
+      ],
+      "quality": {
+        "triangles_selected": 190,
+        "triangles_valid": 190,
+        "centroid_occupancy_pct": 7.6,
+        "area_coverage_pct": null,
+        "selection_method": "triangle_centroid_inside_projected_5km_square",
+        "aggregation": "unweighted_spatial_mean_of_selected_triangle_centroids",
+        "interpolated": false
+      }
+    },
+    "mineralogy": {
+      "source": "NASA Chandrayaan-1 Moon Mineralogy Mapper M3",
+      "status": "exploratory_spectral_indicators",
+      "product_id": "M3G20090203T061431_V01_RFL",
+      "exploratory_pixels": 136,
+      "wavelength_unit": "nm",
+      "band_1um": {
+        "median_apparent_depth": 0.13815601035134428,
+        "evaluable_pixels": 135
+      },
+      "band_2um": {
+        "median_apparent_depth": 0.11617192229429851,
+        "evaluable_pixels": 135
+      },
+      "quality": {
+        "high_solar_incidence": true,
+        "local_illumination_checked": true,
+        "exploratory_spectra": 136,
+        "mineral_classification_validated": false
+      },
+      "identified_minerals": null,
+      "mineral_abundance": null
+    },
+    "run_id": "2026-11-15T04-34-48Z",
+    "thermal_updated_at": "2026-11-15T04:49:24.081763+00:00"
+  },
+  "malapert_massif_01": {
+    "terrain": {
+      "slope_mean_deg": 13.034176,
+      "slope_p90_deg": 23.553555,
+      "roughness_mean_m": 19.281911,
+      "roughness_p90_m": 35.619405,
+      "relief_m": 1039.789551,
+      "valid_pct": 100.0
+    },
+    "thermal": {
+      "source": "NASA LRO Diviner PRP",
+      "product": "DLRE_PRP_SOUTH.TAB",
+      "type": "modeled_annual_surface_temperature",
+      "unit": "K",
+      "temp_mean_annual_k": 150.940945,
+      "temp_max_annual_mean_k": 265.415945,
+      "temp_max_annual_highest_k": 323.838,
+      "temp_mean_annual_lowest_k": 73.529,
+      "temp_mean_annual_range_k": [
+        73.529,
+        193.093
+      ],
+      "temp_max_annual_range_k": [
+        168.719,
+        323.838
+      ],
+      "quality": {
+        "triangles_selected": 200,
+        "triangles_valid": 200,
+        "area_coverage_pct": null,
+        "selection_method": "triangle_centroid_inside_projected_5km_square",
+        "aggregation": "unweighted_mean_of_triangle_centroids",
+        "interpolated": false
+      }
+    },
+    "mineralogy": {
+      "source": "NASA Chandrayaan-1 Moon Mineralogy Mapper M3",
+      "status": "exploratory_spectral_indicators",
+      "product_id": "M3G20090204T173931_V01_RFL",
+      "exploratory_pixels": 987,
+      "wavelength_unit": "nm",
+      "band_1um": {
+        "median_apparent_depth": 0.08747062521902149,
+        "evaluable_pixels": 987
+      },
+      "band_2um": {
+        "median_apparent_depth": 0.05494406981977962,
+        "evaluable_pixels": 985
+      },
+      "quality": {
+        "high_solar_incidence": true,
+        "local_illumination_checked": true,
+        "exploratory_spectra": 987,
+        "mineral_classification_validated": false
+      },
+      "identified_minerals": null,
+      "mineral_abundance": null
+    },
+    "run_id": "lunar-integration-malapert_massif_01",
+    "integrated_at": "2026-11-15T05:17:49.379989+00:00"
+  },
+  "haworth_01": {
+    "terrain": {
+      "slope_mean_deg": 7.448966,
+      "slope_p90_deg": 12.54326,
+      "roughness_mean_m": 10.777095,
+      "roughness_p90_m": 18.091515,
+      "relief_m": 446.984131,
+      "valid_pct": 100.0
+    },
+    "thermal": {
+      "source": "NASA LRO Diviner PRP",
+      "product": "DLRE_PRP_SOUTH.TAB",
+      "type": "modeled_annual_surface_temperature",
+      "unit": "K",
+      "temp_mean_annual_k": 102.800625,
+      "temp_max_annual_mean_k": 222.996065,
+      "temp_max_annual_highest_k": 267.069,
+      "temp_mean_annual_lowest_k": 40.752,
+      "temp_mean_annual_range_k": [
+        40.752,
+        133.484
+      ],
+      "temp_max_annual_range_k": [
+        62.793,
+        267.069
+      ],
+      "quality": {
+        "triangles_selected": 200,
+        "triangles_valid": 200,
+        "area_coverage_pct": null,
+        "selection_method": "triangle_centroid_inside_projected_5km_square",
+        "aggregation": "unweighted_mean_of_triangle_centroids",
+        "interpolated": false
+      }
+    },
+    "mineralogy": {
+      "source": "NASA Chandrayaan-1 Moon Mineralogy Mapper M3",
+      "status": "spectral_coverage_not_confirmed",
+      "exploratory_pixels": 0,
+      "band_1um": null,
+      "band_2um": null,
+      "identified_minerals": null,
+      "mineral_abundance": null
+    },
+    "run_id": "lunar-integration-haworth_01",
+    "integrated_at": "2026-11-15T05:17:49.379989+00:00"
+  },
+  "nobile_rim_01": {
+    "terrain": {
+      "slope_mean_deg": 12.938474,
+      "slope_p90_deg": 22.726733,
+      "roughness_mean_m": 19.083374,
+      "roughness_p90_m": 34.197847,
+      "relief_m": 1090.732422,
+      "valid_pct": 100.0
+    },
+    "thermal": {
+      "source": "NASA LRO Diviner PRP",
+      "product": "DLRE_PRP_SOUTH.TAB",
+      "type": "modeled_annual_surface_temperature",
+      "unit": "K",
+      "temp_mean_annual_k": 128.794375,
+      "temp_max_annual_mean_k": 247.07382,
+      "temp_max_annual_highest_k": 299.711,
+      "temp_mean_annual_lowest_k": 75.465,
+      "temp_mean_annual_range_k": [
+        75.465,
+        169.882
+      ],
+      "temp_max_annual_range_k": [
+        166.815,
+        299.711
+      ],
+      "quality": {
+        "triangles_selected": 200,
+        "triangles_valid": 200,
+        "area_coverage_pct": null,
+        "selection_method": "triangle_centroid_inside_projected_5km_square",
+        "aggregation": "unweighted_mean_of_triangle_centroids",
+        "interpolated": false
+      }
+    },
+    "mineralogy": {
+      "source": "NASA Chandrayaan-1 Moon Mineralogy Mapper M3",
+      "status": "spectral_coverage_not_confirmed",
+      "exploratory_pixels": 0,
+      "band_1um": null,
+      "band_2um": null,
+      "identified_minerals": null,
+      "mineral_abundance": null
+    },
+    "run_id": "lunar-integration-nobile_rim_01",
+    "integrated_at": "2026-11-15T05:17:49.379989+00:00"
+  }
+}

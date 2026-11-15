@@ -1,0 +1,523 @@
+{
+  "project": "ARA - Analog Research and Analysis",
+  "version": "1.1",
+  "body": "mars",
+  "created_at_utc": "2026-11-15T06:57:56.109265+00:00",
+  "regions": [
+    {
+      "id": "jezero_01",
+      "name": "Jezero 01",
+      "body": "mars",
+      "latitude_center_deg": 18.592978,
+      "longitude_center_deg": 77.268437,
+      "area_km2": 25.0,
+      "terrain": {
+        "source": "CTX DEM",
+        "analysis_resolution_m": 100,
+        "records": [
+          {
+            "regiao": "Jezero_01",
+            "planeta": "Marte",
+            "area_km2": 25,
+            "resolucao_m": 100,
+            "declividade_media_graus": 8.272554252740965,
+            "declividade_mediana_graus": 6.395989063757717,
+            "declividade_p90_graus": 17.407180748084716,
+            "rugosidade_media_m": 12.318923726947702,
+            "rugosidade_p90_m": 25.20280424064268,
+            "amplitude_topografica_m": 561.7489013671875
+          }
+        ]
+      },
+      "thermal": {
+        "source": "Huang 2026 THEMIS 1 km MC-13",
+        "property": "thermal_inertia",
+        "source_resolution_m": 1000,
+        "thermal_inertia_unit": "J m^-2 K^-1 s^-1/2",
+        "thermal_inertia_mean": 279.8266666666667,
+        "thermal_inertia_median": 292.8,
+        "thermal_inertia_std": 39.71236527274038,
+        "coverage_pct": 100.0,
+        "valid_pixels": 30,
+        "upper_limit_cells_pct_mean": 0.0,
+        "temperature_k": null,
+        "status": "regional_1km_estimate",
+        "brightness_temperature": {
+          "quantity": "infrared_brightness_temperature",
+          "unit": "K",
+          "product_id": "I63849019PBT",
+          "instrument": "Mars Odyssey THEMIS",
+          "source_resolution_m": 100,
+          "temperature_mean_k": 203.82185801673342,
+          "temperature_median_k": 204.06484985351562,
+          "temperature_std_k": 1.5168311442682914,
+          "temperature_min_k": 197.90341186523438,
+          "temperature_max_k": 207.83346557617188,
+          "coverage_pct": 49.48,
+          "valid_pixels": 1237,
+          "pixels_in_footprint": 2500,
+          "observation_start_utc": "2016-05-06T04:02:55.484",
+          "local_time_hours": "19.381",
+          "solar_longitude_deg": "148.135",
+          "status": "observed_brightness_temperature",
+          "temporal_aggregation": "single_observation",
+          "partial_spatial_coverage": true
+        }
+      },
+      "mineralogy": {
+        "source": "CRISM",
+        "status": "shared_regional_reference",
+        "shared_between": [
+          "jezero_01",
+          "jezero_02",
+          "jezero_03"
+        ],
+        "data": {
+          "fonte": "Jezero Western Rim Mineral Maps - CRISM",
+          "cobertura": [
+            {
+              "regiao": "Jezero_01",
+              "poligonos": 28,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 2.954732959000445,
+              "cobertura_pct": 11.818931836001779
+            },
+            {
+              "regiao": "Jezero_02",
+              "poligonos": 0,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 0.0,
+              "cobertura_pct": 0.0
+            },
+            {
+              "regiao": "Jezero_03",
+              "poligonos": 0,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 0.0,
+              "cobertura_pct": 0.0
+            }
+          ],
+          "classes": [
+            {
+              "regiao": "Jezero_01",
+              "classe": "altered olivine (1.9 + 2.3)",
+              "nome_classe": "Fe/Mg phyllosilicates",
+              "numero_poligonos": 13,
+              "area_km2": 0.153853,
+              "pct_setor": 0.6154,
+              "pct_area_mapeada": 5.207
+            },
+            {
+              "regiao": "Jezero_01",
+              "classe": "bulk rim",
+              "nome_classe": "Bulk rim",
+              "numero_poligonos": 5,
+              "area_km2": 2.299862,
+              "pct_setor": 9.1994,
+              "pct_area_mapeada": 77.8365
+            },
+            {
+              "regiao": "Jezero_01",
+              "classe": "olivine-rich + carbonate (2.5)",
+              "nome_classe": "Olivine-bearing (strong)",
+              "numero_poligonos": 10,
+              "area_km2": 0.501018,
+              "pct_setor": 2.0041,
+              "pct_area_mapeada": 16.9565
+            }
+          ]
+        },
+        "individual_abundance_validated": false
+      },
+      "earth_comparisons": [],
+      "ranking_records": [],
+      "stability_records": []
+    },
+    {
+      "id": "jezero_02",
+      "name": "Jezero 02",
+      "body": "mars",
+      "latitude_center_deg": 18.478258,
+      "longitude_center_deg": 77.416899,
+      "area_km2": 25.0,
+      "terrain": {
+        "source": "CTX DEM",
+        "analysis_resolution_m": 100,
+        "records": [
+          {
+            "regiao": "Jezero_02",
+            "planeta": "Marte",
+            "area_km2": 25,
+            "resolucao_m": 100,
+            "declividade_media_graus": 3.495211453795263,
+            "declividade_mediana_graus": 2.3677386493942105,
+            "declividade_p90_graus": 8.151959289479615,
+            "rugosidade_media_m": 5.273794138142695,
+            "rugosidade_p90_m": 12.324120256612256,
+            "amplitude_topografica_m": 176.698974609375
+          }
+        ]
+      },
+      "thermal": {
+        "source": "Huang 2026 THEMIS 1 km MC-13",
+        "property": "thermal_inertia",
+        "source_resolution_m": 1000,
+        "thermal_inertia_unit": "J m^-2 K^-1 s^-1/2",
+        "thermal_inertia_mean": 233.424,
+        "thermal_inertia_median": 236.20000000000002,
+        "thermal_inertia_std": 17.665747196198637,
+        "coverage_pct": 100.0,
+        "valid_pixels": 25,
+        "upper_limit_cells_pct_mean": 0.0,
+        "temperature_k": null,
+        "status": "regional_1km_estimate",
+        "brightness_temperature": {
+          "quantity": "infrared_brightness_temperature",
+          "unit": "K",
+          "product_id": "I63849019PBT",
+          "instrument": "Mars Odyssey THEMIS",
+          "source_resolution_m": 100,
+          "temperature_mean_k": 203.10358873545695,
+          "temperature_median_k": 203.10630798339844,
+          "temperature_std_k": 1.1250540973863392,
+          "temperature_min_k": 199.87338256835938,
+          "temperature_max_k": 206.30218505859375,
+          "coverage_pct": 100.0,
+          "valid_pixels": 2502,
+          "pixels_in_footprint": 2502,
+          "observation_start_utc": "2016-05-06T04:02:55.484",
+          "local_time_hours": "19.381",
+          "solar_longitude_deg": "148.135",
+          "status": "observed_brightness_temperature",
+          "temporal_aggregation": "single_observation",
+          "partial_spatial_coverage": false
+        }
+      },
+      "mineralogy": {
+        "source": "CRISM",
+        "status": "shared_regional_reference",
+        "shared_between": [
+          "jezero_01",
+          "jezero_02",
+          "jezero_03"
+        ],
+        "data": {
+          "fonte": "Jezero Western Rim Mineral Maps - CRISM",
+          "cobertura": [
+            {
+              "regiao": "Jezero_01",
+              "poligonos": 28,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 2.954732959000445,
+              "cobertura_pct": 11.818931836001779
+            },
+            {
+              "regiao": "Jezero_02",
+              "poligonos": 0,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 0.0,
+              "cobertura_pct": 0.0
+            },
+            {
+              "regiao": "Jezero_03",
+              "poligonos": 0,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 0.0,
+              "cobertura_pct": 0.0
+            }
+          ],
+          "classes": [
+            {
+              "regiao": "Jezero_01",
+              "classe": "altered olivine (1.9 + 2.3)",
+              "nome_classe": "Fe/Mg phyllosilicates",
+              "numero_poligonos": 13,
+              "area_km2": 0.153853,
+              "pct_setor": 0.6154,
+              "pct_area_mapeada": 5.207
+            },
+            {
+              "regiao": "Jezero_01",
+              "classe": "bulk rim",
+              "nome_classe": "Bulk rim",
+              "numero_poligonos": 5,
+              "area_km2": 2.299862,
+              "pct_setor": 9.1994,
+              "pct_area_mapeada": 77.8365
+            },
+            {
+              "regiao": "Jezero_01",
+              "classe": "olivine-rich + carbonate (2.5)",
+              "nome_classe": "Olivine-bearing (strong)",
+              "numero_poligonos": 10,
+              "area_km2": 0.501018,
+              "pct_setor": 2.0041,
+              "pct_area_mapeada": 16.9565
+            }
+          ]
+        },
+        "individual_abundance_validated": false
+      },
+      "earth_comparisons": [],
+      "ranking_records": [],
+      "stability_records": []
+    },
+    {
+      "id": "jezero_03",
+      "name": "Jezero 03",
+      "body": "mars",
+      "latitude_center_deg": 18.350041,
+      "longitude_center_deg": 77.56536,
+      "area_km2": 25.0,
+      "terrain": {
+        "source": "CTX DEM",
+        "analysis_resolution_m": 100,
+        "records": [
+          {
+            "regiao": "Jezero_03",
+            "planeta": "Marte",
+            "area_km2": 25,
+            "resolucao_m": 100,
+            "declividade_media_graus": 1.6143525086121835,
+            "declividade_mediana_graus": 1.2864469339319518,
+            "declividade_p90_graus": 3.2586474118313493,
+            "rugosidade_media_m": 2.446155429691371,
+            "rugosidade_p90_m": 4.651343946652447,
+            "amplitude_topografica_m": 80.28076171875
+          }
+        ]
+      },
+      "thermal": {
+        "source": "Huang 2026 THEMIS 1 km MC-13",
+        "property": "thermal_inertia",
+        "source_resolution_m": 1000,
+        "thermal_inertia_unit": "J m^-2 K^-1 s^-1/2",
+        "thermal_inertia_mean": 248.42000000000004,
+        "thermal_inertia_median": 244.70000000000002,
+        "thermal_inertia_std": 13.262518614501547,
+        "coverage_pct": 100.0,
+        "valid_pixels": 25,
+        "upper_limit_cells_pct_mean": 0.0,
+        "temperature_k": null,
+        "status": "regional_1km_estimate",
+        "brightness_temperature": {
+          "quantity": "infrared_brightness_temperature",
+          "unit": "K",
+          "product_id": "I63849019PBT",
+          "instrument": "Mars Odyssey THEMIS",
+          "source_resolution_m": 100,
+          "temperature_mean_k": 204.0311098083496,
+          "temperature_median_k": 204.07691192626953,
+          "temperature_std_k": 0.7599736747019284,
+          "temperature_min_k": 201.61517333984375,
+          "temperature_max_k": 206.65414428710938,
+          "coverage_pct": 100.0,
+          "valid_pixels": 2500,
+          "pixels_in_footprint": 2500,
+          "observation_start_utc": "2016-05-06T04:02:55.484",
+          "local_time_hours": "19.381",
+          "solar_longitude_deg": "148.135",
+          "status": "observed_brightness_temperature",
+          "temporal_aggregation": "single_observation",
+          "partial_spatial_coverage": false
+        }
+      },
+      "mineralogy": {
+        "source": "CRISM",
+        "status": "shared_regional_reference",
+        "shared_between": [
+          "jezero_01",
+          "jezero_02",
+          "jezero_03"
+        ],
+        "data": {
+          "fonte": "Jezero Western Rim Mineral Maps - CRISM",
+          "cobertura": [
+            {
+              "regiao": "Jezero_01",
+              "poligonos": 28,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 2.954732959000445,
+              "cobertura_pct": 11.818931836001779
+            },
+            {
+              "regiao": "Jezero_02",
+              "poligonos": 0,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 0.0,
+              "cobertura_pct": 0.0
+            },
+            {
+              "regiao": "Jezero_03",
+              "poligonos": 0,
+              "area_setor_km2": 25.0,
+              "area_mapeada_km2": 0.0,
+              "cobertura_pct": 0.0
+            }
+          ],
+          "classes": [
+            {
+              "regiao": "Jezero_01",
+              "classe": "altered olivine (1.9 + 2.3)",
+              "nome_classe": "Fe/Mg phyllosilicates",
+              "numero_poligonos": 13,
+              "area_km2": 0.153853,
+              "pct_setor": 0.6154,
+              "pct_area_mapeada": 5.207
+            },
+            {
+              "regiao": "Jezero_01",
+              "classe": "bulk rim",
+              "nome_classe": "Bulk rim",
+              "numero_poligonos": 5,
+              "area_km2": 2.299862,
+              "pct_setor": 9.1994,
+              "pct_area_mapeada": 77.8365
+            },
+            {
+              "regiao": "Jezero_01",
+              "classe": "olivine-rich + carbonate (2.5)",
+              "nome_classe": "Olivine-bearing (strong)",
+              "numero_poligonos": 10,
+              "area_km2": 0.501018,
+              "pct_setor": 2.0041,
+              "pct_area_mapeada": 16.9565
+            }
+          ]
+        },
+        "individual_abundance_validated": false
+      },
+      "earth_comparisons": [],
+      "ranking_records": [],
+      "stability_records": []
+    },
+    {
+      "id": "jezero_04",
+      "name": "Jezero 04",
+      "body": "mars",
+      "latitude_center_deg": 18.367755,
+      "longitude_center_deg": 77.27333,
+      "area_km2": 25.0,
+      "terrain": {
+        "source": "CTX DEM",
+        "analysis_resolution_m": 100,
+        "records": [
+          {
+            "regiao": "Jezero_04",
+            "planeta": "Marte",
+            "area_km2": 25,
+            "resolucao_m": 100,
+            "declividade_media_graus": 8.046635605770284,
+            "declividade_mediana_graus": 7.389995074902544,
+            "declividade_p90_graus": 14.210174530130923,
+            "rugosidade_media_m": 11.510680806449772,
+            "rugosidade_p90_m": 20.21075246818515,
+            "amplitude_topografica_m": 516.9652099609375
+          }
+        ]
+      },
+      "thermal": {
+        "source": "Huang 2026 THEMIS 1 km MC-13",
+        "property": "thermal_inertia",
+        "source_resolution_m": 1000,
+        "thermal_inertia_unit": "J m^-2 K^-1 s^-1/2",
+        "thermal_inertia_mean": 249.01200000000006,
+        "thermal_inertia_median": 249.9,
+        "thermal_inertia_std": 22.03937058992384,
+        "coverage_pct": 100.0,
+        "valid_pixels": 25,
+        "upper_limit_cells_pct_mean": 0.0,
+        "temperature_k": null,
+        "status": "regional_1km_estimate",
+        "brightness_temperature": {
+          "quantity": "infrared_brightness_temperature",
+          "unit": "K",
+          "product_id": "I63849019PBT",
+          "instrument": "Mars Odyssey THEMIS",
+          "source_resolution_m": 100,
+          "temperature_mean_k": 200.1192901135553,
+          "temperature_median_k": 200.0662078857422,
+          "temperature_std_k": 1.567956599526416,
+          "temperature_min_k": 195.25270080566406,
+          "temperature_max_k": 205.0965576171875,
+          "coverage_pct": 89.8,
+          "valid_pixels": 2245,
+          "pixels_in_footprint": 2500,
+          "observation_start_utc": "2016-05-06T04:02:55.484",
+          "local_time_hours": "19.381",
+          "solar_longitude_deg": "148.135",
+          "status": "observed_brightness_temperature",
+          "temporal_aggregation": "single_observation",
+          "partial_spatial_coverage": true
+        }
+      },
+      "mineralogy": {
+        "source": "CRISM",
+        "status": "existing_sector_analysis",
+        "data": [
+          {
+            "regiao": "Jezero_04",
+            "classe": "altered olivine (1.9 + 2.3)",
+            "nome_classe": "Fe/Mg phyllosilicates",
+            "numero_poligonos": 44,
+            "area_km2": 2.17615,
+            "pct_setor": 8.705,
+            "pct_area_mapeada": 10.837
+          },
+          {
+            "regiao": "Jezero_04",
+            "classe": "bulk rim",
+            "nome_classe": "Bulk rim",
+            "numero_poligonos": 28,
+            "area_km2": 13.860384,
+            "pct_setor": 55.442,
+            "pct_area_mapeada": 69.021
+          },
+          {
+            "regiao": "Jezero_04",
+            "classe": "olivine, weak",
+            "nome_classe": "Olivine-bearing (weak)",
+            "numero_poligonos": 107,
+            "area_km2": 3.372275,
+            "pct_setor": 13.489,
+            "pct_area_mapeada": 16.793
+          },
+          {
+            "regiao": "Jezero_04",
+            "classe": "olivine-rich + carbonate (2.5)",
+            "nome_classe": "Olivine-bearing (strong)",
+            "numero_poligonos": 11,
+            "area_km2": 0.151369,
+            "pct_setor": 0.605,
+            "pct_area_mapeada": 0.754
+          },
+          {
+            "regiao": "Jezero_04",
+            "classe": "pyroxene-rich (LCP)",
+            "nome_classe": "Pyroxene-rich (LCP)",
+            "numero_poligonos": 31,
+            "area_km2": 0.521177,
+            "pct_setor": 2.085,
+            "pct_area_mapeada": 2.595
+          }
+        ],
+        "individual_abundance_validated": false
+      },
+      "earth_comparisons": [],
+      "ranking_records": [],
+      "stability_records": []
+    }
+  ],
+  "limitations": {
+    "temperature_k_available": true,
+    "thermal_inertia_resolution_m": 1000,
+    "crism_01_03_is_shared_reference": true,
+    "ranking_methodology": "preserved_from_original_terramatch",
+    "temperature_type": "infrared_brightness_temperature",
+    "temperature_temporal_scope": "single_observation_2016-05-06",
+    "temperature_not_annual_mean": true,
+    "thermal_inertia_is_distinct_quantity": true,
+    "ranking_not_recomputed_with_temperature": true
+  },
+  "updated_at_utc": "2026-11-15T07:20:17.729299+00:00"
+}

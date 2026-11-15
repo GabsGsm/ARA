@@ -38,7 +38,7 @@ def bbox_from_center(lat, lon, radius_km, half_km=terrain.CELL_KM / 2):
 
 # Centros (linha, coluna) dos setores no DEM CTX original de 20 m (1512 x 1596 px), do notebook/mock
 JEZERO_PX = {"Jezero_01": (380, 320), "Jezero_02": (720, 760), "Jezero_03": (1100, 1200), "Jezero_04": (1047, 334)}
-JEZERO_IMG = {"src": "img/jezero_ctx_dem.png", "frame_px": [1512, 1596],
+JEZERO_IMG = {"src": "data/img/jezero_ctx_dem.png", "frame_px": [1512, 1596],
               "caption": "DEM CTX de Jezero (NASA/USGS), elevação em falsa cor"}
 
 
@@ -74,6 +74,76 @@ def mars_sites(p1):
     return cat, attrs
 
 
+THERMAL_NOTE_MOON = "Temperatura modelada (Diviner PRP), média espacial do recorte; não entra no ranking"
+THERMAL_NOTE_MARS = "THEMIS: uma única observação ao entardecer; cobertura parcial do recorte"
+
+
+def moon_thermal_display(t):
+    if not t:
+        return None
+    return [{"label": "Temperatura média anual", "value": t.get("temp_mean_annual_k"), "unit": "K"},
+            {"label": "Máxima diária (média anual)", "value": t.get("temp_max_annual_mean_k"), "unit": "K"},
+            {"label": "Mínima entre as médias anuais", "value": t.get("temp_mean_annual_lowest_k"), "unit": "K"}]
+
+
+def mars_thermal(delivery_site):
+    t = (delivery_site or {}).get("thermal")
+    if not t:
+        return None
+    bt = t.get("brightness_temperature") or {}
+    t = dict(t)
+    t["display"] = [
+        {"label": "Inércia térmica (THEMIS, 1 km)", "value": t.get("thermal_inertia_mean"), "unit": "J m⁻² K⁻¹ s⁻½"},
+        {"label": "Temperatura de brilho (THEMIS, 1 observação)", "value": bt.get("temperature_mean_k"), "unit": "K",
+         "note": f"{bt.get('coverage_pct')}% do recorte coberto"},
+    ]
+    t["note"] = THERMAL_NOTE_MARS
+    return t
+
+
+def moon_sites_from_delivery(folder: Path):
+    cat_in = json.loads((folder / "catalog.json").read_text(encoding="utf-8"))
+    sites_in = json.loads((folder / "planet_sites.json").read_text(encoding="utf-8"))
+    rec_path = folder / "terrain_recomputed.json"
+    recomputed = json.loads(rec_path.read_text(encoding="utf-8"))["sites"] if rec_path.exists() else {}
+    integ_path = folder / "ara_lua_integracao_final.json"
+    pending = json.loads(integ_path.read_text(encoding="utf-8")).get("site_centers_pending_final_validation", False) \
+        if integ_path.exists() else False
+    names = {"mons_mouton_01": "Mons Mouton", "malapert_massif_01": "Malapert Massif",
+             "haworth_01": "Haworth", "nobile_rim_01": "Nobile Rim 1"}
+    cat, attrs = [], {}
+    for s in cat_in["sites"]:
+        sid = s["id"]
+        src = list(s.get("sources", []))
+        if not any("Diviner" in x["name"] for x in src):
+            src.append({"name": "NASA LRO Diviner PRP",
+                        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"})
+        src += [ARTEMIS_SOURCE, {"name": "Chandrayaan-1 Moon Mineralogy Mapper (M3), indicadores exploratórios",
+                                 "url": "https://pds-imaging.jpl.nasa.gov/volumes/m3.html"}]
+        cat.append({"id": sid, "body": "moon", "name": names.get(sid, s["name"]),
+                    "group": "Região candidata Artemis III", "kind": "landing_region",
+                    "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
+                    "center": s["center"], "bbox": s["bbox"], "cell_km": s.get("cell_km", 5), "res_m": s.get("res_m", 100),
+                    "image": {"src": f"data/img/{sid}.png", "caption": "Relevo LOLA (100 m), cores = elevação"},
+                    "status": "ready", "center_pending_validation": pending, "sources": src})
+        d = sites_in.get(sid, {})
+        thermal = dict(d["thermal"]) if d.get("thermal") else None
+        if thermal:
+            thermal["display"] = moon_thermal_display(thermal)
+            thermal["note"] = THERMAL_NOTE_MOON
+        mineral = dict(d["mineralogy"]) if d.get("mineralogy") else None
+        if mineral:
+            b1, b2 = mineral.get("band_1um") or {}, mineral.get("band_2um") or {}
+            if b1.get("median_apparent_depth") is not None:
+                mineral["summary"] = (f"M3 exploratório: profundidade aparente da banda de 1 µm {b1['median_apparent_depth']:.2f}"
+                                      f" e de 2 µm {b2.get('median_apparent_depth', 0):.2f}; classificação mineral não validada")
+            else:
+                mineral["summary"] = "M3: cobertura espectral do recorte não confirmada; classificação mineral não validada"
+        attrs[sid] = {"terrain": recomputed.get(sid) or d.get("terrain"), "delivered_terrain": d.get("terrain"),
+                      "thermal": thermal, "mineralogy": mineral, "run_id": d.get("run_id")}
+    return cat, attrs
+
+
 def moon_sites():
     cfg = json.loads((HERE / "moon_sites.json").read_text(encoding="utf-8"))
     computed_path = DATA / "moon_sites_attrs.json"
@@ -91,7 +161,7 @@ def moon_sites():
                     "center": {"lat": lat, "lon": lon} if lat is not None else None,
                     "bbox": bbox_from_center(lat, lon, MOON_R_KM) if lat is not None else None,
                     "cell_km": terrain.CELL_KM, "res_m": terrain.RES_M,
-                    "image": {"src": f"img/{s['id']}.png", "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"},
+                    "image": {"src": f"data/img/{s['id']}.png", "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"},
                     "status": "ready" if ready else "pending",
                     "sources": [ARTEMIS_SOURCE, LOLA_SOURCE]})
         attrs[s["id"]] = {"terrain": c.get("terrain"), "thermal": c.get("thermal"),
@@ -102,7 +172,16 @@ def moon_sites():
 def main():
     p1 = json.loads((DATA / "source" / "prototipo1_app_data.json").read_text(encoding="utf-8"))
     mcat, mattrs = mars_sites(p1)
-    lcat, lattrs = moon_sites()
+    mars_delivery = DATA / "source" / "delivery_mars" / "planet_sites.json"
+    if mars_delivery.exists():
+        md = json.loads(mars_delivery.read_text(encoding="utf-8"))
+        for sid in mattrs:
+            mattrs[sid]["thermal"] = mars_thermal(md.get(sid))
+        for s in mcat:
+            s["sources"] = s["sources"] + [{"name": "Mars Odyssey THEMIS: inércia térmica (Huang 2026, 1 km) e temperatura de brilho",
+                                            "url": "https://pds-geosciences.wustl.edu/missions/odyssey/themis.htm"}]
+    moon_delivery = DATA / "source" / "delivery_moon"
+    lcat, lattrs = moon_sites_from_delivery(moon_delivery) if (moon_delivery / "catalog.json").exists() else moon_sites()
     (DATA / "catalog.json").write_text(json.dumps({"version": "1.0", "sites": lcat + mcat},
                                                   ensure_ascii=False, indent=1), encoding="utf-8")
     (DATA / "planet_sites.json").write_text(json.dumps(mattrs | lattrs, ensure_ascii=False, indent=1),

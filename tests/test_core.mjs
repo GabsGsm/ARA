@@ -1,7 +1,7 @@
 // Testes da lógica do front.  Rodar:  node tests/test_core.mjs
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
-import { unpackGrid, rank, distance, contributions, explain, scalesFrom, normalizeWeights, cellsForVariant } from "../web/js/core.js";
+import { unpackGrid, rank, distance, contributions, explain, scalesFrom, normalizeWeights, cellsForVariant } from "../src/lib/core.js";
 
 const root = new URL("../", import.meta.url);
 const read = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));

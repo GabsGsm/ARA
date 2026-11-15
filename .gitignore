@@ -10,10 +10,10 @@ pipeline/cache/
 *.img
 *.IMG
 *.jp2
-!web/img/*.png
 
-# cópia gerada no deploy
-web/data/
+# build do React (gerado pelo npm run build / GitHub Actions)
+web/
+node_modules/
 
 # Python / sistema
 __pycache__/

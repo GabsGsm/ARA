@@ -2,83 +2,178 @@
  "version": "1.0",
  "sites": [
   {
-   "id": "moon_mons_mouton",
+   "id": "mons_mouton_01",
    "body": "moon",
    "name": "Mons Mouton",
    "group": "Região candidata Artemis III",
    "kind": "landing_region",
    "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
-   "center": null,
-   "bbox": null,
+   "center": {
+    "lat": -85.4,
+    "lon": 31.7
+   },
+   "bbox": [
+    30.295922,
+    -85.513209,
+    33.120533,
+    -85.286644
+   ],
    "cell_km": 5,
    "res_m": 100,
    "image": {
-    "src": "img/moon_mons_mouton.png",
-    "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"
+    "src": "data/img/mons_mouton_01.png",
+    "caption": "Relevo LOLA (100 m), cores = elevação"
    },
-   "status": "pending",
+   "status": "ready",
+   "center_pending_validation": true,
    "sources": [
+    {
+     "name": "NASA LRO LOLA",
+     "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+    },
+    {
+     "name": "NASA LRO Diviner PRP",
+     "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"
+    },
     {
      "name": "NASA: Artemis III candidate landing regions (Oct 2024)",
      "url": "https://www.nasa.gov/?p=748006"
     },
     {
-     "name": "LRO LOLA polar DEM (NASA Goddard PGDA)",
-     "url": "https://pgda.gsfc.nasa.gov/products/90"
+     "name": "Chandrayaan-1 Moon Mineralogy Mapper (M3), indicadores exploratórios",
+     "url": "https://pds-imaging.jpl.nasa.gov/volumes/m3.html"
     }
    ]
   },
   {
-   "id": "moon_malapert_massif",
+   "id": "malapert_massif_01",
    "body": "moon",
    "name": "Malapert Massif",
    "group": "Região candidata Artemis III",
    "kind": "landing_region",
    "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
-   "center": null,
-   "bbox": null,
+   "center": {
+    "lat": -85.942,
+    "lon": -0.944
+   },
+   "bbox": [
+    -2.1505,
+    -86.024863,
+    0.224193,
+    -85.857523
+   ],
    "cell_km": 5,
    "res_m": 100,
    "image": {
-    "src": "img/moon_malapert_massif.png",
-    "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"
+    "src": "data/img/malapert_massif_01.png",
+    "caption": "Relevo LOLA (100 m), cores = elevação"
    },
-   "status": "pending",
+   "status": "ready",
+   "center_pending_validation": true,
    "sources": [
+    {
+     "name": "NASA LRO LOLA",
+     "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+    },
+    {
+     "name": "NASA LRO Diviner PRP",
+     "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"
+    },
     {
      "name": "NASA: Artemis III candidate landing regions (Oct 2024)",
      "url": "https://www.nasa.gov/?p=748006"
     },
     {
-     "name": "LRO LOLA polar DEM (NASA Goddard PGDA)",
-     "url": "https://pgda.gsfc.nasa.gov/products/90"
+     "name": "Chandrayaan-1 Moon Mineralogy Mapper (M3), indicadores exploratórios",
+     "url": "https://pds-imaging.jpl.nasa.gov/volumes/m3.html"
     }
    ]
   },
   {
-   "id": "moon_haworth",
+   "id": "haworth_01",
    "body": "moon",
    "name": "Haworth",
    "group": "Região candidata Artemis III",
    "kind": "landing_region",
    "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
-   "center": null,
-   "bbox": null,
+   "center": {
+    "lat": -86.768,
+    "lon": -20.514
+   },
+   "bbox": [
+    -22.422382,
+    -86.873653,
+    -18.661791,
+    -86.66163
+   ],
    "cell_km": 5,
    "res_m": 100,
    "image": {
-    "src": "img/moon_haworth.png",
-    "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"
+    "src": "data/img/haworth_01.png",
+    "caption": "Relevo LOLA (100 m), cores = elevação"
    },
-   "status": "pending",
+   "status": "ready",
+   "center_pending_validation": true,
    "sources": [
+    {
+     "name": "NASA LRO LOLA",
+     "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+    },
+    {
+     "name": "NASA LRO Diviner PRP",
+     "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"
+    },
     {
      "name": "NASA: Artemis III candidate landing regions (Oct 2024)",
      "url": "https://www.nasa.gov/?p=748006"
     },
     {
-     "name": "LRO LOLA polar DEM (NASA Goddard PGDA)",
-     "url": "https://pgda.gsfc.nasa.gov/products/90"
+     "name": "Chandrayaan-1 Moon Mineralogy Mapper (M3), indicadores exploratórios",
+     "url": "https://pds-imaging.jpl.nasa.gov/volumes/m3.html"
+    }
+   ]
+  },
+  {
+   "id": "nobile_rim_01",
+   "body": "moon",
+   "name": "Nobile Rim 1",
+   "group": "Região candidata Artemis III",
+   "kind": "landing_region",
+   "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
+   "center": {
+    "lat": -85.295,
+    "lon": 36.917
+   },
+   "bbox": [
+    35.517205,
+    -85.410217,
+    38.326574,
+    -85.179735
+   ],
+   "cell_km": 5,
+   "res_m": 100,
+   "image": {
+    "src": "data/img/nobile_rim_01.png",
+    "caption": "Relevo LOLA (100 m), cores = elevação"
+   },
+   "status": "ready",
+   "center_pending_validation": true,
+   "sources": [
+    {
+     "name": "NASA LRO LOLA",
+     "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF"
+    },
+    {
+     "name": "NASA LRO Diviner PRP",
+     "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab"
+    },
+    {
+     "name": "NASA: Artemis III candidate landing regions (Oct 2024)",
+     "url": "https://www.nasa.gov/?p=748006"
+    },
+    {
+     "name": "Chandrayaan-1 Moon Mineralogy Mapper (M3), indicadores exploratórios",
+     "url": "https://pds-imaging.jpl.nasa.gov/volumes/m3.html"
     }
    ]
   },
@@ -102,7 +197,7 @@
    "cell_km": 5,
    "res_m": 100,
    "image": {
-    "src": "img/jezero_ctx_dem.png",
+    "src": "data/img/jezero_ctx_dem.png",
     "frame_px": [
      1512,
      1596
@@ -123,6 +218,10 @@
     {
      "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
      "url": "https://doi.org/10.5281/zenodo.22257754"
+    },
+    {
+     "name": "Mars Odyssey THEMIS: inércia térmica (Huang 2026, 1 km) e temperatura de brilho",
+     "url": "https://pds-geosciences.wustl.edu/missions/odyssey/themis.htm"
     }
    ]
   },
@@ -146,7 +245,7 @@
    "cell_km": 5,
    "res_m": 100,
    "image": {
-    "src": "img/jezero_ctx_dem.png",
+    "src": "data/img/jezero_ctx_dem.png",
     "frame_px": [
      1512,
      1596
@@ -167,6 +266,10 @@
     {
      "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
      "url": "https://doi.org/10.5281/zenodo.22257754"
+    },
+    {
+     "name": "Mars Odyssey THEMIS: inércia térmica (Huang 2026, 1 km) e temperatura de brilho",
+     "url": "https://pds-geosciences.wustl.edu/missions/odyssey/themis.htm"
     }
    ]
   },
@@ -190,7 +293,7 @@
    "cell_km": 5,
    "res_m": 100,
    "image": {
-    "src": "img/jezero_ctx_dem.png",
+    "src": "data/img/jezero_ctx_dem.png",
     "frame_px": [
      1512,
      1596
@@ -211,6 +314,10 @@
     {
      "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
      "url": "https://doi.org/10.5281/zenodo.22257754"
+    },
+    {
+     "name": "Mars Odyssey THEMIS: inércia térmica (Huang 2026, 1 km) e temperatura de brilho",
+     "url": "https://pds-geosciences.wustl.edu/missions/odyssey/themis.htm"
     }
    ]
   },
@@ -234,7 +341,7 @@
    "cell_km": 5,
    "res_m": 100,
    "image": {
-    "src": "img/jezero_ctx_dem.png",
+    "src": "data/img/jezero_ctx_dem.png",
     "frame_px": [
      1512,
      1596
@@ -255,6 +362,10 @@
     {
      "name": "Valantinas et al. (2026), Jezero Western Rim Mineral Maps v1.0 (CRISM), CC BY 4.0",
      "url": "https://doi.org/10.5281/zenodo.22257754"
+    },
+    {
+     "name": "Mars Odyssey THEMIS: inércia térmica (Huang 2026, 1 km) e temperatura de brilho",
+     "url": "https://pds-geosciences.wustl.edu/missions/odyssey/themis.htm"
     }
    ]
   }
