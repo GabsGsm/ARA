@@ -127,7 +127,15 @@ export default class TerrainView {
     this.uniforms = {
       uMode: { value: LAYERS[this.layer] }, uMin: { value: meta.height.min }, uMax: { value: meta.height.max },
       uStep: { value: this.contours.step }, uContours: { value: this.contours.on ? 1 : 0 },
+      uMinMap: { value: null }, uMinOn: { value: 0 },
     };
+    if (data.minerals) {
+      const mt = new THREE.Texture(data.minerals);
+      mt.flipY = false; mt.colorSpace = THREE.SRGBColorSpace;
+      mt.magFilter = THREE.NearestFilter; mt.needsUpdate = true;
+      this.uniforms.uMinMap.value = mt;
+      this.uniforms.uMinOn.value = this.minerals ? 1 : 0;
+    }
     mat.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, this.uniforms);
       sh.vertexShader = sh.vertexShader
@@ -136,6 +144,7 @@ export default class TerrainView {
       sh.fragmentShader = sh.fragmentShader
         .replace("#include <common>", `#include <common>
 uniform int uMode; uniform float uMin; uniform float uMax; uniform float uStep; uniform int uContours;
+uniform sampler2D uMinMap; uniform float uMinOn;
 varying float vElev; varying float vSlope; varying float vShadow;
 vec3 slopeColor(float s){
   if (s < 5.0) return mix(vec3(0.16,0.62,0.45), vec3(0.45,0.78,0.42), s/5.0);
@@ -156,6 +165,9 @@ float lum = dot(diffuseColor.rgb, vec3(0.299,0.587,0.114));
 if (uMode == 1) diffuseColor.rgb = mix(slopeColor(vSlope), slopeColor(vSlope) * (0.55 + lum), 0.35);
 else if (uMode == 2) diffuseColor.rgb = hypso(clamp((vElev - uMin) / max(uMax - uMin, 1.0), 0.0, 1.0));
 else if (uMode == 3) diffuseColor.rgb = vec3(0.78);
+#ifdef USE_MAP
+if (uMinOn > 0.5) { vec4 mm = texture2D(uMinMap, vMapUv); diffuseColor.rgb = mix(diffuseColor.rgb, mm.rgb * 1.05, mm.a * 0.78); }
+#endif
 if (uContours == 1) {
   float c = vElev / uStep;
   float w = fwidth(c);
@@ -304,6 +316,12 @@ reflectedLight.directSpecular *= vShadow;
     this.dirty = true;
   }
 
+  setMinerals(on) {
+    this.minerals = on;
+    if (this.uniforms?.uMinMap.value) this.uniforms.uMinOn.value = on ? 1 : 0;
+    this.dirty = true;
+  }
+
   setFlags(f) { this.flags = { ...this.flags, ...f }; if (this.data) this.buildOverlays(); }
 
   setSun(azDeg, elDeg) {
@@ -387,20 +405,34 @@ reflectedLight.directSpecular *= vShadow;
 
   cancelFly() { this._fly = null; this._flying = false; }
 
-  setMode(mode) {
-    if (mode === this.mode) return;
+  /** Descida orbital até a vista inicial (usada ao fim da animação do globo). */
+  descend() {
+    if (!this.S || this.mode === "walk") return;
+    this.setCamState({ p: [0.02, 2.6, 0.35], t: [0, 0, 0] });
+    this.flyTo({ p: [0.0, 0.46, 0.6], t: [0, -0.02, 0.04] }, 3000);
+  }
+
+  setMode(mode, start) {
+    if (!this.data) return; // a página chama de novo quando a cena carregar
+    if (mode === this.mode && !(mode === "walk" && start)) return;
     this.mode = mode;
     if (mode === "walk") {
+      this.cancelFly();
       this.controls.enabled = false;
       const t = this.controls.target;
+      if (start) t.set((start.u - 0.5) * this.S, 0, (start.v - 0.5) * this.S);
       const u = t.x / this.S + 0.5, v = t.z / this.S + 0.5;
       const g = (heightAt(this.data, u, v) - this.mid) * this.exag;
       this.camera.position.set(t.x, g + EYE, t.z);
-      this.camera.lookAt(t.x + 10, g + EYE, t.z - 10);
+      this.camera.lookAt(t.x + 10, g + EYE - 3.5, t.z - 10); // olhando um pouco para o chão
+      this.overlays.visible = false;                          // linhas e rótulos ficariam flutuando na altura dos olhos
+      this.labels.domElement.style.display = "none";
       this.vel.set(0, 0, 0);
       this.camera.near = 0.2; this.camera.updateProjectionMatrix();
     } else {
       if (this.pointerLock.isLocked) this.pointerLock.unlock();
+      this.overlays.visible = true;
+      this.labels.domElement.style.display = "";
       this.controls.enabled = true;
       this.camera.near = Math.max(0.5, this.S / 20000); this.camera.updateProjectionMatrix();
       const p = this.camera.position;
@@ -411,7 +443,22 @@ reflectedLight.directSpecular *= vShadow;
     this.dirty = true;
   }
 
-  lockWalk() { if (this.mode === "walk") this.pointerLock.lock(); }
+  lockWalk() { if (this.mode === "walk" && !this.touch) this.pointerLock.lock(); }
+
+  /** Controles por toque (celular): joystick (x, y em -1..1), olhar (dx, dy em px) e pulo. */
+  touchMove(x, y) { this.touch = true; this.joy = { x, y }; }
+  touchLook(dx, dy) {
+    this.touch = true;
+    const e = new THREE.Euler(0, 0, 0, "YXZ").setFromQuaternion(this.camera.quaternion);
+    e.y -= dx * 0.005; e.x = Math.max(-1.45, Math.min(1.45, e.x - dy * 0.005));
+    this.camera.quaternion.setFromEuler(e);
+    this.dirty = true;
+  }
+  jump() {
+    if (this.mode !== "walk" || !this.onGround) return;
+    this.vel.y = JUMP_V; this.onGround = false; this.jumpStart = this.camera.position.y; this.jumpMax = 0;
+  }
+  setRun(on) { this.running = on; }
 
   // ------------------------------------------------------------------ interação
   pick(e) {
@@ -444,7 +491,7 @@ reflectedLight.directSpecular *= vShadow;
     if (this.mode !== "walk") return;
     const down = e.type === "keydown";
     this.keys[e.code] = down;
-    if (down && e.code === "Space" && this.onGround) { this.vel.y = JUMP_V; this.onGround = false; this.jumpStart = this.camera.position.y; this.jumpMax = 0; }
+    if (down && e.code === "Space") this.jump();
     if (["Space", "ArrowUp", "ArrowDown", "KeyW", "KeyS"].includes(e.code) && this.pointerLock.isLocked) e.preventDefault();
   }
 
@@ -452,9 +499,10 @@ reflectedLight.directSpecular *= vShadow;
     const dt = Math.min(this.clock.getDelta(), 0.05);
     if (this._fly) this._fly(performance.now());
     if (this.mode === "walk" && this.data) {
-      const k = this.keys, speed = (k.ShiftLeft || k.ShiftRight) ? RUN : WALK;
-      const fwd = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0);
-      const side = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0);
+      const k = this.keys, speed = (k.ShiftLeft || k.ShiftRight || this.running) ? RUN : WALK;
+      const j = this.joy || { x: 0, y: 0 };
+      const fwd = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0) - j.y;
+      const side = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0) + j.x;
       if (fwd) this.pointerLock.moveForward(fwd * speed * dt);
       if (side) this.pointerLock.moveRight(side * speed * dt);
       const p = this.camera.position, half = this.S / 2 - 1;
