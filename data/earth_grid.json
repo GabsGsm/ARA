@@ -6,8 +6,8 @@
  "regions": [
   {
    "id": "prototipo1",
-   "name": "Prototype 1 sites (hand-picked)",
-   "why": "Known analogs used in Prototype 1; kept as baseline"
+   "name": "Locais do Protótipo 1 (escolhidos à mão)",
+   "why": "Análogos conhecidos usados no Protótipo 1; mantidos como referência"
   }
  ],
  "columns": [

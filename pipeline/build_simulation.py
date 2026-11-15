@@ -107,15 +107,22 @@ def main():
             d = distances(np.array([s["terrain"][a] for a in attrs]), cells, w, scales)
             wanted.update(ids[i] for i in np.argsort(d)[:args.top])
 
-    out = {"variants": VARIANTS, "seed": SEED, "planet": {}, "earth": {}}
+    # incremental: mantém o que já foi simulado e só (re)calcula o que tem recorte disponível aqui.
+    # Assim dá para rodar só com as regiões novas da Terra sem ter os recortes de Lua/Marte no computador.
+    old = {}
+    if (DATA / "simulation.json").exists():
+        old = json.loads((DATA / "simulation.json").read_text(encoding="utf-8"))
+    keep_earth = {k: v for k, v in old.get("earth", {}).items() if k in wanted}
+    out = {"variants": VARIANTS, "seed": SEED, "planet": dict(old.get("planet", {})), "earth": keep_earth}
     for sid, z in planet.items():
         out["planet"][sid] = simulate(z)
     for cid in sorted(wanted & set(earth)):
         out["earth"][cid] = simulate(earth[cid])
     (DATA / "simulation.json").write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8")
     print(f"simulation.json: {len(out['planet'])} locais fixos, {len(out['earth'])} células da Terra")
-    if not planet:
-        print("Aviso: nenhum recorte de Lua/Marte encontrado. Rode build_moon_sites.py e passe --mars-tif.")
+    missing = [sid for sid, s in sites.items() if s.get("terrain") and sid not in out["planet"]]
+    if missing:
+        print(f"Aviso: sem simulação para {missing}. Rode build_moon_sites.py / import_delivery.py ou passe --mars-tif.")
 
 
 if __name__ == "__main__":
