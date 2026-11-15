@@ -9,6 +9,7 @@
 import { heightAt } from "../terrain3d/data.js";
 
 export const SOURCES = [
+  { id: "lrvgc", text: "NASA NSSDC — LRV: altura livre do chassi ≈ 36 cm; o LRV não tinha suspensão rocker-bogie", url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html" },
   { id: "m2020", text: "NASA/JPL — Mars 2020 press kit: MMRTG ≈ 110 W no início da missão; 2 baterias Li-íon de ≈ 43 Ah", url: "https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/" },
   { id: "msl", text: "Heverly et al. (2013) — Traverse performance characterization for the Mars Science Laboratory rover, J. Field Robotics 30(6): até 22° em rocha lisa e 28° em solo coeso", url: "https://doi.org/10.1002/rob.21481" },
   { id: "mer", text: "Lindemann (JPL), ensaios de mobilidade dos MER em areia solta — patinagem moderada a 10°, atolamento a ≈ 17° (Keck Institute xTerramechanics)", url: "https://kiss.caltech.edu/workshops/xTerra/presentations1/lindemann.pdf" },
@@ -22,13 +23,13 @@ export const SOURCES = [
 // Veículos. maxSlope = limite operacional usado no planejamento; tip = limite estático de tombamento.
 // hotelW (consumo fixo enquanto opera) e eta (eficiência do trem de força) são SUPOSIÇÕES de ordem de grandeza.
 export const ROVERS = {
-  perseverance: { name: "Perseverance", body: "mars", mass: 1025, len: 3.0, vmax: 0.042, maxSlope: 30, tip: 45, wheelR: 0.2625, clearance: 0.6,
+  perseverance: { name: "Perseverance", body: "mars", mass: 1025, len: 3.0, width: 2.7, rockerBogie: true, vmax: 0.042, maxSlope: 30, tip: 45, wheelR: 0.2625, clearance: 0.6,
     batteryWh: 2 * 43 * 28, rtgW: 110, solarW: 0, hotelW: 90, eta: 0.5, src: ["m2020", "msl"] },
-  curiosity: { name: "Curiosity", body: "mars", mass: 899, len: 3.0, vmax: 0.04, maxSlope: 30, tip: 45, wheelR: 0.25, clearance: 0.6,
+  curiosity: { name: "Curiosity", body: "mars", mass: 899, len: 3.0, width: 2.8, rockerBogie: true, vmax: 0.04, maxSlope: 30, tip: 45, wheelR: 0.25, clearance: 0.6,
     batteryWh: 2 * 42 * 28, rtgW: 110, solarW: 0, hotelW: 90, eta: 0.5, src: ["msl", "wheel"] },
-  mer: { name: "Spirit / Opportunity", body: "mars", mass: 185, len: 1.6, vmax: 0.05, maxSlope: 25, tip: 45, wheelR: 0.125, clearance: 0.3,
+  mer: { name: "Spirit / Opportunity", body: "mars", mass: 185, len: 1.6, width: 2.3, rockerBogie: true, vmax: 0.05, maxSlope: 25, tip: 45, wheelR: 0.125, clearance: 0.3,
     batteryWh: 2 * 8 * 32, rtgW: 0, solarW: 140, hotelW: 30, eta: 0.5, src: ["mer"] },
-  lrv: { name: "Carro lunar Apollo (LRV)", body: "moon", mass: 700, len: 3.1, vmax: 3.6, maxSlope: 25, tip: 45, wheelR: 0.41, clearance: 0.36,
+  lrv: { name: "Carro lunar Apollo (LRV)", body: "moon", mass: 700, len: 3.1, width: 2.06, rockerBogie: false, vmax: 3.6, maxSlope: 25, tip: 45, wheelR: 0.41, clearance: 0.36,
     batteryWh: 2 * 121 * 36, rtgW: 0, solarW: 0, hotelW: 50, eta: 0.8, src: ["lrv"] },
 };
 
@@ -93,7 +94,22 @@ export function step(st, spec, input, dt, env) {
   s.energyUsed += (pOut * dt) / 3600;
   s.power = { in: pIn, out: pOut, drive: pDrive };
   // movimento
-  if (v) {
+  s.blocked = null;
+  if (v && env.rocks) {
+    // pedras menores que o pixel (campo estatístico Golombek & Rapp): passar por cima, raspar ou ser bloqueado
+    const nu = s.u + (dir.x * v * dt) / S, nv = s.v + (dir.z * v * dt) / S;
+    const x = (nu - 0.5) * S, z = (nv - 0.5) * S, lim = spec.rockerBogie ? 2 * spec.wheelR : spec.clearance;
+    for (const rk of env.rocks(x, z, spec.len * 0.45)) {
+      const ahead = (rk.x - x) * dir.x + (rk.z - z) * dir.z;
+      if (rk.h > lim && ahead * Math.sign(v) > -0.2) { s.blocked = rk; break; }
+      if (!env.hits.has(rk.id) && rk.h > spec.wheelR * 0.6) {
+        env.hits.add(rk.id);
+        s.wheel = Math.min(100, s.wheel + 4 * (rk.h / lim));
+        s.rocksClimbed = (s.rocksClimbed || 0) + 1;
+      }
+    }
+  }
+  if (v && !s.blocked) {
     const du = (dir.x * v * dt) / S, dv = (dir.z * v * dt) / S;
     s.u = Math.max(0.002, Math.min(0.998, s.u + du)); s.v = Math.max(0.002, Math.min(0.998, s.v + dv));
     s.dist += Math.abs(v) * dt;
@@ -108,6 +124,7 @@ export function step(st, spec, input, dt, env) {
   if (s.slip > 0.6 && thr) s.sink = Math.min(1, s.sink + (s.slip - 0.6) * soft * dt * 0.02 * (spec.vmax > 1 ? 10 : 1));
   else if (thr < 0) s.sink = Math.max(0, s.sink - dt * 0.004 * (spec.vmax > 1 ? 10 : 1));
   s.sinkRisk = s.slip;
+  if (s.blocked) s.speed = 0;
   // fim de missão
   if (Math.abs(s.roll) > spec.tip || Math.abs(s.pitch) > spec.tip) s.status = "tombou";
   else if (s.sink >= 1) s.status = "atolou";

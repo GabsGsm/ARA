@@ -8,12 +8,12 @@ let playing = null;
 export const canSpeak = () => typeof window !== "undefined" && "speechSynthesis" in window;
 export const canSound = () => typeof window !== "undefined" && ("AudioContext" in window || "webkitAudioContext" in window);
 
-export function speak(text) {
+export function speak(text, lang = document.documentElement.lang?.startsWith("en") ? "en" : "pt") {
   if (!canSpeak()) return false;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "pt-BR";
-  const v = window.speechSynthesis.getVoices().find((x) => x.lang?.toLowerCase().startsWith("pt"));
+  u.lang = lang === "en" ? "en-US" : "pt-BR";
+  const v = window.speechSynthesis.getVoices().find((x) => x.lang?.toLowerCase().startsWith(lang === "en" ? "en" : "pt"));
   if (v) u.voice = v;
   u.rate = 1;
   window.speechSynthesis.speak(u);
@@ -75,4 +75,14 @@ export function stopSound() {
   if (!playing) return;
   for (const n of playing.nodes) { try { n.stop(); } catch { /* já parou */ } }
   playing = null;
+}
+
+/** Bipe curto de alerta (missão). */
+export function beep(freq = 660, ms = 120) {
+  if (!canSound()) return;
+  ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+  const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
+  o.frequency.value = freq; o.connect(g); g.connect(ctx.destination);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.12, t + 0.01); g.gain.linearRampToValueAtTime(0, t + ms / 1000);
+  o.start(t); o.stop(t + ms / 1000 + 0.02);
 }

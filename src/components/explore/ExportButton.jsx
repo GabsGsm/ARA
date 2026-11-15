@@ -3,7 +3,10 @@ import * as core from "../../lib/core.js";
 import { useAraData } from "../../hooks/useAraData.jsx";
 import Pill from "../ui/Pill.jsx";
 
+import { useTr } from "../../hooks/useSettings.jsx";
+
 export default function ExportButton({ siteId, siteVec, objective, weights, variant, results }) {
+  const tr = useTr();
   const data = useAraData();
   const onClick = () => {
     const out = {
@@ -18,5 +21,5 @@ export default function ExportButton({ siteId, siteVec, objective, weights, vari
     Object.assign(document.createElement("a"), { href: url, download: `ARA_${siteId}_${variant}.json` }).click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  return <Pill size="sm" variant="gold" arrow="↓" onClick={onClick} className="mt-3.5">Exportar resultado</Pill>;
+  return <Pill size="sm" variant="gold" arrow="↓" onClick={onClick} className="mt-3.5">{tr("Exportar resultado", "Export result")}</Pill>;
 }

@@ -17,11 +17,13 @@ import App from "./App.jsx";
 import { AraDataProvider } from "./hooks/useAraData.jsx";
 import { ExplorerProvider } from "./hooks/useExplorer.jsx";
 import { MotionProvider } from "./hooks/useMotion.jsx";
+import { SettingsProvider } from "./hooks/useSettings.jsx";
 
 // HashRouter: as rotas (#/explorar) funcionam no GitHub Pages sem configurar 404/redirect.
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <HashRouter>
+      <SettingsProvider>
       <MotionProvider>
         <AraDataProvider>
           <ExplorerProvider>
@@ -29,6 +31,7 @@ createRoot(document.getElementById("root")).render(
           </ExplorerProvider>
         </AraDataProvider>
       </MotionProvider>
+      </SettingsProvider>
     </HashRouter>
   </StrictMode>,
 );

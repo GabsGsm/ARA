@@ -8,8 +8,9 @@ import { PointerLockControls } from "three/examples/jsm/controls/PointerLockCont
 import { CSS2DRenderer, CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { heightAt, slopeAt, slopeGrid, uvToLatLon } from "./data.js";
 import { GLB, PROCEDURAL, fitToLength, loadGLB } from "./models.js";
+import { rocksNear } from "../mission/rocks.js";
 
-const LAYERS = { imagem: 0, declividade: 1, altitude: 2, relevo: 3, operacoes: 4 };
+const LAYERS = { imagem: 0, declividade: 1, altitude: 2, relevo: 3, operacoes: 4, protecao: 5 };
 const EYE = 1.75;          // altura dos olhos (m)
 const WALK = 1.4, RUN = 14; // m/s
 const JUMP_V = 2.5;        // m/s — o mesmo impulso nos três corpos
@@ -172,6 +173,14 @@ else if (uMode == 4) {
   vec3 oc = vOps > 2.5 ? vec3(0.2,0.78,0.5) : vOps > 1.5 ? vec3(0.98,0.84,0.3) : vOps > 0.5 ? vec3(0.96,0.5,0.2) : vec3(0.75,0.15,0.18);
   diffuseColor.rgb = mix(oc, oc * (0.6 + lum), 0.3);
 }
+else if (uMode == 5) {
+  vec3 base = diffuseColor.rgb;
+  if (vOps > 3.5) base = mix(base, vec3(0.95,0.2,0.25), 0.62);
+  else if (vOps > 2.5) base = mix(base, vec3(0.25,0.85,1.0), 0.55);
+  else if (vOps > 1.5) base = mix(base, vec3(0.78,0.35,0.95), 0.5);
+  else if (vOps > 0.5) base = mix(base, vec3(0.35,0.6,1.0), 0.45);
+  diffuseColor.rgb = base;
+}
 #ifdef USE_MAP
 if (uMinOn > 0.5) { vec4 mm = texture2D(uMinMap, vMapUv); diffuseColor.rgb = mix(diffuseColor.rgb, mm.rgb * 1.05, mm.a * 0.78); }
 #endif
@@ -194,6 +203,7 @@ reflectedLight.directSpecular *= vShadow;
     this.applyBody(data.body, meta.body);
     if (this.vehicle) { this.scene.remove(this.vehicle); this.vehicle = null; }
     this.routes = [];
+    this.setRockField(null);
     this.buildOverlays();
     this.camera.near = Math.max(0.5, S / 20000);
     this.camera.far = S * 12;
@@ -409,6 +419,7 @@ reflectedLight.directSpecular *= vShadow;
       v.rotateX((-(st.pitch ?? 0) * Math.PI) / 180);
       v.rotateZ(((st.roll ?? 0) * Math.PI) / 180);
     }
+    this.updateRocks(x, z);
     const len = this._vehReq?.length ?? 3;
     const kind = this.chaseKind || "atras";
     const D = kind === "alto" ? Math.max(60, len * 25) : kind === "perto" ? Math.max(4, len * 2.2) : Math.max(10, len * 5);
@@ -584,6 +595,49 @@ reflectedLight.directSpecular *= vShadow;
     if (this.mode === "walk") { this.lockWalk(); return; }
     const p = this.pick(e);
     if (p) this.cb.onPick?.(p);
+  }
+
+  /** Aproxima (f < 1) ou afasta (f > 1) a câmera do alvo. */
+  zoomBy(f) {
+    if (this.mode !== "orbit" || !this.S) return;
+    this.cancelFly();
+    const t = this.controls.target, p = this.camera.position;
+    const d = p.clone().sub(t).multiplyScalar(f);
+    const L = Math.max(this.controls.minDistance, Math.min(this.controls.maxDistance, d.length()));
+    p.copy(t).add(d.setLength(L));
+    this.controls.update();
+    this.dirty = true;
+  }
+
+  /** Campo de pedras (modelo estatístico): kAt(x, z) → abundância local; cor das pedras. null desliga. */
+  setRockField(kAt, color = 0x7a5a48) {
+    if (this.rockMesh) { this.scene.remove(this.rockMesh); this.rockMesh.geometry.dispose(); this.rockMesh.material.dispose(); this.rockMesh = null; }
+    this.rockK = kAt; this.rockColor = color; this._rockAt = null; this.dirty = true;
+  }
+
+  updateRocks(x, z) {
+    if (!this.rockK || !this.data) return;
+    if (this._rockAt && Math.hypot(this._rockAt[0] - x, this._rockAt[1] - z) < 6) return;
+    this._rockAt = [x, z];
+    const list = rocksNear(x, z, 45, this.rockK).filter((r) => r.d >= 0.25 || Math.hypot(r.x - x, r.z - z) < 18);
+    const max = Math.min(list.length, 12000);
+    if (!this.rockMesh || this.rockMesh.count < max || this.rockMesh.instanceMatrix.count < max) {
+      if (this.rockMesh) { this.scene.remove(this.rockMesh); this.rockMesh.geometry.dispose(); this.rockMesh.material.dispose(); }
+      const geo = new THREE.IcosahedronGeometry(0.5, 0);
+      const mat = new THREE.MeshStandardMaterial({ color: this.rockColor, roughness: 0.95, flatShading: true });
+      this.rockMesh = new THREE.InstancedMesh(geo, mat, Math.max(2000, Math.ceil(max * 1.3)));
+      this.scene.add(this.rockMesh);
+    }
+    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), sc = new THREE.Vector3(), pos = new THREE.Vector3();
+    for (let i = 0; i < max; i++) {
+      const r = list[i], u = r.x / this.S + 0.5, v = r.z / this.S + 0.5;
+      const g = (heightAt(this.data, u, v) - this.mid) * this.exag;
+      e.set(0, r.rot, 0); q.setFromEuler(e); sc.set(r.d, r.h * 2, r.d * 0.85); pos.set(r.x, g + r.h * 0.35, r.z);
+      m.compose(pos, q, sc); this.rockMesh.setMatrixAt(i, m);
+    }
+    this.rockMesh.count = max;
+    this.rockMesh.instanceMatrix.needsUpdate = true;
+    this.dirty = true;
   }
 
   /** Modo direção: fn(input, dtReal) → { u, v, heading, pitch, roll } chamado a cada quadro. */

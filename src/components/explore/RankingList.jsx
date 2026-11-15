@@ -2,11 +2,13 @@
 import { useAraData } from "../../hooks/useAraData.jsx";
 import { useStabilityText } from "../../hooks/useRanking.js";
 import { fmt } from "../../lib/format.js";
+import { useTr } from "../../hooks/useSettings.jsx";
 
 export default function RankingList({ siteId, results, selected, onSelect }) {
   const { regionName } = useAraData();
   const stabilityText = useStabilityText();
-  if (!results.length) return <p className="note mt-4">Sem resultados para este local/variante.</p>;
+  const tr = useTr();
+  if (!results.length) return <p className="note mt-4">{tr("Sem resultados para este local/variante.")}</p>;
   return (
     <ol className="ex-rank">
       {results.map((r) => {
@@ -22,8 +24,8 @@ export default function RankingList({ siteId, results, selected, onSelect }) {
                 <small className="block truncate">{c.id} · {fmt(c.lat, 2)}°, {fmt(c.lon, 2)}°</small>
                 {st && <small className="block truncate text-gold-3/80" title="Estabilidade em 2.000 conjuntos de pesos aleatórios">{st}</small>}
               </span>
-              <span className={`ex-badge ${c.known ? "" : "new"}`}>{c.known ? "Análogo conhecido" : "Novo candidato"}</span>
-              <span className="ex-score" title="Distância ponderada (menor = mais parecido)">{fmt(r.d, 3)}</span>
+              <span className={`ex-badge ${c.known ? "" : "new"}`}>{c.known ? tr("Análogo conhecido") : tr("Novo candidato")}</span>
+              <span className="ex-score" title={tr("Distância ponderada (menor = mais parecido)", "Weighted distance (lower = more similar)")}>{fmt(r.d, 3)}</span>
             </button>
           </li>
         );

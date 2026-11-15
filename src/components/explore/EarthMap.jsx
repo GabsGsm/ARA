@@ -29,7 +29,10 @@ function MapSync({ results, focus, fitTick }) {
   return null;
 }
 
+import { useTr } from "../../hooks/useSettings.jsx";
+
 export default function EarthMap({ results, selected, focus, onPick }) {
+  const tr = useTr();
   const { cellName } = useAraData();
   const [gibs, setGibs] = useState(false);
   const [fitTick, setFitTick] = useState(0);
@@ -58,10 +61,10 @@ export default function EarthMap({ results, selected, focus, onPick }) {
       </MapContainer>
       <button type="button" onClick={() => setFitTick((t) => t + 1)}
               className="absolute right-2.5 top-2.5 z-[500] cursor-pointer rounded-full border border-line bg-petrol-950/85 px-3 py-1.5 text-[13px] text-ink hover:border-gold">
-        Ver todos
+        {tr("Ver todos", "Show all")}
       </button>
       <label className="absolute bottom-2.5 left-2.5 z-[500] flex items-center gap-2 rounded-full bg-petrol-950/85 px-3 py-1.5 text-[13px] text-ink">
-        <input type="checkbox" checked={gibs} onChange={(e) => setGibs(e.target.checked)} /> Camada NASA GIBS (MODIS cor real)
+        <input type="checkbox" checked={gibs} onChange={(e) => setGibs(e.target.checked)} /> {tr("Camada NASA GIBS (MODIS cor real)", "NASA GIBS layer (MODIS true colour)")}
       </label>
     </div>
   );

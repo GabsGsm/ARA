@@ -4,6 +4,7 @@
 import { useState } from "react";
 import * as core from "../../lib/core.js";
 import { useAraData } from "../../hooks/useAraData.jsx";
+import { useTr } from "../../hooks/useSettings.jsx";
 import { useStabilityText } from "../../hooks/useRanking.js";
 import { BODY_LABEL, fmt, withUnit } from "../../lib/format.js";
 import StatusChip from "../ui/StatusChip.jsx";
@@ -22,10 +23,11 @@ const BODY_PHYS = {
 export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
   const data = useAraData();
   const stabilityText = useStabilityText();
+  const tr = useTr();
   const [tab, setTab] = useState("resumo");
   const tabs = [...TABS, ...extraTabs.map((t) => ({ id: t.id, label: t.label }))];
   if (!result || !ex.siteId) {
-    return <section className="card ex-details"><p className="note m-0">Selecione um candidato para ver os detalhes.</p></section>;
+    return <section className="card ex-details"><p className="note m-0">{tr("Selecione um candidato para ver os detalhes.")}</p></section>;
   }
   const site = data.siteById(ex.siteId);
   const cell = result.cell;
@@ -42,10 +44,10 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
   return (
     <section className="card ex-details" aria-labelledby="exDetTitle">
       <div className="ex-det-head">
-        <h2 id="exDetTitle" className="eyebrow mb-0">Detalhes do análogo selecionado</h2>
-        <div role="tablist" aria-label="Detalhes" className="ex-tabs">
+        <h2 id="exDetTitle" className="eyebrow mb-0">{tr("Detalhes do análogo selecionado")}</h2>
+        <div role="tablist" aria-label={tr("Detalhes", "Details")} className="ex-tabs">
           {tabs.map((t) => (
-            <button key={t.id} type="button" role="tab" id={`tab-${t.id}`} aria-selected={tab === t.id} aria-controls="ex-det-panel" onClick={() => setTab(t.id)}>{t.label}</button>
+            <button key={t.id} type="button" role="tab" id={`tab-${t.id}`} aria-selected={tab === t.id} aria-controls="ex-det-panel" onClick={() => setTab(t.id)}>{tr(t.label)}</button>
           ))}
         </div>
       </div>
@@ -63,22 +65,22 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
                   <p className="m-0 text-[13px] text-ink-2">Célula selecionada: <b className="font-mono">{cell.id}</b> · {fmt(cell.lat, 2)}°, {fmt(cell.lon, 2)}° · {result.position}º lugar</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <StatusChip status={overall}>{overall === "analog" ? "Relevo análogo" : overall === "partial" ? "Parcialmente análogo" : "Relevo não análogo"}</StatusChip>
+                  <StatusChip status={overall}>{tr(overall === "analog" ? "Relevo análogo" : overall === "partial" ? "Parcialmente análogo" : "Relevo não análogo")}</StatusChip>
                   <div className="text-right">
-                    <small className="block text-[11px] text-muted">Distância ARA</small>
+                    <small className="block text-[11px] text-muted">{tr("Distância ARA")}</small>
                     <b className="ex-bigscore">{fmt(result.d, 3)}</b>
                   </div>
                 </div>
               </div>
               <div className="ex-likes">
                 <div className="ex-like ok">
-                  <h4><span aria-hidden="true">✓</span> O que é análogo?</h4>
+                  <h4><span aria-hidden="true">✓</span> {tr("O que é análogo?")}</h4>
                   {like.length ? (
                     <ul>{like.map((d) => <li key={d.attr}>{d.dimension}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}{d.status === "partial" ? " (parcial)" : ""}</li>)}</ul>
                   ) : <p>Nenhuma das três medidas de relevo ficou dentro dos limites.</p>}
                 </div>
                 <div className="ex-like bad">
-                  <h4><span aria-hidden="true">✕</span> O que não é análogo?</h4>
+                  <h4><span aria-hidden="true">✕</span> {tr("O que não é análogo?")}</h4>
                   <ul>
                     {unlike.map((d) => <li key={d.attr}>{d.dimension}: {withUnit(d.site, d.unit)} × {withUnit(d.cell, d.unit)}</li>)}
                     <li>Gravidade ({phys.gText} × 1 g), atmosfera ({phys.atm}) e radiação — nenhum lugar da Terra reproduz.</li>
@@ -86,20 +88,20 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [] }) {
                 </div>
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-3">
-                <Pill to={`/3d?site=${ex.siteId}&analog=${cell.id}`} variant="gold" size="sm">Ver lado a lado em 3D</Pill>
+                <Pill to={`/3d?site=${ex.siteId}&analog=${cell.id}`} variant="gold" size="sm">{tr("Ver lado a lado em 3D")}</Pill>
                 {st && <small className="text-muted">Estabilidade em 2.000 conjuntos de pesos aleatórios: {st}.</small>}
               </div>
             </div>
             <div className="ex-main-table">
-              <h4 className="eyebrow mb-2">Comparação principal</h4>
+              <h4 className="eyebrow mb-2">{tr("Comparação principal")}</h4>
               <table className="data-table m-0">
-                <thead><tr><th>Atributo</th><th>{BODY_LABEL[site.body]}</th><th>Terra</th><th>Avaliação</th></tr></thead>
+                <thead><tr><th>{tr("Atributo")}</th><th>{tr(BODY_LABEL[site.body])}</th><th>{tr("Terra")}</th><th>{tr("Avaliação")}</th></tr></thead>
                 <tbody>
                   {topo.map((d) => (
-                    <tr key={d.attr}><th scope="row">{d.dimension}</th><td>{withUnit(d.site, d.unit)}</td><td>{withUnit(d.cell, d.unit)}</td><td><StatusChip status={d.status} /></td></tr>
+                    <tr key={d.attr}><th scope="row">{tr(d.dimension)}</th><td>{withUnit(d.site, d.unit)}</td><td>{withUnit(d.cell, d.unit)}</td><td><StatusChip status={d.status} /></td></tr>
                   ))}
-                  <tr><th scope="row">Gravidade</th><td>{phys.gText}</td><td>1 g</td><td><StatusChip status="not_analog" /></td></tr>
-                  <tr><th scope="row">Atmosfera</th><td>{phys.atm}</td><td>1 atm</td><td><StatusChip status="not_analog" /></td></tr>
+                  <tr><th scope="row">{tr("Gravidade")}</th><td>{phys.gText}</td><td>1 g</td><td><StatusChip status="not_analog" /></td></tr>
+                  <tr><th scope="row">{tr("Atmosfera")}</th><td>{phys.atm}</td><td>1 atm</td><td><StatusChip status="not_analog" /></td></tr>
                 </tbody>
               </table>
             </div>
