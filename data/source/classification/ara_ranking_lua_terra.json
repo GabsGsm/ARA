@@ -1,0 +1,259 @@
+{
+  "project": "ARA - Analog Research and Analysis",
+  "body": "moon",
+  "classification_method": "terramatch_original_weighted_topographic_distance",
+  "lower_distance_is_better": true,
+  "weights": {
+    "slope": 0.4,
+    "roughness": 0.35,
+    "relief": 0.25
+  },
+  "scales": {
+    "slope_deg": 10.0,
+    "roughness_m": 15.0,
+    "relief_m": 500.0
+  },
+  "scientific_scope": "topographic_analogy_only",
+  "results": [
+    {
+      "moon_region_id": "mons_mouton_01",
+      "moon_region_name": "Mons Mouton",
+      "earth_region_id": "wadi_rum_01",
+      "topographic_distance": 0.01959475201111416,
+      "contributions_pct": {
+        "slope": 2.947197627787949,
+        "roughness": 43.17842097995371,
+        "relief": 53.87438139225834
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 1
+    },
+    {
+      "moon_region_id": "mons_mouton_01",
+      "moon_region_name": "Mons Mouton",
+      "earth_region_id": "death_valley_01",
+      "topographic_distance": 0.1194090203646849,
+      "contributions_pct": {
+        "slope": 4.390241444434513,
+        "roughness": 14.793541834190833,
+        "relief": 80.81621672137464
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 2
+    },
+    {
+      "moon_region_id": "mons_mouton_01",
+      "moon_region_name": "Mons Mouton",
+      "earth_region_id": "atacama_01",
+      "topographic_distance": 0.47367957662848165,
+      "contributions_pct": {
+        "slope": 46.71314773150468,
+        "roughness": 36.483002516673665,
+        "relief": 16.80384975182166
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 3
+    },
+    {
+      "moon_region_id": "mons_mouton_01",
+      "moon_region_name": "Mons Mouton",
+      "earth_region_id": "timanfaya_01",
+      "topographic_distance": 0.531378530196972,
+      "contributions_pct": {
+        "slope": 51.37450684887162,
+        "roughness": 42.26596878137783,
+        "relief": 6.35952436975056
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 4
+    },
+    {
+      "moon_region_id": "malapert_massif_01",
+      "moon_region_name": "Malapert Massif",
+      "earth_region_id": "death_valley_01",
+      "topographic_distance": 0.5870341858817054,
+      "contributions_pct": {
+        "slope": 17.20741721954578,
+        "roughness": 12.981890166069752,
+        "relief": 69.81069261438446
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 1
+    },
+    {
+      "moon_region_id": "malapert_massif_01",
+      "moon_region_name": "Malapert Massif",
+      "earth_region_id": "wadi_rum_01",
+      "topographic_distance": 0.7131211503880078,
+      "contributions_pct": {
+        "slope": 14.537146785917653,
+        "roughness": 11.761237919158617,
+        "relief": 73.70161529492373
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 2
+    },
+    {
+      "moon_region_id": "malapert_massif_01",
+      "moon_region_name": "Malapert Massif",
+      "earth_region_id": "atacama_01",
+      "topographic_distance": 1.1284963352369268,
+      "contributions_pct": {
+        "slope": 27.54551555889001,
+        "roughness": 23.19918058817095,
+        "relief": 49.255303852939036
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 3
+    },
+    {
+      "moon_region_id": "malapert_massif_01",
+      "moon_region_name": "Malapert Massif",
+      "earth_region_id": "timanfaya_01",
+      "topographic_distance": 1.1492571508809244,
+      "contributions_pct": {
+        "slope": 31.929657668861775,
+        "roughness": 27.520448546653757,
+        "relief": 40.54989378448447
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 4
+    },
+    {
+      "moon_region_id": "haworth_01",
+      "moon_region_name": "Haworth",
+      "earth_region_id": "wadi_rum_01",
+      "topographic_distance": 0.12349542455820219,
+      "contributions_pct": {
+        "slope": 43.38558830703225,
+        "roughness": 54.14499048295919,
+        "relief": 2.4694212100085644
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 1
+    },
+    {
+      "moon_region_id": "haworth_01",
+      "moon_region_name": "Haworth",
+      "earth_region_id": "death_valley_01",
+      "topographic_distance": 0.19459430071100248,
+      "contributions_pct": {
+        "slope": 31.79570272979053,
+        "roughness": 40.55542190668778,
+        "relief": 27.64887536352168
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 2
+    },
+    {
+      "moon_region_id": "haworth_01",
+      "moon_region_name": "Haworth",
+      "earth_region_id": "atacama_01",
+      "topographic_distance": 0.37433856881543903,
+      "contributions_pct": {
+        "slope": 40.77611711919911,
+        "roughness": 30.90751183140805,
+        "relief": 28.316371049392835
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 3
+    },
+    {
+      "moon_region_id": "haworth_01",
+      "moon_region_name": "Haworth",
+      "earth_region_id": "timanfaya_01",
+      "topographic_distance": 0.4225861301354304,
+      "contributions_pct": {
+        "slope": 49.11704797652448,
+        "roughness": 40.059336496062684,
+        "relief": 10.823615527412842
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 4
+    },
+    {
+      "moon_region_id": "nobile_rim_01",
+      "moon_region_name": "Nobile Rim 1",
+      "earth_region_id": "death_valley_01",
+      "topographic_distance": 0.6253121426987931,
+      "contributions_pct": {
+        "slope": 14.420699646421387,
+        "roughness": 10.609730184922508,
+        "relief": 74.9695701686561
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 1
+    },
+    {
+      "moon_region_id": "nobile_rim_01",
+      "moon_region_name": "Nobile Rim 1",
+      "earth_region_id": "wadi_rum_01",
+      "topographic_distance": 0.7526547031787667,
+      "contributions_pct": {
+        "slope": 12.475557770828114,
+        "roughness": 9.892878184646834,
+        "relief": 77.63156404452506
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 2
+    },
+    {
+      "moon_region_id": "nobile_rim_01",
+      "moon_region_name": "Nobile Rim 1",
+      "earth_region_id": "atacama_01",
+      "topographic_distance": 1.1581056601294442,
+      "contributions_pct": {
+        "slope": 25.623161708259754,
+        "roughness": 21.397969226657594,
+        "relief": 52.97886906508265
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 3
+    },
+    {
+      "moon_region_id": "nobile_rim_01",
+      "moon_region_name": "Nobile Rim 1",
+      "earth_region_id": "timanfaya_01",
+      "topographic_distance": 1.1750511799976078,
+      "contributions_pct": {
+        "slope": 29.97654156736993,
+        "roughness": 25.646099146239866,
+        "relief": 44.377359286390195
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false,
+      "mineralogy_in_ranking": false,
+      "rank": 4
+    }
+  ]
+}

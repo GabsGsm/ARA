@@ -1,0 +1,851 @@
+{
+  "project": "ARA - Analog Research and Analysis",
+  "body": "mars",
+  "version": "1.0",
+  "classification_method": "existing_terramatch_topographic_distance",
+  "distance_direction": "lower_is_more_similar",
+  "regions": [
+    "Jezero_01",
+    "Jezero_02",
+    "Jezero_03",
+    "Jezero_04"
+  ],
+  "earth_candidates": [
+    "Atacama_01",
+    "Death_Valley_01",
+    "Timanfaya_01",
+    "Wadi_Rum_01"
+  ],
+  "geology_used_in_score": false,
+  "thermal_used_in_score": false,
+  "records": [
+    {
+      "mars_region_id": "jezero_01",
+      "earth_region_id": "death_valley_01",
+      "rank": 1,
+      "topographic_distance": 0.08637329258691402,
+      "distance_contributions_pct": {
+        "declividade_pct": 44.532043511132706,
+        "rugosidade_pct": 53.39267031641821,
+        "amplitude_pct": 2.0752861724490788
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_01",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.272554252740965,
+        "declividade_mediana_graus": 6.395989063757717,
+        "declividade_p90_graus": 17.407180748084716,
+        "rugosidade_media_m": 12.318923726947702,
+        "rugosidade_p90_m": 25.20280424064268,
+        "amplitude_topografica_m": 561.7489013671875
+      },
+      "earth_terrain": {
+        "regiao": "Death_Valley_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 9.183905499636422,
+        "declividade_mediana_graus": 6.432287628147568,
+        "declividade_p90_graus": 19.596650127489987,
+        "rugosidade_media_m": 13.919135764761736,
+        "rugosidade_p90_m": 29.142746154381463,
+        "amplitude_topografica_m": 549.3060913085938
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 11.818931836001779,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)"
+        ],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_01",
+      "earth_region_id": "wadi_rum_01",
+      "rank": 2,
+      "topographic_distance": 0.14057563825313776,
+      "distance_contributions_pct": {
+        "declividade_pct": 4.331021983878457,
+        "rugosidade_pct": 4.572980940627802,
+        "amplitude_pct": 91.09599707549374
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_01",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.272554252740965,
+        "declividade_mediana_graus": 6.395989063757717,
+        "declividade_p90_graus": 17.407180748084716,
+        "rugosidade_media_m": 12.318923726947702,
+        "rugosidade_p90_m": 25.20280424064268,
+        "amplitude_topografica_m": 561.7489013671875
+      },
+      "earth_terrain": {
+        "regiao": "Wadi_Rum_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.735121908735755,
+        "declividade_mediana_graus": 5.387144225764519,
+        "declividade_p90_graus": 20.950717807098115,
+        "rugosidade_media_m": 13.081120308351275,
+        "rugosidade_p90_m": 29.79930796455141,
+        "amplitude_topografica_m": 427.57757568359375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 11.818931836001779,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)"
+        ],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_01",
+      "earth_region_id": "atacama_01",
+      "rank": 3,
+      "topographic_distance": 0.505614536901964,
+      "distance_contributions_pct": {
+        "declividade_pct": 33.15314147045271,
+        "rugosidade_pct": 28.28879893693401,
+        "amplitude_pct": 38.558059592613276
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_01",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.272554252740965,
+        "declividade_mediana_graus": 6.395989063757717,
+        "declividade_p90_graus": 17.407180748084716,
+        "rugosidade_media_m": 12.318923726947702,
+        "rugosidade_p90_m": 25.20280424064268,
+        "amplitude_topografica_m": 561.7489013671875
+      },
+      "earth_terrain": {
+        "regiao": "Atacama_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.669438462564168,
+        "declividade_mediana_graus": 1.6731456210047813,
+        "declividade_p90_graus": 10.072607049890284,
+        "rugosidade_media_m": 5.500499113417956,
+        "rugosidade_p90_m": 14.145931438898252,
+        "amplitude_topografica_m": 247.786865234375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 11.818931836001779,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)"
+        ],
+        "earth_lithologies": [],
+        "earth_geological_classes": [
+          "Siliciclástica",
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_01",
+      "earth_region_id": "timanfaya_01",
+      "rank": 4,
+      "topographic_distance": 0.5417146487713264,
+      "distance_contributions_pct": {
+        "declividade_pct": 41.32808515342195,
+        "rugosidade_pct": 36.722831200632456,
+        "amplitude_pct": 21.94908364594559
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_01",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.272554252740965,
+        "declividade_mediana_graus": 6.395989063757717,
+        "declividade_p90_graus": 17.407180748084716,
+        "rugosidade_media_m": 12.318923726947702,
+        "rugosidade_p90_m": 25.20280424064268,
+        "amplitude_topografica_m": 561.7489013671875
+      },
+      "earth_terrain": {
+        "regiao": "Timanfaya_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 2.7662116965119194,
+        "declividade_mediana_graus": 2.752344659740464,
+        "declividade_p90_graus": 3.9859567603478103,
+        "rugosidade_media_m": 3.995617087597776,
+        "rugosidade_p90_m": 5.486969261421401,
+        "amplitude_topografica_m": 307.95640563964844
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 11.818931836001779,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)"
+        ],
+        "earth_lithologies": [
+          "Basalto"
+        ],
+        "earth_geological_classes": [
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_02",
+      "earth_region_id": "atacama_01",
+      "rank": 1,
+      "topographic_distance": 0.07249038833149278,
+      "distance_contributions_pct": {
+        "declividade_pct": 2.3106283613730705,
+        "rugosidade_pct": 1.5214117857448177,
+        "amplitude_pct": 96.1679598528821
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_02",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.495211453795263,
+        "declividade_mediana_graus": 2.3677386493942105,
+        "declividade_p90_graus": 8.151959289479615,
+        "rugosidade_media_m": 5.273794138142695,
+        "rugosidade_p90_m": 12.324120256612256,
+        "amplitude_topografica_m": 176.698974609375
+      },
+      "earth_terrain": {
+        "regiao": "Atacama_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.669438462564168,
+        "declividade_mediana_graus": 1.6731456210047813,
+        "declividade_p90_graus": 10.072607049890284,
+        "rugosidade_media_m": 5.500499113417956,
+        "rugosidade_p90_m": 14.145931438898252,
+        "amplitude_topografica_m": 247.786865234375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [],
+        "earth_geological_classes": [
+          "Siliciclástica",
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_02",
+      "earth_region_id": "timanfaya_01",
+      "rank": 2,
+      "topographic_distance": 0.1479717668573033,
+      "distance_contributions_pct": {
+        "declividade_pct": 9.708609644769753,
+        "rugosidade_pct": 11.606728838236553,
+        "amplitude_pct": 78.6846615169937
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_02",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.495211453795263,
+        "declividade_mediana_graus": 2.3677386493942105,
+        "declividade_p90_graus": 8.151959289479615,
+        "rugosidade_media_m": 5.273794138142695,
+        "rugosidade_p90_m": 12.324120256612256,
+        "amplitude_topografica_m": 176.698974609375
+      },
+      "earth_terrain": {
+        "regiao": "Timanfaya_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 2.7662116965119194,
+        "declividade_mediana_graus": 2.752344659740464,
+        "declividade_p90_graus": 3.9859567603478103,
+        "rugosidade_media_m": 3.995617087597776,
+        "rugosidade_p90_m": 5.486969261421401,
+        "amplitude_topografica_m": 307.95640563964844
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [
+          "Basalto"
+        ],
+        "earth_geological_classes": [
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_02",
+      "earth_region_id": "wadi_rum_01",
+      "rank": 3,
+      "topographic_distance": 0.5172857856171055,
+      "distance_contributions_pct": {
+        "declividade_pct": 41.04371210807891,
+        "rugosidade_pct": 35.434726396957416,
+        "amplitude_pct": 23.52156149496369
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_02",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.495211453795263,
+        "declividade_mediana_graus": 2.3677386493942105,
+        "declividade_p90_graus": 8.151959289479615,
+        "rugosidade_media_m": 5.273794138142695,
+        "rugosidade_p90_m": 12.324120256612256,
+        "amplitude_topografica_m": 176.698974609375
+      },
+      "earth_terrain": {
+        "regiao": "Wadi_Rum_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.735121908735755,
+        "declividade_mediana_graus": 5.387144225764519,
+        "declividade_p90_graus": 20.950717807098115,
+        "rugosidade_media_m": 13.081120308351275,
+        "rugosidade_p90_m": 29.79930796455141,
+        "amplitude_topografica_m": 427.57757568359375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_02",
+      "earth_region_id": "death_valley_01",
+      "rank": 4,
+      "topographic_distance": 0.6201179327448992,
+      "distance_contributions_pct": {
+        "declividade_pct": 33.661740198083166,
+        "rugosidade_pct": 30.23439369215162,
+        "amplitude_pct": 36.10386610976521
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_02",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.495211453795263,
+        "declividade_mediana_graus": 2.3677386493942105,
+        "declividade_p90_graus": 8.151959289479615,
+        "rugosidade_media_m": 5.273794138142695,
+        "rugosidade_p90_m": 12.324120256612256,
+        "amplitude_topografica_m": 176.698974609375
+      },
+      "earth_terrain": {
+        "regiao": "Death_Valley_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 9.183905499636422,
+        "declividade_mediana_graus": 6.432287628147568,
+        "declividade_p90_graus": 19.596650127489987,
+        "rugosidade_media_m": 13.919135764761736,
+        "rugosidade_p90_m": 29.142746154381463,
+        "amplitude_topografica_m": 549.3060913085938
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_03",
+      "earth_region_id": "atacama_01",
+      "rank": 1,
+      "topographic_distance": 0.24385161361963067,
+      "distance_contributions_pct": {
+        "declividade_pct": 28.409834627505195,
+        "rugosidade_pct": 24.404508518699963,
+        "amplitude_pct": 47.185656853794846
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_03",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 1.6143525086121835,
+        "declividade_mediana_graus": 1.2864469339319518,
+        "declividade_p90_graus": 3.2586474118313493,
+        "rugosidade_media_m": 2.446155429691371,
+        "rugosidade_p90_m": 4.651343946652447,
+        "amplitude_topografica_m": 80.28076171875
+      },
+      "earth_terrain": {
+        "regiao": "Atacama_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.669438462564168,
+        "declividade_mediana_graus": 1.6731456210047813,
+        "declividade_p90_graus": 10.072607049890284,
+        "rugosidade_media_m": 5.500499113417956,
+        "rugosidade_p90_m": 14.145931438898252,
+        "amplitude_topografica_m": 247.786865234375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [],
+        "earth_geological_classes": [
+          "Siliciclástica",
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_03",
+      "earth_region_id": "timanfaya_01",
+      "rank": 2,
+      "topographic_distance": 0.24673456153856155,
+      "distance_contributions_pct": {
+        "declividade_pct": 8.71763732265299,
+        "rugosidade_pct": 6.134613673169391,
+        "amplitude_pct": 85.14774900417763
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_03",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 1.6143525086121835,
+        "declividade_mediana_graus": 1.2864469339319518,
+        "declividade_p90_graus": 3.2586474118313493,
+        "rugosidade_media_m": 2.446155429691371,
+        "rugosidade_p90_m": 4.651343946652447,
+        "amplitude_topografica_m": 80.28076171875
+      },
+      "earth_terrain": {
+        "regiao": "Timanfaya_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 2.7662116965119194,
+        "declividade_mediana_graus": 2.752344659740464,
+        "declividade_p90_graus": 3.9859567603478103,
+        "rugosidade_media_m": 3.995617087597776,
+        "rugosidade_p90_m": 5.486969261421401,
+        "amplitude_topografica_m": 307.95640563964844
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [
+          "Basalto"
+        ],
+        "earth_geological_classes": [
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_03",
+      "earth_region_id": "wadi_rum_01",
+      "rank": 3,
+      "topographic_distance": 0.7066637760228851,
+      "distance_contributions_pct": {
+        "declividade_pct": 40.615160652008555,
+        "rugosidade_pct": 35.23156919388321,
+        "amplitude_pct": 24.153270154108228
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_03",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 1.6143525086121835,
+        "declividade_mediana_graus": 1.2864469339319518,
+        "declividade_p90_graus": 3.2586474118313493,
+        "rugosidade_media_m": 2.446155429691371,
+        "rugosidade_p90_m": 4.651343946652447,
+        "amplitude_topografica_m": 80.28076171875
+      },
+      "earth_terrain": {
+        "regiao": "Wadi_Rum_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.735121908735755,
+        "declividade_mediana_graus": 5.387144225764519,
+        "declividade_p90_graus": 20.950717807098115,
+        "rugosidade_media_m": 13.081120308351275,
+        "rugosidade_p90_m": 29.79930796455141,
+        "amplitude_topografica_m": 427.57757568359375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_03",
+      "earth_region_id": "death_valley_01",
+      "rank": 4,
+      "topographic_distance": 0.808661823038378,
+      "distance_contributions_pct": {
+        "declividade_pct": 35.04826932821877,
+        "rugosidade_pct": 31.31151948502433,
+        "amplitude_pct": 33.6402111867569
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_03",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 1.6143525086121835,
+        "declividade_mediana_graus": 1.2864469339319518,
+        "declividade_p90_graus": 3.2586474118313493,
+        "rugosidade_media_m": 2.446155429691371,
+        "rugosidade_p90_m": 4.651343946652447,
+        "amplitude_topografica_m": 80.28076171875
+      },
+      "earth_terrain": {
+        "regiao": "Death_Valley_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 9.183905499636422,
+        "declividade_mediana_graus": 6.432287628147568,
+        "declividade_p90_graus": 19.596650127489987,
+        "rugosidade_media_m": 13.919135764761736,
+        "rugosidade_p90_m": 29.142746154381463,
+        "amplitude_topografica_m": 549.3060913085938
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 0.0,
+        "mars_crism_classes": [],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_04",
+      "earth_region_id": "wadi_rum_01",
+      "rank": 1,
+      "topographic_distance": 0.11714366662849733,
+      "distance_contributions_pct": {
+        "declividade_pct": 13.816975061761815,
+        "rugosidade_pct": 27.95698418575516,
+        "amplitude_pct": 58.22604075248302
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_04",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.046635605770284,
+        "declividade_mediana_graus": 7.389995074902544,
+        "declividade_p90_graus": 14.210174530130923,
+        "rugosidade_media_m": 11.510680806449772,
+        "rugosidade_p90_m": 20.21075246818515,
+        "amplitude_topografica_m": 516.9652099609375
+      },
+      "earth_terrain": {
+        "regiao": "Wadi_Rum_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.735121908735755,
+        "declividade_mediana_graus": 5.387144225764519,
+        "declividade_p90_graus": 20.950717807098115,
+        "rugosidade_media_m": 13.081120308351275,
+        "rugosidade_p90_m": 29.79930796455141,
+        "amplitude_topografica_m": 427.57757568359375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 80.33,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)",
+          "Olivine-bearing (weak)",
+          "Pyroxene-rich (LCP)"
+        ],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_04",
+      "earth_region_id": "death_valley_01",
+      "rank": 2,
+      "topographic_distance": 0.12346135188251697,
+      "distance_contributions_pct": {
+        "declividade_pct": 33.94103019952315,
+        "rugosidade_pct": 59.197113074248755,
+        "amplitude_pct": 6.861856726228102
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_04",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.046635605770284,
+        "declividade_mediana_graus": 7.389995074902544,
+        "declividade_p90_graus": 14.210174530130923,
+        "rugosidade_media_m": 11.510680806449772,
+        "rugosidade_p90_m": 20.21075246818515,
+        "amplitude_topografica_m": 516.9652099609375
+      },
+      "earth_terrain": {
+        "regiao": "Death_Valley_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 9.183905499636422,
+        "declividade_mediana_graus": 6.432287628147568,
+        "declividade_p90_graus": 19.596650127489987,
+        "rugosidade_media_m": 13.919135764761736,
+        "rugosidade_p90_m": 29.142746154381463,
+        "amplitude_topografica_m": 549.3060913085938
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 80.33,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)",
+          "Olivine-bearing (weak)",
+          "Pyroxene-rich (LCP)"
+        ],
+        "earth_lithologies": [
+          "Arenito"
+        ],
+        "earth_geological_classes": [
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_04",
+      "earth_region_id": "atacama_01",
+      "rank": 3,
+      "topographic_distance": 0.4530856653230233,
+      "distance_contributions_pct": {
+        "declividade_pct": 37.33288573639977,
+        "rugosidade_pct": 27.371593675384798,
+        "amplitude_pct": 35.29552058821543
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_04",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.046635605770284,
+        "declividade_mediana_graus": 7.389995074902544,
+        "declividade_p90_graus": 14.210174530130923,
+        "rugosidade_media_m": 11.510680806449772,
+        "rugosidade_p90_m": 20.21075246818515,
+        "amplitude_topografica_m": 516.9652099609375
+      },
+      "earth_terrain": {
+        "regiao": "Atacama_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 3.669438462564168,
+        "declividade_mediana_graus": 1.6731456210047813,
+        "declividade_p90_graus": 10.072607049890284,
+        "rugosidade_media_m": 5.500499113417956,
+        "rugosidade_p90_m": 14.145931438898252,
+        "amplitude_topografica_m": 247.786865234375
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 80.33,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)",
+          "Olivine-bearing (weak)",
+          "Pyroxene-rich (LCP)"
+        ],
+        "earth_lithologies": [],
+        "earth_geological_classes": [
+          "Siliciclástica",
+          "Sedimentar (geral)",
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    },
+    {
+      "mars_region_id": "jezero_04",
+      "earth_region_id": "timanfaya_01",
+      "rank": 4,
+      "topographic_distance": 0.49301929646085846,
+      "distance_contributions_pct": {
+        "declividade_pct": 45.88489410474167,
+        "rugosidade_pct": 36.1429024425887,
+        "amplitude_pct": 17.972203452669632
+      },
+      "mars_terrain": {
+        "regiao": "Jezero_04",
+        "planeta": "Marte",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 8.046635605770284,
+        "declividade_mediana_graus": 7.389995074902544,
+        "declividade_p90_graus": 14.210174530130923,
+        "rugosidade_media_m": 11.510680806449772,
+        "rugosidade_p90_m": 20.21075246818515,
+        "amplitude_topografica_m": 516.9652099609375
+      },
+      "earth_terrain": {
+        "regiao": "Timanfaya_01",
+        "planeta": "Terra",
+        "area_km2": 25,
+        "resolucao_m": 100,
+        "declividade_media_graus": 2.7662116965119194,
+        "declividade_mediana_graus": 2.752344659740464,
+        "declividade_p90_graus": 3.9859567603478103,
+        "rugosidade_media_m": 3.995617087597776,
+        "rugosidade_p90_m": 5.486969261421401,
+        "amplitude_topografica_m": 307.95640563964844
+      },
+      "geological_evidence": {
+        "mars_crism_coverage_pct": 80.33,
+        "mars_crism_classes": [
+          "Bulk rim",
+          "Fe/Mg phyllosilicates",
+          "Olivine-bearing (strong)",
+          "Olivine-bearing (weak)",
+          "Pyroxene-rich (LCP)"
+        ],
+        "earth_lithologies": [
+          "Basalto"
+        ],
+        "earth_geological_classes": [
+          "Vulcânica (geral)"
+        ],
+        "mineral_similarity": null,
+        "mineralogy_status": "Litologia mapeada; mineralogia não verificada"
+      },
+      "ranking_basis": "topography_only",
+      "thermal_in_ranking": false
+    }
+  ]
+}

@@ -95,7 +95,9 @@ def mars_thermal(delivery_site):
     t["display"] = [
         {"label": "Inércia térmica (THEMIS, 1 km)", "value": t.get("thermal_inertia_mean"), "unit": "J m⁻² K⁻¹ s⁻½"},
         {"label": "Temperatura de brilho (THEMIS, 1 observação)", "value": bt.get("temperature_mean_k"), "unit": "K",
-         "note": f"{bt.get('coverage_pct')}% do recorte coberto"},
+         "note": (f"{bt.get('coverage_pct'):.2f}".rstrip("0").rstrip(".").replace(".", ",")
+                  + "% do recorte coberto · 06/05/2016, ~19h23 hora local em Marte; não é média anual")
+         if bt.get("coverage_pct") is not None else None},
     ]
     t["note"] = THERMAL_NOTE_MARS
     return t

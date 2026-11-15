@@ -45,3 +45,24 @@ assert.equal(dims.filter((d) => d.attr === "limit").length, 3);
 assert.equal(cellsForVariant(cells, "res_300", { earth: {} }).length, 0);
 
 console.log("core.js: todos os testes passaram");
+
+// 6) entrega de classificação da equipe (data/source/classification):
+//    Marte deve bater exatamente; Lua difere só porque a declividade lunar foi
+//    recalculada com terrain.py (a entrega excluía a borda), mas a ordem dos 4 candidatos é a mesma.
+{
+  const csv = (f) => readFileSync(new URL("data/source/classification/" + f, root), "utf8")
+    .replace(/^﻿/, "").trim().split(/\r?\n/).slice(1).map((l) => l.split(","));
+  for (const [f, tol] of [["ara_ranking_marte_terra_validado.csv", 1e-6], ["ara_ranking_lua_terra.csv", 0.02]]) {
+    const rows = csv(f);
+    for (const sid of new Set(rows.map((r) => r[0]))) {
+      const ours = rank(sites[sid].terrain, cells, w, scales, 10);
+      const theirs = rows.filter((r) => r[0] === sid).sort((a, b) => a[2] - b[2]);
+      assert.deepEqual(ours.map((r) => r.cell.id.replace(/^p1_/, "")), theirs.map((r) => r[1]), `ordem ${sid}`);
+      theirs.forEach((r) => {
+        const d = ours.find((o) => o.cell.id === "p1_" + r[1]).d;
+        assert.ok(Math.abs(d - Number(r[3])) <= tol, `${sid}/${r[1]}: ${d} vs ${r[3]}`);
+      });
+    }
+  }
+  console.log("Entrega de classificação: Marte idêntico (16), Lua mesma ordem (16)");
+}

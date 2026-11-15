@@ -53,7 +53,7 @@
      "label": "Temperatura de brilho (THEMIS, 1 observação)",
      "value": 203.82185801673342,
      "unit": "K",
-     "note": "49.48% do recorte coberto"
+     "note": "49,48% do recorte coberto · 06/05/2016, ~19h23 hora local em Marte; não é média anual"
     }
    ],
    "note": "THEMIS: uma única observação ao entardecer; cobertura parcial do recorte"
@@ -124,7 +124,7 @@
      "label": "Temperatura de brilho (THEMIS, 1 observação)",
      "value": 203.10358873545695,
      "unit": "K",
-     "note": "100.0% do recorte coberto"
+     "note": "100% do recorte coberto · 06/05/2016, ~19h23 hora local em Marte; não é média anual"
     }
    ],
    "note": "THEMIS: uma única observação ao entardecer; cobertura parcial do recorte"
@@ -191,7 +191,7 @@
      "label": "Temperatura de brilho (THEMIS, 1 observação)",
      "value": 204.0311098083496,
      "unit": "K",
-     "note": "100.0% do recorte coberto"
+     "note": "100% do recorte coberto · 06/05/2016, ~19h23 hora local em Marte; não é média anual"
     }
    ],
    "note": "THEMIS: uma única observação ao entardecer; cobertura parcial do recorte"
@@ -258,7 +258,7 @@
      "label": "Temperatura de brilho (THEMIS, 1 observação)",
      "value": 200.1192901135553,
      "unit": "K",
-     "note": "89.8% do recorte coberto"
+     "note": "89,8% do recorte coberto · 06/05/2016, ~19h23 hora local em Marte; não é média anual"
     }
    ],
    "note": "THEMIS: uma única observação ao entardecer; cobertura parcial do recorte"
