@@ -8,61 +8,74 @@ import { PointerLockControls } from "three/examples/jsm/controls/PointerLockCont
 import { CSS2DRenderer, CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { heightAt, slopeAt, slopeGrid, uvToLatLon } from "./data.js";
 import { GLB, PROCEDURAL, fitToLength, loadGLB } from "./models.js";
-import { rocksNear } from "../mission/rocks.js";
+import { rockAbundance, rocksNear, setRockCorridor } from "../mission/rocks.js";
 import { T } from "../i18n.js";
 
 const LAYERS = { imagem: 0, declividade: 1, altitude: 2, relevo: 3, operacoes: 4, protecao: 5 };
 const EYE = 1.75;          // altura dos olhos (m)
-const WALK = 1.4, RUN = 3.5; // m/s
+const WALK = 2.4, RUN = 6.5; // m/s — ritmo de jogo (um astronauta real anda ~1 m/s em Marte e na Lua)
 const JUMP_V = 2.5;        // m/s — o mesmo impulso nos três corpos
-const WALK_CAMERA_DISTANCE = 4.5;
+// vistas da câmera na caminhada: distância (m) e inclinação (rad) — "alto" é a visão de cima
+const WALK_VIEWS = { atras: { d: 9, pitch: 0.42 }, alto: { d: 32, pitch: 1.05 }, perto: { d: 4.2, pitch: 0.18 } };
+const angDiff = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
 
+// Astronauta em terceira pessoa: traje EVA branco com juntas, mochila de suporte de vida (PLSS),
+// viseira dourada, luvas e botas; membros com joelho e cotovelo para a animação de passada.
 function createWalker() {
-  const suit = new THREE.MeshStandardMaterial({ color: 0xe7e9e5, roughness: 0.8 });
-  const trim = new THREE.MeshStandardMaterial({ color: 0xf2b53a, roughness: 0.65 });
-  const visor = new THREE.MeshStandardMaterial({ color: 0x25445a, metalness: 0.45, roughness: 0.25 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x333b40, roughness: 0.9 });
-  const root = new THREE.Group();
-  const addCapsule = (parent, radius, length, material, y) => {
-    const mesh = new THREE.Mesh(new THREE.CapsuleGeometry(radius, length, 4, 8), material);
-    mesh.position.y = y;
-    parent.add(mesh);
-    return mesh;
-  };
-  const torso = addCapsule(root, 0.23, 0.46, suit, 1.15);
-  torso.rotation.x = -0.08;
-  const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 12), suit);
-  helmet.position.set(0, 1.67, 0);
-  root.add(helmet);
-  const faceplate = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.55), visor);
-  faceplate.position.set(0, 1.68, -0.105);
-  faceplate.rotation.x = -0.18;
-  root.add(faceplate);
-  const backpack = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.55, 0.22), dark);
-  backpack.position.set(0, 1.18, 0.27);
-  root.add(backpack);
-  const badge = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.2, 0.025), trim);
-  badge.position.set(0, 1.25, -0.235);
-  root.add(badge);
-
-  const arms = [-1, 1].map((side) => {
-    const pivot = new THREE.Group();
-    pivot.position.set(side * 0.29, 1.39, 0);
-    addCapsule(pivot, 0.095, 0.43, suit, -0.24);
-    root.add(pivot);
-    return pivot;
+  const M = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.75, ...o });
+  const suit = M(0xf1f1ec, { roughness: 0.85 }), joint = M(0xc9ccc8), glove = M(0xdedfda), boot = M(0x5d6266, { roughness: 0.95 });
+  const gold = M(0xe9a923, { metalness: 0.9, roughness: 0.18, emissive: 0x3a2400, emissiveIntensity: 0.4 });
+  const pack = M(0xe4e5e0), dark = M(0x2d3338, { roughness: 0.6 }), red = M(0xc8372d), lamp = M(0xfff4d0, { emissive: 0xfff2c0, emissiveIntensity: 1.5 });
+  const blue = M(0x2f6fb5, { emissive: 0x0b2a55, emissiveIntensity: 0.5 });
+  const root = new THREE.Group(), body = new THREE.Group();
+  root.add(body);
+  const mesh = (geo, mat, x = 0, y = 0, z = 0, parent = body) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); parent.add(m); return m; };
+  const cap = (r, l) => new THREE.CapsuleGeometry(r, l, 6, 12);
+  // tronco e cintura
+  mesh(cap(0.25, 0.42), suit, 0, 1.17, 0).scale.set(1.08, 1, 0.85);
+  mesh(new THREE.TorusGeometry(0.22, 0.04, 8, 20), joint, 0, 0.9, 0).rotation.x = Math.PI / 2;
+  mesh(cap(0.2, 0.12), suit, 0, 0.84, 0).scale.set(1.15, 1, 0.9);
+  // painel de controle no peito (DCM) com botões
+  mesh(new THREE.BoxGeometry(0.3, 0.16, 0.1), pack, 0, 1.18, -0.24);
+  mesh(new THREE.BoxGeometry(0.06, 0.04, 0.02), red, -0.08, 1.2, -0.3);
+  mesh(new THREE.BoxGeometry(0.06, 0.04, 0.02), blue, 0.07, 1.2, -0.3);
+  // emblema ARA no ombro
+  mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.02, 16), gold, -0.3, 1.36, -0.05).rotation.z = Math.PI / 2;
+  // mochila PLSS
+  mesh(new THREE.BoxGeometry(0.5, 0.66, 0.26), pack, 0, 1.2, 0.3);
+  mesh(new THREE.BoxGeometry(0.42, 0.14, 0.2), joint, 0, 1.58, 0.29);
+  mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.3, 8), dark, 0.18, 1.62, 0.22);
+  // capacete: bolha, viseira dourada, lanternas
+  const head = new THREE.Group(); head.position.set(0, 1.68, -0.02); body.add(head);
+  mesh(new THREE.SphereGeometry(0.235, 24, 18), suit, 0, 0, 0, head);
+  const visor = mesh(new THREE.SphereGeometry(0.205, 24, 16, -Math.PI * 0.42, Math.PI * 0.84, Math.PI * 0.22, Math.PI * 0.42), gold, 0, 0.0, -0.045, head);
+  visor.rotation.y = Math.PI;
+  mesh(new THREE.TorusGeometry(0.2, 0.025, 8, 24), joint, 0, -0.17, 0, head).rotation.x = Math.PI / 2;
+  [-1, 1].forEach((sd) => { mesh(new THREE.BoxGeometry(0.06, 0.05, 0.08), dark, sd * 0.2, 0.08, -0.08, head); mesh(new THREE.SphereGeometry(0.022, 8, 6), lamp, sd * 0.2, 0.08, -0.125, head); });
+  // braços: ombro → cotovelo → luva
+  const arms = [-1, 1].map((sd) => {
+    const sh = new THREE.Group(); sh.position.set(sd * 0.34, 1.4, 0); body.add(sh);
+    mesh(new THREE.SphereGeometry(0.11, 12, 10), joint, 0, 0, 0, sh);
+    mesh(cap(0.095, 0.2), suit, 0, -0.17, 0, sh);
+    const el = new THREE.Group(); el.position.set(0, -0.34, 0); sh.add(el);
+    mesh(new THREE.TorusGeometry(0.085, 0.022, 6, 14), joint, 0, 0.02, 0, el).rotation.x = Math.PI / 2;
+    mesh(cap(0.085, 0.18), suit, 0, -0.14, 0, el);
+    mesh(new THREE.BoxGeometry(0.11, 0.14, 0.1), glove, 0, -0.32, 0, el);
+    sh.rotation.z = sd * 0.12;
+    return { sh, el };
   });
-  const legs = [-1, 1].map((side) => {
-    const pivot = new THREE.Group();
-    pivot.position.set(side * 0.13, 0.82, 0);
-    addCapsule(pivot, 0.12, 0.43, suit, -0.27);
-    const boot = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.12, 0.3), dark);
-    boot.position.set(0, -0.56, -0.04);
-    pivot.add(boot);
-    root.add(pivot);
-    return pivot;
+  // pernas: quadril → joelho → bota
+  const legs = [-1, 1].map((sd) => {
+    const hip = new THREE.Group(); hip.position.set(sd * 0.13, 0.8, 0); body.add(hip);
+    mesh(cap(0.125, 0.24), suit, 0, -0.2, 0, hip);
+    if (sd < 0) mesh(new THREE.CylinderGeometry(0.127, 0.127, 0.06, 14), red, 0, -0.1, 0, hip);
+    const kn = new THREE.Group(); kn.position.set(0, -0.42, 0); hip.add(kn);
+    mesh(new THREE.TorusGeometry(0.11, 0.026, 6, 14), joint, 0, 0.02, 0, kn).rotation.x = Math.PI / 2;
+    mesh(cap(0.11, 0.2), suit, 0, -0.16, 0, kn);
+    mesh(new THREE.BoxGeometry(0.2, 0.13, 0.32), boot, 0, -0.36, -0.04, kn);
+    return { hip, kn };
   });
-  root.userData.walkingParts = { arms, legs, suit, trim, visor, dark };
+  root.userData.walkingParts = { body, head, arms, legs };
   root.traverse((object) => { if (object.isMesh) { object.castShadow = false; object.receiveShadow = false; } });
   return root;
 }
@@ -138,8 +151,26 @@ export default class TerrainView {
     this._onLeave = () => this.cb.onHover?.(null);
     dom.addEventListener("pointermove", this._onMove);
     dom.addEventListener("pointerleave", this._onLeave);
-    dom.addEventListener("pointerdown", (e) => { this._down = [e.clientX, e.clientY]; });
-    dom.addEventListener("pointerup", this._onClick);
+    dom.addEventListener("pointerdown", (e) => {
+      this._down = [e.clientX, e.clientY];
+      if (this.mode === "walk") { this._drag = [e.clientX, e.clientY]; dom.setPointerCapture?.(e.pointerId); }
+    });
+    dom.addEventListener("pointerup", (e) => { this._drag = null; this._onClick(e); });
+    dom.addEventListener("pointercancel", () => { this._drag = null; });
+    // caminhada: arrastar olha ao redor; a roda aproxima/afasta a câmera do astronauta
+    dom.addEventListener("pointermove", (e) => {
+      if (this.mode !== "walk" || !this._drag || !this.walkCam) return;
+      const dx = e.clientX - this._drag[0], dy = e.clientY - this._drag[1];
+      this._drag = [e.clientX, e.clientY];
+      this.walkCam.yaw -= dx * 0.006;
+      this.walkCam.pitch = Math.max(0.05, Math.min(1.35, this.walkCam.pitch + dy * 0.004));
+      this.walkCam.lookAt = performance.now();
+    });
+    dom.addEventListener("wheel", (e) => {
+      if (this.mode !== "walk" || !this.walkCam) return;
+      e.preventDefault();
+      this.walkCam.d = Math.max(2.5, Math.min(120, this.walkCam.d * Math.exp(e.deltaY * 0.0012)));
+    }, { passive: false });
     this._onKey = (e) => this.key(e);
     window.addEventListener("keydown", this._onKey);
     window.addEventListener("keyup", this._onKey);
@@ -194,6 +225,7 @@ export default class TerrainView {
       uMode: { value: LAYERS[this.layer] }, uMin: { value: meta.height.min }, uMax: { value: meta.height.max },
       uStep: { value: this.contours.step }, uContours: { value: this.contours.on ? 1 : 0 },
       uMinMap: { value: null }, uMinOn: { value: 0 },
+      uDetail: { value: this.mode === "walk" || this.mode === "drive" ? 1 : 0 },
     };
     if (data.minerals) {
       const mt = new THREE.Texture(data.minerals);
@@ -205,13 +237,19 @@ export default class TerrainView {
     mat.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, this.uniforms);
       sh.vertexShader = sh.vertexShader
-        .replace("#include <common>", "#include <common>\nattribute float aElev;\nattribute float aSlope;\nattribute float aShadow;\nattribute float aOps;\nvarying float vElev;\nvarying float vSlope;\nvarying float vShadow;\nvarying float vOps;")
-        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvElev = aElev;\nvSlope = aSlope;\nvShadow = aShadow;\nvOps = aOps;");
+        .replace("#include <common>", "#include <common>\nattribute float aElev;\nattribute float aSlope;\nattribute float aShadow;\nattribute float aOps;\nvarying vec3 vWPos;\nvarying float vElev;\nvarying float vSlope;\nvarying float vShadow;\nvarying float vOps;")
+        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvElev = aElev;\nvSlope = aSlope;\nvShadow = aShadow;\nvOps = aOps;");
       sh.fragmentShader = sh.fragmentShader
         .replace("#include <common>", `#include <common>
 uniform int uMode; uniform float uMin; uniform float uMax; uniform float uStep; uniform int uContours;
-uniform sampler2D uMinMap; uniform float uMinOn;
-varying float vElev; varying float vSlope; varying float vShadow; varying float vOps;
+uniform sampler2D uMinMap; uniform float uMinOn; uniform float uDetail;
+varying vec3 vWPos;
+varying float vElev;
+// detalhe do chão visto de perto (caminhada/direção): grãos, seixos e manchas procedurais que
+// aparecem só a poucos metros da câmera — a imagem orbital continua sendo a cor de fundo.
+float h21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(h21(i), h21(i + vec2(1.0, 0.0)), f.x), mix(h21(i + vec2(0.0, 1.0)), h21(i + vec2(1.0, 1.0)), f.x), f.y); } varying float vSlope; varying float vShadow; varying float vOps;
 vec3 slopeColor(float s){
   if (s < 5.0) return mix(vec3(0.16,0.62,0.45), vec3(0.45,0.78,0.42), s/5.0);
   if (s < 15.0) return mix(vec3(0.45,0.78,0.42), vec3(0.98,0.84,0.30), (s-5.0)/10.0);
@@ -227,6 +265,15 @@ vec3 hypso(float t){
   return mix(d,e,(t-0.8)/0.2);
 }`)
         .replace("#include <map_fragment>", `#include <map_fragment>
+if (uDetail > 0.5 && uMode == 0) {
+  float dist = length(vWPos - cameraPosition);
+  float fade = 1.0 - smoothstep(18.0, 140.0, dist);
+  if (fade > 0.0) {
+    vec2 q = vWPos.xz;
+    float n = vnoise(q * 0.35) * 0.25 + vnoise(q * 1.3) * 0.35 + vnoise(q * 5.0) * 0.28 + h21(floor(q * 16.0)) * 0.12;
+    diffuseColor.rgb *= mix(1.0, 0.8 + n * 0.4, fade);
+  }
+}
 float lum = dot(diffuseColor.rgb, vec3(0.299,0.587,0.114));
 if (uMode == 1) diffuseColor.rgb = mix(slopeColor(vSlope), slopeColor(vSlope) * (0.55 + lum), 0.35);
 else if (uMode == 2) diffuseColor.rgb = hypso(clamp((vElev - uMin) / max(uMax - uMin, 1.0), 0.0, 1.0));
@@ -626,12 +673,14 @@ reflectedLight.directSpecular *= vShadow;
     if (!this.data) return; // a página chama de novo quando a cena carregar
     if (mode === this.mode && !(mode === "walk" && start)) return;
     this.mode = mode;
+    if (this.uniforms?.uDetail) this.uniforms.uDetail.value = mode === "walk" || mode === "drive" ? 1 : 0;
     if (mode !== "walk" && this.walker) {
       this.scene.remove(this.walker);
       disposeWalker(this.walker);
       this.walker = null;
       this.walkPos = null;
       this._walkJump = 0;
+      this.clearWalkExtras();
     }
     if (this._ambBase != null && mode !== "drive") { this.ambient.intensity = this._ambBase; this._ambBase = null; }
     if (mode === "drive") {
@@ -661,9 +710,14 @@ reflectedLight.directSpecular *= vShadow;
       this.walker = createWalker();
       this.walker.position.copy(this.walkPos);
       this.scene.add(this.walker);
-      this.camera.position.set(t.x, g + EYE + 1.1, t.z + WALK_CAMERA_DISTANCE);
-      this.camera.rotation.order = "YXZ";
-      this.camera.lookAt(t.x, g + 1.05, t.z);
+      this.walkHeading = 0;            // rumo do astronauta (rad; 0 = norte, −Z)
+      this.walkSpeed = 0;              // velocidade atual (m/s), com aceleração suave
+      const view = WALK_VIEWS[this.walkView || "atras"];
+      this.walkCam = { yaw: 0, pitch: view.pitch, d: view.d, pos: null, lookAt: 0 };
+      this._walkSent = 0;
+      if (this.pointerLock.isLocked) this.pointerLock.unlock();
+      this.setupWalkExtras();
+      if (import.meta.env?.DEV) window.__araWalk = this;
       this.overlays.visible = false;                          // linhas e rótulos ficariam flutuando na altura dos olhos
       this.labels.domElement.style.display = "none";
       this.vel.set(0, 0, 0);
@@ -684,12 +738,62 @@ reflectedLight.directSpecular *= vShadow;
     this.dirty = true;
   }
 
-  lockWalk() { if (this.mode === "walk" && !this.touch) this.pointerLock.lock(); }
+  // a caminhada usa arrastar para olhar (sem travar o mouse): mais simples e não "prende" a pessoa
+  lockWalk() {}
+
+  /** Vista da câmera na caminhada: "atras", "alto" (de cima) ou "perto". */
+  setWalkView(kind) {
+    this.walkView = kind;
+    if (this.walkCam && WALK_VIEWS[kind]) { this.walkCam.d = WALK_VIEWS[kind].d; this.walkCam.pitch = WALK_VIEWS[kind].pitch; }
+    this.cb.onWalkView?.(kind);
+  }
+
+  /** Detalhes que aparecem perto do astronauta: pedras (modelo estatístico) e pegadas. */
+  setupWalkExtras() {
+    const body = this.data.meta.body, data = this.data;
+    if (!this.rockK) {
+      this._walkRocks = true;
+      setRockCorridor(null);
+      this.setRockField((x, z) => {
+        const u = Math.min(1, Math.max(0, x / this.S + 0.5)), v = Math.min(1, Math.max(0, z / this.S + 0.5));
+        return rockAbundance(body, { slope: slopeAt(data, u, v) });
+      }, body === "moon" ? 0x8d8c88 : body === "earth" ? 0x8a7866 : 0x6e4c3c);
+    }
+    this._rockAt = null;
+    const geo = new THREE.BoxGeometry(0.12, 0.012, 0.26);
+    const mat = new THREE.MeshStandardMaterial({ color: 0x000000, transparent: true, opacity: 0.22, roughness: 1, depthWrite: false });
+    this.prints = new THREE.InstancedMesh(geo, mat, 600);
+    this.prints.count = 0; this.prints.frustumCulled = false; this._printI = 0; this._printSide = 1; this._printDist = 0;
+    this.scene.add(this.prints);
+  }
+
+  clearWalkExtras() {
+    if (this.prints) { this.scene.remove(this.prints); this.prints.geometry.dispose(); this.prints.material.dispose(); this.prints = null; }
+    if (this._walkRocks) { this._walkRocks = false; this.setRockField(null); }
+    this.walkCam = null;
+  }
+
+  addFootprint(x, z, heading) {
+    const side = (this._printSide = -this._printSide), off = 0.13 * side;
+    const px = x + Math.cos(heading) * off, pz = z - Math.sin(heading) * off;
+    const g = (heightAt(this.data, px / this.S + 0.5, pz / this.S + 0.5) - this.mid) * this.exag;
+    const m = new THREE.Matrix4().compose(new THREE.Vector3(px, g + 0.03, pz), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, heading, 0)), new THREE.Vector3(1, 1, 1));
+    this.prints.setMatrixAt(this._printI, m);
+    this._printI = (this._printI + 1) % 600;
+    this.prints.count = Math.min(600, this.prints.count + 1);
+    this.prints.instanceMatrix.needsUpdate = true;
+  }
 
   /** Controles por toque (celular): joystick (x, y em -1..1), olhar (dx, dy em px) e pulo. */
   touchMove(x, y) { this.touch = true; this.joy = { x, y }; }
   touchLook(dx, dy) {
     this.touch = true;
+    if (this.mode === "walk" && this.walkCam) {
+      this.walkCam.yaw -= dx * 0.006;
+      this.walkCam.pitch = Math.max(0.05, Math.min(1.35, this.walkCam.pitch + dy * 0.004));
+      this.walkCam.lookAt = performance.now();
+      return;
+    }
     const e = new THREE.Euler(0, 0, 0, "YXZ").setFromQuaternion(this.camera.quaternion);
     e.y -= dx * 0.005; e.x = Math.max(-1.45, Math.min(1.45, e.x - dy * 0.005));
     this.camera.quaternion.setFromEuler(e);
@@ -750,11 +854,15 @@ reflectedLight.directSpecular *= vShadow;
     if (!this.rockK || !this.data) return;
     if (this._rockAt && Math.hypot(this._rockAt[0] - x, this._rockAt[1] - z) < 6) return;
     this._rockAt = [x, z];
-    const list = rocksNear(x, z, 45, this.rockK).filter((r) => r.d >= 0.6 || (r.d >= 0.35 && Math.hypot(r.x - x, r.z - z) < 10));
+    const near = this.mode === "walk" ? 18 : 10, dMin = this.mode === "walk" ? 0.2 : 0.35;
+    const list = rocksNear(x, z, 45, this.rockK).filter((r) => r.d >= 0.6 || (r.d >= dMin && Math.hypot(r.x - x, r.z - z) < near));
     const max = Math.min(list.length, 12000);
     if (!this.rockMesh || this.rockMesh.count < max || this.rockMesh.instanceMatrix.count < max) {
       if (this.rockMesh) { this.scene.remove(this.rockMesh); this.rockMesh.geometry.dispose(); this.rockMesh.material.dispose(); }
-      const geo = new THREE.IcosahedronGeometry(0.5, 0);
+      const geo = new THREE.DodecahedronGeometry(0.5, 1);
+      const pos = geo.attributes.position;                    // deforma um pouco para não parecer poliedro perfeito
+      for (let i = 0; i < pos.count; i++) { const f = 0.82 + 0.3 * Math.abs(Math.sin(pos.getX(i) * 9.1 + pos.getZ(i) * 5.3)); pos.setXYZ(i, pos.getX(i) * f, pos.getY(i) * (0.8 + 0.2 * f), pos.getZ(i) * f); }
+      geo.computeVertexNormals();
       const mat = new THREE.MeshStandardMaterial({ color: this.rockColor, roughness: 0.95, flatShading: true });
       this.rockMesh = new THREE.InstancedMesh(geo, mat, Math.max(2000, Math.ceil(max * 1.3)));
       this.scene.add(this.rockMesh);
@@ -763,7 +871,7 @@ reflectedLight.directSpecular *= vShadow;
     for (let i = 0; i < max; i++) {
       const r = list[i], u = r.x / this.S + 0.5, v = r.z / this.S + 0.5;
       const g = (heightAt(this.data, u, v) - this.mid) * this.exag;
-      e.set(0, r.rot, 0); q.setFromEuler(e); sc.set(r.d, r.h * 2, r.d * 0.85); pos.set(r.x, g + r.h * 0.35, r.z);
+      e.set(0, r.rot, 0); q.setFromEuler(e); sc.set(r.d, r.h * 2, r.d * 0.85); pos.set(r.x, g + r.h * (r.d < 0.6 ? 0.6 : 0.35), r.z);
       m.compose(pos, q, sc); this.rockMesh.setMatrixAt(i, m);
     }
     this.rockMesh.count = max;
@@ -790,35 +898,44 @@ reflectedLight.directSpecular *= vShadow;
     const down = e.type === "keydown";
     this.keys[e.code] = down;
     if (down && e.code === "Space") this.jump();
+    if (down && e.code === "KeyC") this.setWalkView({ atras: "alto", alto: "perto", perto: "atras" }[this.walkView || "atras"]);
     // setas e espaço não rolam a página enquanto se caminha
-    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code) || (this.pointerLock.isLocked && ["KeyW", "KeyA", "KeyS", "KeyD"].includes(e.code))) e.preventDefault();
+    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)  || ["KeyW", "KeyA", "KeyS", "KeyD"].includes(e.code)) e.preventDefault();
   }
 
   tick() {
     const dt = Math.min(this.clock.getDelta(), 0.05);
     if (this._fly) this._fly(performance.now());
-    if (this.mode === "walk" && this.data) {
-      const k = this.keys, speed = (k.ShiftLeft || k.ShiftRight || this.running) ? RUN : WALK;
-      const j = this.joy || { x: 0, y: 0 };
+    if (this.mode === "walk" && this.data && this.walkCam) {
+      // Terceira pessoa como num jogo: W/S/A/D (ou setas) andam em relação à câmera; o astronauta
+      // vira suavemente para onde anda e a câmera vem atrás com atraso. Arrastar olha ao redor.
+      const k = this.keys, j = this.joy || { x: 0, y: 0 }, cam = this.walkCam;
       let fwd = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0) - j.y;
-      // sem o mouse travado (teclado só): A/D e ←/→ GIRAM o astronauta; Q/E andam de lado.
-      // com o mouse travado: o mouse gira e A/D andam de lado (como num jogo em terceira pessoa).
-      const lr = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0);
-      const strafe = (k.KeyE ? 1 : 0) - (k.KeyQ ? 1 : 0);
-      let side = (this.pointerLock.isLocked ? lr : 0) + strafe + j.x;
-      if (!this.pointerLock.isLocked && lr) {
-        const e = new THREE.Euler(0, 0, 0, "YXZ").setFromQuaternion(this.camera.quaternion);
-        e.y -= lr * 1.9 * dt; this.camera.quaternion.setFromEuler(e);
+      let side = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0) + (k.KeyE ? 1 : 0) - (k.KeyQ ? 1 : 0) + j.x;
+      const len = Math.hypot(fwd, side);
+      if (len > 1) { fwd /= len; side /= len; }
+      const moving = len > 0.05;
+      const p = this.walkPos, half = this.S / 2 - 1;
+      const run = k.ShiftLeft || k.ShiftRight || this.running;
+      // direção desejada no mundo: frente da câmera (−sen yaw, −cos yaw), direita (cos yaw, −sen yaw)
+      const mx = -Math.sin(cam.yaw) * fwd + Math.cos(cam.yaw) * side, mz = -Math.cos(cam.yaw) * fwd - Math.sin(cam.yaw) * side;
+      if (moving) this.walkHeading += angDiff(Math.atan2(-mx, -mz), this.walkHeading) * Math.min(1, dt * 10);
+      const hx = -Math.sin(this.walkHeading), hz = -Math.cos(this.walkHeading);
+      // ladeira: sobe mais devagar e desce um pouco mais rápido (rota livre: nada bloqueia)
+      const u0 = p.x / this.S + 0.5, v0 = p.z / this.S + 0.5, e = 2;
+      const uA = Math.min(1, Math.max(0, u0 + (hx * e) / this.S)), vA = Math.min(1, Math.max(0, v0 + (hz * e) / this.S));
+      const grade = ((heightAt(this.data, uA, vA) - heightAt(this.data, u0, v0)) * this.exag) / e;
+      const slopeK = grade > 0 ? Math.max(0.35, 1 - grade * 1.4) : Math.min(1.2, 1 - grade * 0.4);
+      const target = moving ? (run ? RUN : WALK) * Math.min(1, len) * slopeK : 0;
+      this.walkSpeed += (target - this.walkSpeed) * Math.min(1, dt * (moving ? 6 : 9));
+      if (this.walkSpeed > 0.01) {
+        const step = this.walkSpeed * dt;
+        p.x = Math.max(-half, Math.min(half, p.x + hx * step));
+        p.z = Math.max(-half, Math.min(half, p.z + hz * step));
+        this._printDist += step;
+        if (this.prints && this._printDist > (run ? 1.1 : 0.75) && this.onGround) { this._printDist = 0; this.addFootprint(p.x, p.z, this.walkHeading); }
       }
-      const inputLength = Math.hypot(fwd, side);
-      if (inputLength > 1) { fwd /= inputLength; side /= inputLength; }
-      const p = this.walkPos, yaw = new THREE.Euler(0, 0, 0, "YXZ").setFromQuaternion(this.camera.quaternion).y, half = this.S / 2 - 1;
-      // frente da câmera (three.js olha para −Z): (−sen yaw, −cos yaw); direita: (cos yaw, −sen yaw)
-      p.x += (-Math.sin(yaw) * fwd + Math.cos(yaw) * side) * speed * dt;
-      p.z += (-Math.cos(yaw) * fwd - Math.sin(yaw) * side) * speed * dt;
-      p.x = Math.max(-half, Math.min(half, p.x)); p.z = Math.max(-half, Math.min(half, p.z));
       const u = p.x / this.S + 0.5, v = p.z / this.S + 0.5;
-      const elevation = (heightAt(this.data, u, v) - this.mid) * this.exag;
       this.vel.y -= this.data.body.g * dt;
       this._walkJump = Math.max(0, (this._walkJump ?? 0) + this.vel.y * dt);
       if (!this.onGround && this.jumpStart != null) this.jumpMax = Math.max(this.jumpMax, this._walkJump - this.jumpStart);
@@ -828,21 +945,45 @@ reflectedLight.directSpecular *= vShadow;
       }
       const ground = (heightAt(this.data, u, v) - this.mid) * this.exag;
       p.y = ground;
-      if (this.walker) {
-        this.walker.position.set(p.x, ground + this._walkJump, p.z);
-        this.walker.rotation.y = yaw;
-        const parts = this.walker.userData.walkingParts, moving = inputLength > 0.02;
-        this._walkAnim += dt * (moving ? speed * 1.8 : 0);
-        const swing = moving ? Math.sin(this._walkAnim) * 0.48 : 0;
-        parts.legs[0].rotation.x = swing; parts.legs[1].rotation.x = -swing;
-        parts.arms[0].rotation.x = -swing * 0.7; parts.arms[1].rotation.x = swing * 0.7;
+      this.updateRocks(p.x, p.z);
+      // animação: passada com joelhos e cotovelos, balanço do corpo, inclinação ao correr
+      const parts = this.walker.userData.walkingParts, sp = this.walkSpeed;
+      if (sp > 0.05) this._walkAnim += dt * (2.5 + sp * 1.5);
+      const amp = Math.min(0.75, sp * 0.18), sw = Math.sin(this._walkAnim);
+      parts.legs.forEach((l, i) => {
+        l.hip.rotation.x = (i ? -sw : sw) * amp;
+        l.kn.rotation.x = this.onGround ? Math.max(0, Math.cos(this._walkAnim + (i ? Math.PI : 0))) * amp * 1.3 : 0.55;
+      });
+      parts.arms.forEach((a, i) => { a.sh.rotation.x = (i ? sw : -sw) * amp * 0.8; a.el.rotation.x = -0.25 - amp * 0.5; });
+      parts.body.position.y = Math.abs(Math.cos(this._walkAnim)) * amp * 0.08;
+      parts.body.rotation.x = -Math.min(0.22, sp * 0.03);
+      this.walker.position.set(p.x, ground + this._walkJump, p.z);
+      this.walker.rotation.y = this.walkHeading;
+      // câmera: volta devagar para trás do astronauta quando ele anda para a frente e a pessoa não está olhando ao redor
+      if (moving && fwd > 0.2 && performance.now() - cam.lookAt > 1500) cam.yaw += angDiff(this.walkHeading, cam.yaw) * Math.min(1, dt * 1.6);
+      const tgt = new THREE.Vector3(p.x, ground + this._walkJump + 1.25, p.z);
+      let pitch = cam.pitch, want = null;
+      for (let tries = 0; tries < 8; tries++) {            // sobe a câmera se um morro ficar no caminho
+        const ch = Math.cos(pitch) * cam.d;
+        want = new THREE.Vector3(tgt.x + Math.sin(cam.yaw) * ch, tgt.y + Math.sin(pitch) * cam.d, tgt.z + Math.cos(cam.yaw) * ch);
+        let blocked = false;
+        for (const f of [0.35, 0.65, 1]) {
+          const x = tgt.x + (want.x - tgt.x) * f, z = tgt.z + (want.z - tgt.z) * f, y = tgt.y + (want.y - tgt.y) * f;
+          const g = (heightAt(this.data, Math.min(1, Math.max(0, x / this.S + 0.5)), Math.min(1, Math.max(0, z / this.S + 0.5))) - this.mid) * this.exag;
+          if (y < g + 0.6) { blocked = true; break; }
+        }
+        if (!blocked) break;
+        pitch = Math.min(1.45, pitch + 0.12);
       }
-      const cameraX = p.x + Math.sin(yaw) * WALK_CAMERA_DISTANCE;
-      const cameraZ = p.z + Math.cos(yaw) * WALK_CAMERA_DISTANCE;
-      const cameraU = cameraX / this.S + 0.5, cameraV = cameraZ / this.S + 0.5;
-      const cameraGround = (heightAt(this.data, cameraU, cameraV) - this.mid) * this.exag;
-      this.camera.position.set(cameraX, cameraGround + EYE + 1.1 + this._walkJump, cameraZ);
-      this.cb.onWalk?.({ u, v, h: heightAt(this.data, u, v), slope: slopeAt(this.data, u, v), ...uvToLatLon(this.data, u, v) });
+      if (!cam.pos) cam.pos = want.clone();
+      cam.pos.lerp(want, 1 - Math.exp(-dt * 9));
+      this.camera.position.copy(cam.pos);
+      this.camera.lookAt(tgt);
+      const now = performance.now();
+      if (now - this._walkSent > 150) {                     // o painel da página não precisa de 60 atualizações por segundo
+        this._walkSent = now;
+        this.cb.onWalk?.({ u, v, h: heightAt(this.data, u, v), slope: slopeAt(this.data, u, v), speed: sp, view: this.walkView || "atras", ...uvToLatLon(this.data, u, v) });
+      }
       this.dirty = true;
     } else if (this.mode === "drive" && this.data) {
       const k = this.keys, j = this.joy || { x: 0, y: 0 };

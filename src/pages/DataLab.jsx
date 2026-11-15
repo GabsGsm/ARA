@@ -69,11 +69,11 @@ const SRC = [
   ["Grohmann (2015) — Effects of spatial resolution on slope and aspect derivation for regional-scale analysis, Computers & Geosciences 77", "https://doi.org/10.1016/j.cageo.2015.02.003"],
   ["Farr et al. (2007) — The Shuttle Radar Topography Mission, Reviews of Geophysics 45", "https://doi.org/10.1029/2005RG000183"],
   ["Kirk et al. (2008) — Ultrahigh resolution topographic mapping of Mars with MRO HiRISE stereo images, JGR Planets", "https://doi.org/10.1029/2007JE003000"],
-  ["Horn (1981) — Hill shading and the reflectance map, Proceedings of the IEEE 69(1) (declividade e sombreamento)", "https://doi.org/10.1109/PROC.1981.11918"],
-  ["OpenCV — Sobel derivatives (operador de bordas)", "https://docs.opencv.org/4.x/d2/d2c/tutorial_sobel_derivatives.html"],
-  ["NASA Earthdata — Remote sensing basics (resolução espacial, sensores)", "https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/remote-sensing"],
-  ["NASA Chandra — A Universe of Sound (sonificação de dados científicos)", "https://chandra.si.edu/sound/"],
-  ["W3C — WCAG 2.2 (acessibilidade)", "https://www.w3.org/TR/WCAG22/"],
+  ["Horn (1981) — Hill shading and the reflectance map, Proceedings of the IEEE 69(1)", "https://doi.org/10.1109/PROC.1981.11918"],
+  ["OpenCV — Sobel derivatives", "https://docs.opencv.org/4.x/d2/d2c/tutorial_sobel_derivatives.html"],
+  ["NASA Earthdata — Remote sensing basics", "https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/remote-sensing"],
+  ["NASA Chandra — A Universe of Sound", "https://chandra.si.edu/sound/"],
+  ["W3C — WCAG 2.2", "https://www.w3.org/TR/WCAG22/"],
 ];
 
 function Canvas({ field, n, view, opts, label, imageSrc, k, valid }) {
