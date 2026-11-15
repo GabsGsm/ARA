@@ -32,7 +32,7 @@ export default function FilterBar({ ex, onBody }) {
         <div className="min-w-0">
           <span className="ex-label">{tr("Local fixo")}</span>
           <div className="flex flex-wrap items-center gap-2">
-            <Segmented asTabs label="Corpo celeste" options={BODIES} value={ex.body} onChange={onBody} className="ex-bodies" />
+            <Segmented asTabs label={tr("Corpo celeste", "Celestial body")} options={BODIES} value={ex.body} onChange={onBody} className="ex-bodies" />
             <select aria-label={tr("Local fixo")} className="field ex-select" value={ex.siteId ?? ""} onChange={(e) => ex.setSiteId(e.target.value)}>
               {list.map((s) => (
                 <option key={s.id} value={s.id} disabled={!data.hasTerrain(s.id)}>

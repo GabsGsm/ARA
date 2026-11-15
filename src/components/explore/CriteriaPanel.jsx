@@ -15,7 +15,7 @@ export default function CriteriaPanel({ objective, onObjective, weights, onWeigh
           <label htmlFor="objective" className="mb-1.5 mt-2.5 block text-[13px] text-muted">{tr("Objetivo")}</label>
           <select id="objective" className="field" value={objective} onChange={(e) => onObjective(e.target.value)}>
             {Object.entries(config.objectives).map(([k, o]) => <option key={k} value={k}>{tr(o.label)}</option>)}
-            <option value="custom">Personalizado</option>
+            <option value="custom">{tr("Personalizado", "Custom")}</option>
           </select>
         </>
       )}

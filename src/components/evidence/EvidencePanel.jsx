@@ -1,7 +1,7 @@
 // Painel de evidências de um candidato: finalidade da missão, cartões (favorável / diferença / ausente / contexto),
 // "O que o ranking não mostra?" (Analog Mirage), "O que falta saber?" (Next Best Measurement), cobertura dos
 // dados e a ficha exportável (Analog Passport).
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ORIGIN, PURPOSES, RELATION, downloadJSON, evidenceFor, mirage, nextBest, passport, tally, targetEvidence } from "../../lib/evidence/engine.js";
 import { fmt } from "../../lib/format.js";
 import { T } from "../../lib/i18n.js";
@@ -36,7 +36,10 @@ function Card({ e, open, onToggle }) {
 }
 
 export default function EvidencePanel({ candidate, site, siteAttrs, siteVec, extra, data, objective, weights, distance, rankInfo, exploratory, sourcesMeta, compare }) {
-  const [purpose, setPurpose] = useState(objective === "rover" ? "mobilidade" : "geomorfologia");
+  const fromObjective = objective === "rover" ? "mobilidade" : "geomorfologia";
+  const [purpose, setPurpose] = useState(fromObjective);
+  // a finalidade acompanha o objetivo do ranking quando ele muda (a pessoa ainda pode trocar aqui)
+  useEffect(() => { setPurpose(fromObjective); }, [fromObjective]);
   const [openId, setOpenId] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const list = useMemo(() => build(candidate, siteVec, extra, site, purpose, data), [candidate, siteVec, extra, site, purpose, data]);

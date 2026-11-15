@@ -9,7 +9,7 @@ export default function SitePicker({ body, onBody, siteId, onSite }) {
   const list = data.sitesOf(body);
   return (
     <>
-      <Segmented asTabs label="Corpo celeste" options={BODIES} value={body} onChange={onBody} className="mb-3" />
+      <Segmented asTabs label={T("Corpo celeste", "Celestial body")} options={BODIES} value={body} onChange={onBody} className="mb-3" />
       <div role="radiogroup" aria-label={T("Locais", "Sites")} className="grid gap-2">
         {list.length === 0 && <p className="note">{T("Nenhum local para este corpo ainda.", "No sites for this body yet.")}</p>}
         {list.map((s) => {

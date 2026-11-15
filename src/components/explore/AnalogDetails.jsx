@@ -29,6 +29,8 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [], ini
   const [tab, setTab] = useState(initialTab || "resumo");
   useEffect(() => { if (initialTab) setTab(initialTab); }, [initialTab]);
   const tabs = [...TABS, ...extraTabs.map((t) => ({ id: t.id, label: t.label }))];
+  // aba pedida na URL (?aba=) que não existe volta para o Resumo
+  const activeTab = tabs.some((t) => t.id === tab) ? tab : "resumo";
   if (!result || !ex.siteId) {
     return <section className="card ex-details"><p className="note m-0">{tr("Selecione um candidato para ver os detalhes.")}</p></section>;
   }
@@ -42,7 +44,7 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [], ini
   const unlike = topo.filter((d) => d.status === "not_analog");
   const phys = BODY_PHYS[site.body];
   const st = stabilityText(ex.siteId, cell.id);
-  const extra = extraTabs.find((t) => t.id === tab);
+  const extra = extraTabs.find((t) => t.id === activeTab);
 
   return (
     <section className="card ex-details" aria-labelledby="exDetTitle">
@@ -50,13 +52,13 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [], ini
         <h2 id="exDetTitle" className="eyebrow mb-0">{tr("Detalhes do análogo selecionado")}</h2>
         <div role="tablist" aria-label={tr("Detalhes", "Details")} className="ex-tabs">
           {tabs.map((t) => (
-            <button key={t.id} type="button" role="tab" id={`tab-${t.id}`} aria-selected={tab === t.id} aria-controls="ex-det-panel" onClick={() => setTab(t.id)}>{tr(t.label)}</button>
+            <button key={t.id} type="button" role="tab" id={`tab-${t.id}`} aria-selected={activeTab === t.id} aria-controls="ex-det-panel" onClick={() => setTab(t.id)}>{tr(t.label)}</button>
           ))}
         </div>
       </div>
 
-      <div id="ex-det-panel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="ex-det-body">
-        {tab === "resumo" && (
+      <div id="ex-det-panel" role="tabpanel" aria-labelledby={`tab-${activeTab}`} className="ex-det-body">
+        {activeTab === "resumo" && (
           <div className="ex-resumo">
             <div className="ex-thumb">
               <SiteFigure siteId={ex.siteId} compact showTrek={false} />
@@ -111,9 +113,9 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [], ini
           </div>
         )}
 
-        {tab === "comparacao" && <><InspectPanel siteId={ex.siteId} siteVec={siteVec} result={result} weights={ex.weights} /><MLProfile siteId={ex.siteId} cellId={cell.id} /></>}
+        {activeTab === "comparacao" && <><InspectPanel siteId={ex.siteId} siteVec={siteVec} result={result} weights={ex.weights} /><MLProfile siteId={ex.siteId} cellId={cell.id} /></>}
 
-        {tab === "limitacoes" && (
+        {activeTab === "limitacoes" && (
           <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
             <div>
               <div className="ex-method">
@@ -138,7 +140,7 @@ export default function AnalogDetails({ ex, siteVec, result, extraTabs = [], ini
           </div>
         )}
 
-        {tab === "fontes" && (
+        {activeTab === "fontes" && (
           <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
             <div>
               <h4 className="eyebrow mb-2">{site.name}</h4>

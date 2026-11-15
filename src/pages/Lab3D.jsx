@@ -400,7 +400,7 @@ export default function Lab3D() {
             {twin && <><i className="t3-vs">⇄</i><span>Terra</span><i>›</i><b>{live.scene ? live.scene.meta.name : byId[analogId]?.name}</b></>}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Seg label="Navegação" options={NAV} value={nav} onChange={setNav} />
+            <Seg label={T("Navegação", "Navigation")} options={NAV} value={nav} onChange={setNav} />
             {twin && <Toggle on={sync} onChange={setSync}>{tr("Câmeras juntas")}</Toggle>}
           </div>
         </div>
@@ -481,7 +481,7 @@ export default function Lab3D() {
                   aria-label={panels.right ? T("Recolher painel", "Collapse panel") : T("Abrir painel", "Open panel")}>{panels.right ? "›" : "‹"}</button>
           <div className="t3-scroll">
             <h2 className="t3-h">{tr("Camada")}</h2>
-            <Seg label="Camada" options={planetBody === "moon" ? [...LAYERS, { value: "operacoes", label: "Janela operacional" }] : LAYERS} value={settings.layer} onChange={(v) => setSettings((s) => ({ ...s, layer: v }))} />
+            <Seg label={T("Camada", "Layer")} options={planetBody === "moon" ? [...LAYERS, { value: "operacoes", label: "Janela operacional" }] : LAYERS} value={settings.layer} onChange={(v) => setSettings((s) => ({ ...s, layer: v }))} />
             {settings.layer === "operacoes" && planetBody === "moon" && (
               <div className="t3-ops">
                 <div className="t3-legend">
@@ -506,7 +506,7 @@ export default function Lab3D() {
             <div className="t3-toggles">
               <Toggle on={settings.contours} onChange={(v) => setSettings((s) => ({ ...s, contours: v }))}>{tr("Curvas de nível")}</Toggle>
               {settings.contours && (
-                <select className="t3-select" value={settings.step} aria-label="Intervalo das curvas"
+                <select className="t3-select" value={settings.step} aria-label={T("Intervalo das curvas", "Contour interval")}
                         onChange={(e) => setSettings((s) => ({ ...s, step: Number(e.target.value) }))}>
                   {[10, 25, 50, 100, 250].map((v) => <option key={v} value={v}>a cada {v} m</option>)}
                 </select>

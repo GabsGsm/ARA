@@ -2,6 +2,7 @@
 // Fica num contexto para sobreviver à troca de página (Explorar -> Análises -> Explorar).
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useAraData } from "./useAraData.jsx";
+import * as core from "../lib/core.js";
 
 const ExplorerContext = createContext(null);
 
@@ -34,8 +35,18 @@ export function ExplorerProvider({ children }) {
     if (key !== "custom" && data.status === "ready") setWeights({ ...data.config.objectives[key].weights });
   }, [data]);
 
+  // value em % (0–100). Os pesos ficam sempre na escala 0–1 com soma 1: o atributo movido recebe value/100 e
+  // os outros dividem o restante na proporção que já tinham (se ambos forem 0, dividem igualmente).
   const setWeight = useCallback((attr, value) => {
-    setWeights((w) => ({ ...w, [attr]: value }));
+    setWeights((w) => {
+      const cur = core.normalizeWeights(w ?? {});
+      const v = Math.min(1, Math.max(0, Number(value) / 100));
+      const others = core.RANK_ATTRS.filter((a) => a !== attr);
+      const rest = others.reduce((s, a) => s + cur[a], 0);
+      const out = { ...w, [attr]: v };
+      for (const a of others) out[a] = rest > 0 ? (cur[a] / rest) * (1 - v) : (1 - v) / others.length;
+      return out;
+    });
     setObjectiveState("custom");
   }, []);
 

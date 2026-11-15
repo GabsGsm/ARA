@@ -53,12 +53,12 @@ export default function Analyses() {
         </Card>
 
         <Card as="article" title={T("Qualidade dos dados")} titleId="an2">
-          <p className="text-[13px] text-ink-2">{T("O ranking recalculado com dados piores. Se ele muda muito, a conclusão depende mais dos dados do que do terreno.", "The ranking recomputed with worse data. If it changes a lot, the conclusion depends more on the data than on the terrain.")}</p>
+          <p className="text-[13px] text-ink-2">{T("O ranking recalculado com dados piores. Se ele muda muito, a conclusão depende mais dos dados do que do terreno. Atenção: as versões simuladas existem só para parte das células (o número aparece em cada linha), então o conjunto de candidatos também muda.", "The ranking recomputed with worse data. If it changes a lot, the conclusion depends more on the data than on the terrain. Note: simulated versions exist for only part of the cells (the count is shown on each row), so the candidate set also changes.")}</p>
           {sim ? (
             <table className="data-table"><thead><tr><th>{T("Dados", "Data")}</th><th>{T("3 melhores", "Top 3")}</th></tr></thead>
               <tbody>{sim.variants.map((v) => (
                 <tr key={v.id}>
-                  <th scope="row">{T(v.label)} {v.id !== "base" && <StatusChip status="partial">{T("simulação", "simulation")}</StatusChip>}</th>
+                  <th scope="row">{T(v.label)} {v.id !== "base" && <StatusChip status="partial">{T("simulação", "simulation")}</StatusChip>}<small className="block text-muted">{T(`${core.cellsForVariant(data.cells, v.id, data.sim).length} de ${data.cells.length} células`, `${core.cellsForVariant(data.cells, v.id, data.sim).length} of ${data.cells.length} cells`)}</small></th>
                   <td><TopList rows={topFor(data, siteId, config.objectives.default.weights, v.id)} cellName={data.cellName} /></td>
                 </tr>
               ))}</tbody></table>
