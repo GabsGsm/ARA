@@ -22,7 +22,7 @@ export default function RankingList({ siteId, results, selected, onSelect }) {
               <span className="min-w-0">
                 <b className="block truncate">{c.known || regionName(c.region)}</b>
                 <small className="block truncate">{c.id} · {fmt(c.lat, 2)}°, {fmt(c.lon, 2)}°</small>
-                {st && <small className="block truncate text-gold-3/80" title="Estabilidade em 2.000 conjuntos de pesos aleatórios">{st}</small>}
+                {st && <small className="block truncate text-gold-3/80" title={tr("Estabilidade em 2.000 conjuntos de pesos aleatórios", "Stability across 2,000 random weight sets")}>{st}</small>}
               </span>
               <span className={`ex-badge ${c.known ? "" : "new"}`}>{c.known ? tr("Análogo conhecido") : tr("Novo candidato")}</span>
               <span className="ex-score" title={tr("Distância ponderada (menor = mais parecido)", "Weighted distance (lower = more similar)")}>{fmt(r.d, 3)}</span>

@@ -13,7 +13,7 @@ export default function RobustnessMatrix({ siteId, top = 6 }) {
     const variants = data.sim?.variants ?? [{ id: "base", label: T("Dados originais", "Original data") }];
     const scenarios = [];
     for (const [ok, o] of Object.entries(data.config.objectives)) {
-      for (const v of variants) scenarios.push({ id: `${ok}|${v.id}`, objective: T(o.label), variant: T(v.label), weights: o.weights, vid: v.id });
+      for (const v of variants) scenarios.push({ id: `${ok}|${v.id}`, objective: T(o.label), variant: T(v.label), weights: o.weights, vid: v.id, n: core.cellsForVariant(data.cells, v.id, data.sim).length });
     }
     const base = core.rank(site.terrain, data.cells, data.config.objectives.default.weights, data.scales, top);
     const pos = scenarios.map((sc) => {
@@ -26,17 +26,18 @@ export default function RobustnessMatrix({ siteId, top = 6 }) {
   }, [data, siteId, top]);
   if (!rows) return <p className="note">{T("Sem atributos para este local.", "No attributes for this site.")}</p>;
   const { scenarios, list } = rows;
+  const simN = Math.min(...scenarios.map((s) => s.n));
   const inTop = (p) => p != null && p <= 10;
   return (
     <div>
       <p className="desc mt-0">
-        {T(`${scenarios.length} cenários: ${Object.keys(data.config.objectives).length} objetivos (pesos) × ${scenarios.length / Object.keys(data.config.objectives).length} versões dos dados. Cada célula mostra a posição do candidato no ranking das ${data.cells.length} células naquele cenário. Dourado = top 10.`,
-          `${scenarios.length} scenarios: ${Object.keys(data.config.objectives).length} objectives (weights) × ${scenarios.length / Object.keys(data.config.objectives).length} data versions. Each cell shows the candidate's position in the ranking of the ${data.cells.length} cells under that scenario. Gold = top 10.`)}
+        {T(`${scenarios.length} cenários: ${Object.keys(data.config.objectives).length} objetivos (pesos) × ${scenarios.length / Object.keys(data.config.objectives).length} versões dos dados. Cada célula mostra a posição do candidato naquele cenário; o número de células comparadas aparece em cada coluna ("de N"): os dados originais usam as ${data.cells.length} células, mas as versões simuladas existem só para ${simN} delas (as regiões novas da expansão ficam de fora). Por isso, compare colunas do mesmo tipo de dado. Dourado = top 10.`,
+          `${scenarios.length} scenarios: ${Object.keys(data.config.objectives).length} objectives (weights) × ${scenarios.length / Object.keys(data.config.objectives).length} data versions. Each cell shows the candidate's position under that scenario; the number of compared cells is in each column ("of N"): original data uses all ${data.cells.length} cells, but simulated versions exist for only ${simN} of them (the new expansion regions are not included). Compare columns of the same data type. Gold = top 10.`)}
       </p>
       <div className="overflow-x-auto">
         <table className="data-table ev-robust">
           <thead>
-            <tr><th>{T("Candidato", "Candidate")}</th>{scenarios.map((s) => <th key={s.id} title={`${s.objective} · ${s.variant}`}><span>{s.objective.split(" ")[0]}</span><small>{s.variant.replace(/\(.*\)/, "").trim()}</small></th>)}<th>{T("No top 10", "In top 10")}</th></tr>
+            <tr><th>{T("Candidato", "Candidate")}</th>{scenarios.map((s) => <th key={s.id} title={`${s.objective} · ${s.variant}`}><span>{s.objective.split(" ")[0]}</span><small>{s.variant.replace(/\(.*\)/, "").trim()}</small><small className="opacity-70">{T(`de ${s.n}`, `of ${s.n}`)}</small></th>)}<th>{T("No top 10", "In top 10")}</th></tr>
           </thead>
           <tbody>
             {list.map((r) => {

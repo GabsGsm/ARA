@@ -41,7 +41,7 @@ export default function SiteFigure({ siteId, compact = false, showTrek = true })
         {ok && (
           <button type="button" onClick={() => setOpen(true)} className="ex-zoom-btn" aria-label={T(`Ampliar a imagem de ${site.name}`, `Enlarge the image of ${site.name}`)}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm-1 1v2H7v2h2v2h2v-2h2V9h-2V7H9z" fill="currentColor" /></svg>
-            Ampliar
+            {T("Ampliar", "Enlarge")}
           </button>
         )}
       </div>

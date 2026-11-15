@@ -36,12 +36,14 @@ export default function Explore() {
   }, [params]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ?site=<id> abre direto naquele local (links do 3D e de outras páginas); ?aba=<id> abre a aba dos detalhes
+  // aplicado só quando o próprio ?site= muda (trocar o idioma ou escolher outro local na lista não o reaplica)
+  const siteParam = params.get("site");
   useEffect(() => {
-    const id = params.get("site"), s = id && data.siteById(id);
+    const s = siteParam && data.siteById(siteParam);
     if (!s) return;
     if (s.body !== ex.body) ex.setBody(s.body);
-    ex.setSiteId(id);
-  }, [params, data]); // eslint-disable-line react-hooks/exhaustive-deps
+    ex.setSiteId(siteParam);
+  }, [siteParam]); // eslint-disable-line react-hooks/exhaustive-deps
   const tabParam = params.get("aba");
 
   // ao trocar de local ou de variante, seleciona o 1º lugar; senão mantém a escolha se ela ainda estiver no ranking
@@ -71,7 +73,7 @@ export default function Explore() {
   const asCandidate = (r) => ({ ...r.cell, name: data.cellName(r.cell), origin: "catalog" });
   const extraTabs = selected && site ? [
     { id: "evidencias", label: tr("Evidências"), render: () => (evidence.status === "loading"
-      ? <p className="note">Carregando evidências…</p>
+      ? <p className="note">{tr("Carregando evidências…", "Loading evidence…")}</p>
       : <EvidencePanel candidate={asCandidate(selected)} site={site} siteAttrs={data.sites[ex.siteId]} siteVec={siteVec}
                        extra={cellExtra(evidence, selected.cell.id)} data={data} objective={ex.objective} weights={ex.weights}
                        distance={selected.d} rankInfo={{ position: selected.position, of: data.cells.length }}
@@ -89,7 +91,7 @@ export default function Explore() {
         <p className="ex-lead">{tr("Encontre células de 5 × 5 km da Terra parecidas com locais de exploração em Marte e na Lua — e veja, medida por medida, em que se parecem e em que não.", "Find 5 × 5 km cells on Earth that resemble exploration sites on Mars and the Moon — and see, measure by measure, how they are alike and how they differ.")}</p>
       </header>
 
-      <div className="ex-modes"><Segmented asTabs label="Modo" options={MODES} value={mode} onChange={setMode} /></div>
+      <div className="ex-modes"><Segmented asTabs label={tr("Modo", "Mode")} options={MODES} value={mode} onChange={setMode} /></div>
 
       {mode === "descobrir" ? <DiscoverPanel /> : mode === "minerais" ? <MineralExplorer /> : <>
       <FilterBar ex={ex} onBody={onBody} />
@@ -101,7 +103,7 @@ export default function Explore() {
               <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor" /></svg>
               {tr("Análogos na Terra")}
             </h2>
-            <Segmented label="Visualização" options={VIEWS} value={ex.viewMode} onChange={ex.setViewMode} />
+            <Segmented label={tr("Visualização", "View")} options={VIEWS} value={ex.viewMode} onChange={ex.setViewMode} />
           </div>
           {ex.variant !== "base" && (
             <p className="mt-2.5 inline-block rounded-full border border-dashed border-warn bg-warn/10 px-3 py-1 text-[13px] font-semibold text-warn">

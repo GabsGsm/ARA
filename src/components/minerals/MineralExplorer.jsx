@@ -10,6 +10,7 @@ import { useAraData } from "../../hooks/useAraData.jsx";
 import { dataUrl, fmt } from "../../lib/format.js";
 import * as svc from "../../lib/services/earthData.js";
 import { T } from "../../lib/i18n.js";
+import { useExplorer } from "../../hooks/useExplorer.jsx";
 
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const MACRO = "https://tiles.macrostrat.org/carto/{z}/{x}/{y}.png";
@@ -163,10 +164,12 @@ function EarthGeology() {
   const [geo, setGeo] = useState(null);
   const [pt, setPt] = useState(null);
   const [opacity, setOpacity] = useState(0.65);
+  const req = useRef(0); // só a resposta do clique mais recente é mostrada
   const onClick = async ({ lat, lng }) => {
-    const lon = ((lng + 540) % 360) - 180;
+    const lon = ((lng + 540) % 360) - 180, id = ++req.current;
     setPt({ lat, lon }); setGeo({ loading: true });
-    setGeo(await svc.geology(lat, lon));
+    const r = await svc.geology(lat, lon);
+    if (id === req.current) setGeo({ ...r, at: { lat, lon } });
   };
   const u = geo?.ok ? geo.data?.best : null;
   return (
@@ -194,6 +197,7 @@ function EarthGeology() {
         {!pt && <p className="note">{T("Clique no mapa.", "Click the map.")}</p>}
         {geo?.loading && <p className="note">{T("Consultando o Macrostrat…", "Querying Macrostrat…")}</p>}
         {geo && !geo.loading && !geo.ok && <p className="dv-warn">{T("Macrostrat indisponível", "Macrostrat unavailable")}: {geo.error}</p>}
+        {geo?.at && <p className="note m-0">{T("Consultado em", "Queried at")} {fmt(geo.at.lat, 4)}°, {fmt(geo.at.lon, 4)}°</p>}
         {geo?.ok && !u && <p className="note">{T("Sem unidade mapeada neste ponto (comum no mar e em algumas regiões sem mapa compilado).", "No unit mapped at this point (common at sea and in some regions without a compiled map).")}</p>}
         {u && (
           <dl className="mx-pass">
@@ -246,7 +250,9 @@ function MoonEvidence() {
 }
 
 export default function MineralExplorer() {
-  const [body, setBody] = useState("mars");
+  const ex = useExplorer();
+  // abre no corpo que a pessoa já tinha escolhido no Explorar (Marte ou Lua)
+  const [body, setBody] = useState(ex?.body === "moon" ? "moon" : "mars");
   return (
     <div className="mb-6">
       <div className="mb-3 max-w-[620px]"><Segmented asTabs label={T("Corpo celeste", "Celestial body")} options={BODIES()} value={body} onChange={setBody} /></div>

@@ -2,7 +2,7 @@
 // Fluxo: escolher ponto (mapa, busca, coordenadas ou análogo famoso) → janela de 5 km → alvo e objetivo →
 // "Analisar este local" → relevo (AWS Terrain Tiles) + medidas do ARA → geologia (Macrostrat) → clima (NASA POWER)
 // → solo (SoilGrids) → água (JRC) → evidências, comparação exploratória e ficha.
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { MapContainer, Marker, Rectangle, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
@@ -45,7 +45,8 @@ export default function DiscoverPanel() {
   const [query, setQuery] = useState(""), [found, setFound] = useState(null);
   const [geoLayer, setGeoLayer] = useState(false);
   const [targetId, setTargetId] = useState(ex.siteId ?? "jezero_01");
-  const [run, setRun] = useState(null);              // { status: {step: "wait"|"ok"|"err"|"none"}, res: {...} }
+  const [run, setRun] = useState(null);              // { status: {step: "wait"|"ok"|"err"|"none"}, res: {...}, at }
+  const runId = useRef(0);                            // cada análise tem um número; respostas de análises antigas são descartadas
   const targets = data.catalog.sites.filter((s) => data.hasTerrain(s.id));
   const site = data.siteById(targetId);
 
@@ -53,7 +54,7 @@ export default function DiscoverPanel() {
     const lo = ((lon + 540) % 360) - 180;
     setPoint({ lat, lon: lo, name: name || `${T("Ponto", "Point")} ${lat.toFixed(4)}°, ${lo.toFixed(4)}°`, key: `${lat},${lo},${Date.now()}` });
     setLatTxt(lat.toFixed(5)); setLonTxt(lo.toFixed(5));
-    setRun(null);
+    runId.current++; setRun(null);
   };
 
   const search = async () => {
@@ -75,18 +76,19 @@ export default function DiscoverPanel() {
     if (!point) return;
     // no celular os resultados ficam abaixo do mapa: leva a pessoa até eles
     requestAnimationFrame(() => document.querySelector(".dv-res")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    const id = ++runId.current, at = { lat: point.lat, lon: point.lon };
     const status = Object.fromEntries(STEPS().map(([k]) => [k, "wait"]));
     const res = {};
-    const update = () => setRun({ status: { ...status }, res: { ...res } });
+    const update = () => { if (id === runId.current) setRun({ status: { ...status }, res: { ...res }, at }); };
     update();
-    const done = (k, r) => { res[k] = r; status[k] = r.ok ? (r.data ? "ok" : "none") : "err"; update(); };
+    const done = (k, r) => { if (id !== runId.current) return; res[k] = r; status[k] = r.ok ? (r.data ? "ok" : "none") : "err"; update(); };
     // relevo primeiro (as medidas aparecem assim que chegam); o resto em paralelo
     const tasks = [
-      svc.terrain(point.lat, point.lon).then((r) => done("terrain", r)),
-      svc.geology(point.lat, point.lon).then((r) => done("geology", r)),
-      svc.climate(point.lat, point.lon).then((r) => done("climate", r)),
-      svc.soil(point.lat, point.lon).then((r) => done("soil", r)),
-      svc.water(point.lat, point.lon).then((r) => done("water", r)),
+      svc.terrain(at.lat, at.lon).then((r) => done("terrain", r)),
+      svc.geology(at.lat, at.lon).then((r) => done("geology", r)),
+      svc.climate(at.lat, at.lon).then((r) => done("climate", r)),
+      svc.soil(at.lat, at.lon).then((r) => done("soil", r)),
+      svc.water(at.lat, at.lon).then((r) => done("water", r)),
     ];
     await Promise.allSettled(tasks);
   };
@@ -193,6 +195,8 @@ export default function DiscoverPanel() {
         <h2 className="eyebrow">{T("3 · Resultado", "3 · Result")}</h2>
         {!run && <p className="note">{T("Os resultados aparecem aqui, etapa por etapa, conforme cada fonte responde.", "Results appear here step by step as each source responds.")}</p>}
         {run && (
+          <>
+          <p className="note m-0 mb-2">{T("Analisado em", "Analysed at")} {fmt(Math.abs(run.at.lat), 4)}°{run.at.lat >= 0 ? "N" : "S"}, {fmt(Math.abs(run.at.lon), 4)}°{run.at.lon >= 0 ? T("L", "E") : T("O", "W")}</p>
           <ol className="dv-steps">
             {STEPS().map(([k, label]) => (
               <li key={k} className={run.status[k]}>
@@ -202,6 +206,7 @@ export default function DiscoverPanel() {
               </li>
             ))}
           </ol>
+          </>
         )}
         {ocean && <p className="dv-warn">{T("Este ponto parece estar no mar: o relevo veio plano em 0 m. Escolha um ponto em terra.", "This point seems to be at sea: the relief came back flat at 0 m. Pick a point on land.")}</p>}
         {m && !ocean && siteVec && (

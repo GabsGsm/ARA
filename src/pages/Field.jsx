@@ -60,6 +60,7 @@ export default function Field() {
   const [notes, setNotes] = useState(() => { try { return JSON.parse(localStorage.getItem(NOTES_KEY) ?? "[]"); } catch { return []; } });
   const [note, setNote] = useState({ title: "", text: "" });
   const [sheet, setSheet] = useState(true);
+  const geoReq = useRef(0), terrReq = useRef(0);
   const watch = useRef(null), demoTimer = useRef(null), lastGeo = useRef(null), t0 = useRef(null);
   const site = data.siteById(targetId), siteVec = data.sites[targetId]?.terrain;
 
@@ -138,7 +139,7 @@ export default function Field() {
     if (mode === "demo") { if (running) { clearInterval(demoTimer.current); setRunning(false); } else if (demo.current && demo.current.i < demo.current.pts.length) runDemo(); else startDemo(); }
   };
   const finish = () => { stop(); };
-  const erase = () => { stop(); setTrack([]); setDist(0); setRejected(0); setFix(null); setGeo(null); setTerr(null); setMode(null); lastGeo.current = null; lastOk.current = null; demo.current = null; t0.current = null; setLowAcc(null); };
+  const erase = () => { stop(); setTrack([]); setDist(0); setRejected(0); setFix(null); setGeo(null); setTerr(null); setMode(null); lastGeo.current = null; lastOk.current = null; demo.current = null; t0.current = null; setLowAcc(null); geoReq.current++; terrReq.current++; };
 
   const pos = fix ? [fix.lat, fix.lon] : null;
   // consulta geológica só quando o deslocamento é relevante
@@ -147,14 +148,16 @@ export default function Field() {
     if (lastGeo.current && hav(lastGeo.current, pos) < REQUERY_M) return;
     lastGeo.current = pos;
     setGeo({ loading: true });
-    svc.geology(pos[0], pos[1]).then(setGeo);
+    const id = ++geoReq.current, at = pos;  // resposta de um ponto antigo não sobrescreve a do ponto atual
+    svc.geology(at[0], at[1]).then((r) => { if (id === geoReq.current) setGeo({ ...r, at }); });
   }, [pos?.[0], pos?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const characterize = async () => {
     if (!pos) return;
-    setTerr({ loading: true, at: pos });
-    const [t, c] = await Promise.all([svc.terrain(pos[0], pos[1]), svc.climate(pos[0], pos[1])]);
-    setTerr({ at: pos, t, c });
+    const id = ++terrReq.current, at = pos;
+    setTerr({ loading: true, at });
+    const [t, c] = await Promise.all([svc.terrain(at[0], at[1]), svc.climate(at[0], at[1])]);
+    if (id === terrReq.current) setTerr({ at, t, c });
   };
 
   const m = terr?.t?.ok ? terr.t.data.metrics : null;
