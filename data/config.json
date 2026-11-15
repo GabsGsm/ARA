@@ -55,7 +55,7 @@
   "top_n": 10,
   "planet_maps": {
     "mars": {
-      "url": "https://trek.nasa.gov/tiles/Mars/EQ/Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+      "url": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
       "max_native_zoom": 7,
       "attribution": "NASA Mars Trek WMTS · mosaico colorido Viking MDIM 2.1 (232 m)",
       "note": "Higher-resolution Mars Trek layers can be swapped in after checking their WMTSCapabilities.xml"
@@ -76,7 +76,7 @@
     }
   ],
   "globes": {
-    "mars": "https://trek.nasa.gov/tiles/Mars/EQ/Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/0/0/1.jpg",
+    "mars": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/0/0/1.jpg",
     "moon": "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0/default/default028mm/0/0/1.jpg"
   }
 }

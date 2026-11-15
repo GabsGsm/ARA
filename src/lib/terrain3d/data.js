@@ -39,7 +39,8 @@ export function loadScene(id) {
     const k = (max - min) / 65535;
     for (let i = 0; i < n * n; i++) heights[i] = min + (px[i * 4] * 256 + px[i * 4 + 1]) * k;
     const color = meta.color ? await loadImage(dataUrl(`data/terrain/${meta.color.file}`), { imageOrientation: "flipY" }).catch(() => null) : null;
-    return { meta, heights, n, color, body: BODIES[meta.body] };
+    const minerals = meta.minerals ? await loadImage(dataUrl(`data/terrain/${meta.minerals.file}`), { imageOrientation: "flipY", premultiplyAlpha: "none" }).catch(() => null) : null;
+    return { meta, heights, n, color, minerals, body: BODIES[meta.body] };
   })();
   cache.set(id, p);
   p.catch(() => cache.delete(id));

@@ -548,6 +548,32 @@
    }
   },
   {
+   "id": "jezero_hirise_pouso",
+   "body": "mars",
+   "name": "Local de pouso do Perseverance (HiRISE 1 m)",
+   "group": "Cratera Jezero",
+   "kind": "walk",
+   "lat": 18.4447,
+   "lon": 77.4508,
+   "size_m": 1500,
+   "cell_m": null,
+   "stats_inner": {
+    "window_m": 750,
+    "native": {
+     "slope_mean_deg": 3.31,
+     "roughness_mean_m": 0.07,
+     "relief_m": 22.6,
+     "res_m": 1.46
+    },
+    "at_100m": {
+     "slope_mean_deg": 0.711,
+     "roughness_mean_m": 0.908,
+     "relief_m": 6.3,
+     "res_m": 99.6
+    }
+   }
+  },
+  {
    "id": "lunar_south_pole",
    "body": "moon",
    "name": "Polo sul da Lua (regiões Artemis III)",

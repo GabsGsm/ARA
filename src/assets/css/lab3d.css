@@ -150,3 +150,43 @@
   .t3-caption, .t3-walk, .t3-profile { position: static; transform: none; width: auto; margin: 10px; }
 }
 .calm .t3-spinner { animation: none; }
+
+/* descida a partir do globo */
+.t3-intro { position: absolute; inset: 0; z-index: 20; background: #01070b; transition: opacity .6s ease; }
+.t3-intro.out { opacity: 0; pointer-events: none; }
+.t3-intro-hud { position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-shadow: 0 1px 8px #000; pointer-events: none; }
+.t3-intro-hud small { font: 400 10px var(--font-display); letter-spacing: .3em; text-transform: uppercase; color: var(--color-gold-2); }
+.t3-intro-hud strong { font: 400 clamp(16px, 1.6vw, 24px) var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
+.t3-intro-hud span { margin-top: 6px; padding: 4px 14px; border-radius: 999px; border: 1px solid var(--color-line); background: rgb(2 16 22 / .7);
+  font: 500 13px ui-monospace, Consolas, monospace; letter-spacing: .14em; color: var(--color-gold-3); }
+.t3-intro-skip { position: absolute; right: 18px; bottom: 18px; border: 1px solid var(--color-line); background: rgb(2 16 22 / .7); color: var(--color-ink);
+  border-radius: 999px; padding: 7px 16px; cursor: pointer; font: 400 11px var(--font-display); letter-spacing: .14em; text-transform: uppercase; }
+.t3-intro-skip:hover { border-color: var(--color-gold); color: var(--color-gold-2); }
+
+/* caminhada por toque */
+.t3-touch { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.t3-lookpad { position: absolute; top: 0; right: 0; bottom: 40px; left: 40%; pointer-events: auto; touch-action: none; }
+.t3-joy { position: absolute; left: 22px; bottom: 60px; width: 120px; height: 120px; border-radius: 50%; pointer-events: auto; touch-action: none;
+  border: 1.5px solid rgb(255 255 255 / .45); background: rgb(2 16 22 / .35); display: grid; place-items: center; }
+.t3-joy span { width: 50px; height: 50px; border-radius: 50%; background: rgb(242 181 58 / .75); box-shadow: 0 0 14px rgb(242 181 58 / .6); transition: transform .05s; }
+.t3-touch-btns { position: absolute; right: 18px; bottom: 60px; display: flex; flex-direction: column; gap: 10px; pointer-events: auto; }
+.t3-touch-btns button { width: 74px; height: 46px; border-radius: 12px; border: 1px solid var(--color-line); background: rgb(2 16 22 / .7); color: var(--color-ink);
+  font: 500 12px var(--font-body); text-transform: uppercase; letter-spacing: .06em; }
+.t3-touch-btns button[aria-pressed=true] { border-color: var(--color-gold); color: var(--color-gold-3); }
+
+/* testar qualquer lugar */
+.t3-field { display: grid; gap: 3px; font-size: 11px; color: var(--color-muted); }
+.t3-field input { width: 100%; border-radius: 8px; border: 1px solid var(--color-line); background: rgb(2 16 22 / .8); color: var(--color-ink); padding: 6px 8px; font-size: 13px; }
+.t3-minimap { height: 220px; margin-top: 8px; border-radius: 10px; overflow: hidden; border: 1px solid var(--color-line-2); }
+.t3-pin span { display: block; width: 18px; height: 18px; border-radius: 50%; border: 3px solid #fff; background: var(--color-gold); box-shadow: 0 0 10px var(--color-gold); }
+.t3-progress { position: relative; margin-top: 10px; height: 6px; border-radius: 4px; background: rgb(255 255 255 / .1); }
+.t3-progress span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--color-gold); transition: width .2s; }
+.t3-progress small { position: absolute; top: 9px; left: 0; font-size: 11px; color: var(--color-muted); }
+.t3-live { margin-bottom: 12px; }
+
+/* minerais */
+.t3-minlegend { display: grid; gap: 4px; margin-top: 10px; font-size: 12px; }
+.t3-minlegend span { display: flex; align-items: center; gap: 8px; color: var(--color-ink-2); }
+.t3-minlegend span::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--c); flex: none; }
+.t3-minlegend b { margin-left: auto; font-weight: 500; font-family: ui-monospace, Consolas, monospace; color: var(--color-gold-2); }

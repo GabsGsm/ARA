@@ -57,8 +57,12 @@ SRC = {
     "crater_dtm": M20 + "CTX/ScienceInvestigationMaps_JPL/M20_JezeroCrater_CTXDEM_20m.tif",
     "crater_ortho": M20 + "CTX/ScienceInvestigationMaps_JPL/M20_JezeroCrater_CTXortho_mosaic_5m.tif",
     "lola": "/vsicurl/https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_40MPP_ADJ.TIF",
+    "hirise_dtm": M20 + "HiRISE/JEZ_hirise_soc_006_DTM_MOLAtopography_DeltaGeoid_1m_Eqc_latTs0_lon0_blend40.tif",
+    "hirise_ortho": M20 + "HiRISE/JEZ_hirise_soc_007_orthoMosaic_25cm_Ortho_blend120.tif",
 }
-VIKING = "https://trek.nasa.gov/tiles/Mars/EQ/Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg"
+LROC = "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0/default/default028mm/{z}/{y}/{x}.jpg"
+CRISM_ZIP = "https://zenodo.org/api/records/22257754/files/jezero_rim_maps_v1_core.zip/content"
+VIKING = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg"
 TERRARIUM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
 ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
 TOP_EARTH = 3  # cenas 3D para os 3 melhores análogos de cada sítio
@@ -69,7 +73,11 @@ CITE = {
             "url": "https://planetarymaps.usgs.gov/mosaic/mars2020_trn/CTX/"},
     "crater": {"name": "CTX DEM 20 m e ortomosaico 5 m da cratera Jezero (Science Investigation Maps)", "by": "NASA/JPL-Caltech · USGS",
                "url": "https://planetarymaps.usgs.gov/mosaic/mars2020_trn/CTX/ScienceInvestigationMaps_JPL/"},
-    "viking": {"name": "Viking MDIM 2.1 colorido (232 m) — só a cor", "by": "NASA Solar System Treks", "url": "https://trek.nasa.gov/mars/"},
+    "viking": {"name": "Viking MDIM 2.1 colorido (232 m) — cor aproximada, misturada à média global", "by": "NASA Solar System Treks", "url": "https://trek.nasa.gov/mars/"},
+    "hirise": {"name": "HiRISE DTM 1 m e ortomosaico 25 cm do local de pouso (Mars 2020 TRN)", "by": "NASA/JPL-Caltech/University of Arizona · USGS",
+               "url": "https://planetarymaps.usgs.gov/mosaic/mars2020_trn/HiRISE/"},
+    "crism": {"name": "Jezero Western Rim Mineral Maps v1.0 (CRISM + CaSSIS)", "by": "Valantinas et al. (2026), Zenodo, CC BY 4.0",
+              "url": "https://doi.org/10.5281/zenodo.22257754"},
     "mmgis": {"name": "Trajeto e paradas do Perseverance", "by": "NASA/JPL-Caltech MMGIS", "url": "https://mars.nasa.gov/mars2020/mission/where-is-the-rover/"},
     "lola": {"name": "LOLA LDEM_80S_40MPP_ADJ (40 m)", "by": "NASA Goddard PGDA · Barker et al. (2021)", "url": "https://pgda.gsfc.nasa.gov/products/90"},
     "terrarium": {"name": "Terrain Tiles (SRTM/NED/ETOPO, ~10–30 m)", "by": "AWS Open Data · Mapzen", "url": "https://registry.opendata.aws/terrain-tiles/"},
@@ -200,6 +208,66 @@ def viking_color(lon, lat, z=7):
     return np.stack([map_coordinates(mosaic[..., k], [rr, cc], order=1, mode="nearest") for k in range(3)], -1)
 
 
+def crism_overlay(sc, n=512):
+    """Classes minerais (CRISM + CaSSIS, 18 m) amostradas na grade da cena -> PNG RGBA (transparente fora do mapa)."""
+    import csv
+    import zipfile
+    root = CACHE / "crism"
+    tif = root / "jezero_rim_maps_v1" / "01_geologic_map" / "geologic_map_CRISM_CaSSIS.tif"
+    if not tif.exists():
+        root.mkdir(parents=True, exist_ok=True)
+        z = root / "core.zip"
+        z.write_bytes(requests.get(CRISM_ZIP, headers=UA, timeout=120).content)
+        zipfile.ZipFile(z).extractall(root)
+    classes = {}
+    with open(root / "jezero_rim_maps_v1" / "01_geologic_map" / "class_dictionary.csv", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            classes[int(r["value"])] = {"value": int(r["value"]), "name": r["display_name"], "spectral": r["interp_field_value"],
+                                        "color": [int(r["red"]), int(r["green"]), int(r["blue"])]}
+    lon, lat, _, geo = local_grid(sc["lat"], sc["lon"], sc["size_m"], n, R_MARS)
+    with rasterio.open(tif) as d:
+        xs, ys = warp_transform(geo, d.crs, lon.ravel().tolist(), lat.ravel().tolist())
+        cols, rows = ~d.transform * (np.asarray(xs), np.asarray(ys))
+        a = d.read(1)
+        ci, ri = np.floor(cols).astype(int), np.floor(rows).astype(int)
+        inside = (ci >= 0) & (ri >= 0) & (ci < d.width) & (ri < d.height)
+        cls = np.zeros(ci.shape, np.uint8)
+        cls[inside] = a[ri[inside], ci[inside]]
+    cls = cls.reshape(n, n)
+    if not (cls > 0).any():
+        return None
+    rgba = np.zeros((n, n, 4), np.uint8)
+    for v, c in classes.items():
+        m = cls == v
+        rgba[m, :3] = c["color"]
+        rgba[m, 3] = 255
+    Image.fromarray(rgba).save(OUT / f"{sc['id']}_m.png", optimize=True)
+    used = [classes[v] | {"pct": round(100 * float((cls == v).mean()), 2)} for v in classes if (cls == v).any()]
+    return {"file": f"{sc['id']}_m.png", "n": n, "coverage_pct": round(100 * float((cls > 0).mean()), 1), "classes": used,
+            "note": "Classes pelo absorvedor dominante nos espectros CRISM; fraco/forte se refere à banda de 1 µm, não à abundância."}
+
+
+def build_globes():
+    """Texturas globais (equiretangulares 2:1) para a descida animada: Viking (Marte) e LROC WAC (Lua)."""
+    gdir = DATA / "globe"
+    gdir.mkdir(parents=True, exist_ok=True)
+    for name, url, z in (("mars", VIKING, 2), ("moon", LROC, 2)):
+        cols, rows = 2 ** (z + 1), 2 ** z
+        img = Image.new("RGB", (cols * 256, rows * 256))
+        for x in range(cols):
+            for y in range(rows):
+                im = fetch_tile(url.format(z=z, x=x, y=y), f"globe_{name}")
+                if im is None:
+                    raise RuntimeError(f"tile global {name} {z}/{y}/{x} indisponível")
+                img.paste(im.convert("RGB"), (x * 256, y * 256))
+        img.save(gdir / f"{name}.jpg", quality=84, optimize=True, progressive=True)
+        if name == "mars":
+            a = np.asarray(img, np.float32)[rows * 256 // 6: rows * 256 * 5 // 6]
+            m = a.reshape(-1, 3).mean(0)
+            print("   cor média de Marte (Viking, ±60°):", np.round(m / m.mean(), 3))
+        print(f"   globo {name}: {img.size}")
+
+
 # ---------------------------------------------------------------------------- saída
 def save_height(path, h):
     lo, hi = float(np.nanmin(h)), float(np.nanmax(h))
@@ -210,21 +278,26 @@ def save_height(path, h):
     return lo, hi
 
 
-def colorize_mars(gray, color):
-    """CTX (pancromático, detalhe) + Viking (cor, 232 m): mantém o detalhe do CTX e a cor real de Marte."""
+TARGET_MEDIAN = 118  # brilho mediano das imagens de Marte (0..255)
+MARS_MEAN_CHROMA = np.array([1.182, 0.919, 0.899], np.float32)  # média do mosaico Viking em ±60° (build_globes imprime)
+
+
+def colorize_mars(gray, color, blur=18):
+    """Imagem pancromática (CTX/HiRISE: o detalhe) x mosaico Viking (232 m: a cor real de Marte).
+    Mantém o brilho da imagem de alta resolução e a cor do Viking (pan-sharpening simples)."""
     g = gray.astype(np.float32)
     g = (g - np.percentile(g, 1)) / max(np.percentile(g, 99.5) - np.percentile(g, 1), 1)
     g = np.clip(g, 0, 1)
-    if color is None:
-        ramp = np.array([[52, 30, 22], [128, 74, 48], [190, 128, 88], [236, 196, 150]], np.float32)
-        idx = g * 3
-        i0 = np.clip(idx.astype(int), 0, 2)
-        t = (idx - i0)[..., None]
-        return ramp[i0] * (1 - t) + ramp[i0 + 1] * t
-    c = color / max(np.percentile(color.mean(-1), 60), 1) * 0.62
-    lum = np.asarray(Image.fromarray((g * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(18)), np.float32) / 255
-    detail = (g + 0.04) / (lum + 0.04)
-    out = c * (0.35 + 0.95 * g[..., None]) * np.clip(detail, 0.6, 1.6)[..., None] ** 0.35
+    c = np.asarray(Image.fromarray(np.clip(color, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(blur)), np.float32)
+    cl = c.mean(-1, keepdims=True)
+    chroma = c / np.maximum(cl, 1)                       # só a cor (razão entre canais)
+    # o Viking local perto de Syrtis/Isidis puxa para cinza-azulado; mistura com a cor média global de Marte
+    # (do próprio mosaico Viking, latitudes ±60°) para não exagerar o viés de cor do mosaico
+    chroma = 0.3 * chroma + 0.7 * MARS_MEAN_CHROMA
+    base = 0.18 + 0.92 * g[..., None]                    # o brilho vem da imagem de alta resolução
+    out = base * chroma
+    # mesmo brilho médio em todas as cenas (o Viking local varia muito: o fundo de Jezero é escuro)
+    out *= TARGET_MEDIAN / 255 / max(float(np.median(out.mean(-1))), 1e-3)
     return np.clip(out * 255, 0, 255)
 
 
@@ -258,13 +331,17 @@ def mars_scene(sc):
     big = sc.get("overview")
     n_h, n_c = sc.get("n_h", 512), sc.get("n_c", 2048)
     lon, lat, _, geo = local_grid(lat0, lon0, size, n_h, R_MARS)
-    dtm = SRC["crater_dtm"] if big else SRC["ctx_dtm"]
+    hirise = sc.get("hirise")
+    dtm = SRC["hirise_dtm"] if hirise else SRC["crater_dtm"] if big else SRC["ctx_dtm"]
     h, ok, native = sample_raster(dtm, geo, lon, lat, max_px=900 if big else None)
     lonc, latc, _, _ = local_grid(lat0, lon0, size, n_c, R_MARS)
-    gray, _, native_c = sample_raster(SRC["crater_ortho"] if big else SRC["ctx_ortho"], geo, lonc, latc, max_px=2600 if big else None)
+    ortho = SRC["hirise_ortho"] if hirise else SRC["crater_ortho"] if big else SRC["ctx_ortho"]
+    gray, _, native_c = sample_raster(ortho, geo, lonc, latc, max_px=2600 if big else 3400 if hirise else None)
     color = viking_color(lonc, latc)
-    rgb = colorize_mars(gray, color)
-    srcs = [CITE["crater" if big else "ctx"], CITE["viking"], CITE["mmgis"]]
+    if color is None:
+        raise RuntimeError("cor Viking indisponível: não gero cena de Marte com cor inventada")
+    rgb = colorize_mars(gray, color, blur=60 if hirise else 18)
+    srcs = [CITE["hirise" if hirise else "crater" if big else "ctx"], CITE["viking"], CITE["mmgis"]]
     return h, ok, native, rgb, native_c, srcs
 
 
@@ -368,6 +445,8 @@ def scenes():
                     "lat": r["lat"], "lon": r["lon"], "size_m": 10000, "cell_m": 5000, "kind": "analog"})
     out.append({"id": "jezero_crater", "body": "mars", "name": "Cratera Jezero (visão geral)", "group": "Cratera Jezero",
                 "lat": 18.40, "lon": 77.58, "size_m": 60000, "overview": True, "n_h": 640, "n_c": 3072, "kind": "overview"})
+    out.append({"id": "jezero_hirise_pouso", "body": "mars", "name": "Local de pouso do Perseverance (HiRISE 1 m)", "group": "Cratera Jezero",
+                "lat": 18.4447, "lon": 77.4508, "size_m": 1500, "hirise": True, "n_h": 1024, "n_c": 3072, "kind": "walk"})
     out.append({"id": "lunar_south_pole", "body": "moon", "name": "Polo sul da Lua (regiões Artemis III)", "group": "Regiões candidatas Artemis III",
                 "lat": -87.6, "lon": 12.0, "size_m": 180000, "n_h": 720, "kind": "overview"})
     return out
@@ -411,6 +490,11 @@ def build(sc):
         p = perseverance(sc)
         if p["runs"]:
             meta["paths"] = [p]
+    if body == "mars":
+        mm = crism_overlay(sc)
+        if mm:
+            meta["minerals"] = mm
+            srcs = srcs + [CITE["crism"]]
     meta["sources"] = srcs
     meta["built_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     (OUT / f"{sc['id']}.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -421,8 +505,11 @@ def build(sc):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", nargs="*")
+    ap.add_argument("--globes", action="store_true", help="também gera data/globe/{mars,moon}.jpg")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
+    if a.globes:
+        build_globes()
     index = []
     idx_path = OUT / "index.json"
     old = {m["id"]: m for m in json.loads(idx_path.read_text(encoding="utf-8"))["scenes"]} if idx_path.exists() else {}

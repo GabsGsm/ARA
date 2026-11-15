@@ -5,6 +5,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import TerrainPane from "../components/lab3d/TerrainPane.jsx";
 import ProfileChart from "../components/lab3d/ProfileChart.jsx";
+import GlobeIntro from "../components/lab3d/GlobeIntro.jsx";
+import LiveEarthPicker from "../components/lab3d/LiveEarthPicker.jsx";
+import { useMotion } from "../hooks/useMotion.jsx";
+import { buildLiveScene } from "../lib/terrain3d/liveEarth.js";
 import StatusChip from "../components/ui/StatusChip.jsx";
 import { useAraData } from "../hooks/useAraData.jsx";
 import * as core from "../lib/core.js";
@@ -61,6 +65,7 @@ export default function Lab3D() {
   const [settings, setSettings] = useState(() => ({
     exag: Number(params.get("exag")) || 2, layer: LAYERS.some((l) => l.value === params.get("layer")) ? params.get("layer") : "imagem",
     contours: params.get("curvas") === "1", step: Number(params.get("passo")) || 50, labels: true, path: true, cell: true,
+    minerals: params.get("minerais") === "1",
   }));
   const [sync, setSync] = useState(true);
   const [nav, setNav] = useState(() => (NAV.some((n) => n.value === params.get("nav")) ? params.get("nav") : "orbit"));
@@ -76,6 +81,9 @@ export default function Lab3D() {
   const [locked, setLocked] = useState(false);
   const [panels, setPanels] = useState({ left: true, right: true });
   const [showSources, setShowSources] = useState(false);
+  const [intro, setIntro] = useState(null);         // { id, body, lat, lon, name } enquanto o globo anima
+  const [live, setLive] = useState({ scene: null, busy: false, progress: { f: 0, text: "" }, error: null });
+  const { calm } = useMotion();
   const left = useRef(null), right = useRef(null);
 
   useEffect(() => { loadIndex().then(setIndex).catch((e) => setErr(e.message)); }, []);
@@ -98,7 +106,8 @@ export default function Lab3D() {
     if (!analogId || !ranking.some((r) => r.cell.id === analogId)) setAnalogId(ranking[0].cell.id);
   }, [ranking]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const twin = !isOverview && analogId && byId[analogId];
+  const isWalk = site?.kind === "walk";
+  const twin = !isOverview && !isWalk && (live.scene || (analogId && byId[analogId]));
   const asked = params.get("analog");
   const missing3d = asked && index && !byId[asked] ? (data.cells?.find((c) => c.id === asked) ? data.cellName(data.cells.find((c) => c.id === asked)) : asked) : null;
 
@@ -106,8 +115,33 @@ export default function Lab3D() {
     const p = { site: id };
     setParams(p, { replace: true });
     setAnalogId(null);
+    if (nav === "walk") setNav("orbit");
     setPts([]); setTool(null);
     left.current?.view?.resetView(); right.current?.view?.resetView();
+  };
+
+  // ---- descida a partir do globo (Marte/Lua), uma vez por sítio
+  const introFor = useRef(null);
+  useEffect(() => {
+    if (!site || site.body === "earth" || calm || params.get("intro") === "0" || introFor.current === site.id) return;
+    introFor.current = site.id;
+    setIntro({ id: site.id, body: site.body, lat: site.lat, lon: site.lon, name: site.name });
+  }, [site, calm]); // eslint-disable-line react-hooks/exhaustive-deps
+  const endIntro = () => { setIntro(null); left.current?.view?.descend(); right.current?.view?.descend(); };
+
+  // ---- cena HiRISE: abre direto caminhando no local de pouso
+  useEffect(() => { if (isWalk) { setNav("walk"); setSettings((s) => ({ ...s, exag: 1 })); } }, [isWalk, siteId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ---- testar um lugar qualquer da Terra
+  const testLive = async (lat, lon, name) => {
+    setLive((l) => ({ ...l, busy: true, error: null, progress: { f: 0, text: "Começando…" } }));
+    try {
+      const sc = await buildLiveScene(lat, lon, name, (text, f) => setLive((l) => ({ ...l, progress: { text, f } })));
+      setLive({ scene: sc, busy: false, progress: { f: 1, text: "" }, error: null });
+    } catch (e) {
+      console.error(e);
+      setLive((l) => ({ ...l, busy: false, error: "Não consegui baixar os dados desse ponto (sem rede ou fora da cobertura). Tente outro." }));
+    }
   };
 
   // ---- sincronização de câmeras
@@ -162,11 +196,12 @@ export default function Lab3D() {
   const stopTour = () => { clearTimeout(tourTimer.current); setTourStep(-1); left.current?.view?.cancelFly(); right.current?.view?.cancelFly(); };
   useEffect(() => {
     const walk = nav === "walk";
-    left.current?.view?.setMode(walk ? "walk" : "orbit");
+    const start = isWalk ? scenes.left?.meta?.pois?.find((q) => q.kind === "landing") : null;
+    left.current?.view?.setMode(walk ? "walk" : "orbit", start);
     right.current?.view?.setMode("orbit");
     if (nav === "tour") setTourStep(0); else stopTour();
     if (!walk) { setWalkInfo(null); setJump(null); }
-  }, [nav]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [nav, scenes.left]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (tourStep < 0) return;
@@ -183,15 +218,24 @@ export default function Lab3D() {
 
   const L = scenes.left?.meta, R = twin ? scenes.right?.meta : null;
   const sunL = sunFor(scenes.left), sunR = twin ? sunFor(scenes.right) : null;
-  const planets = index.scenes.filter((s) => s.body !== "earth");
+  const ORDER = { mars: 0, moon: 1 }, KIND = { walk: 0, overview: 1, site: 2 };
+  const planets = index.scenes.filter((s) => s.body !== "earth")
+    .sort((a, b) => ORDER[a.body] - ORDER[b.body] || KIND[a.kind] - KIND[b.kind] || a.name.localeCompare(b.name));
   const earthScenes = index.scenes.filter((s) => s.body === "earth");
   const siteVec = data.sites?.[siteId]?.terrain;
-  const cell = data.cells?.find((c) => c.id === analogId);
+  const liveStats = live.scene?.meta.stats_inner.at_100m;
+  const cell = liveStats ? { ...liveStats, id: live.scene.meta.id } : data.cells?.find((c) => c.id === analogId);
   const dims = siteVec && cell ? ATTRS.map((a) => ({
     attr: a, meta: data.config.attributes[a], site: siteVec[a], cell: cell[a],
     ...core.dimensionStatus(siteVec[a], cell[a], data.config.attributes[a].scale, data.config.thresholds),
   })) : [];
-  const rk = ranking.find((r) => r.cell.id === analogId);
+  let rk = ranking.find((r) => r.cell.id === analogId);
+  if (liveStats && siteVec && data.status === "ready") {
+    const w = core.normalizeWeights(data.config.objectives.default.weights);
+    const d = core.distance(siteVec, liveStats, w, data.scales);
+    const better = data.cells.filter((c) => core.distance(siteVec, c, w, data.scales) < d).length;
+    rk = { d, position: better + 1, live: true };
+  }
   const gB = BODIES[planetBody], jumpH = (g) => (2.5 * 2.5) / (2 * g);
   const tour = tourStep >= 0 ? TOUR[tourStep] : null;
   const reliefTxt = [L && `${L.name} ${fmt(L.stats_inner?.at_100m?.relief_m ?? 0, 0)} m`, R && `${R.name} ${fmt(R.stats_inner?.at_100m?.relief_m ?? 0, 0)} m`].filter(Boolean).join(" · ");
@@ -216,19 +260,20 @@ export default function Lab3D() {
       <h1 id="labTitle" className="sr-only">Laboratório 3D</h1>
       <div className={`t3-stage ${twin ? "twin" : "single"}`}>
         <TerrainPane ref={left} side="left" sceneId={siteId} settings={settings} onCamera={onCamera} onPick={onPick}
-                     onSite={setSite} onLoaded={onLoaded} onUser={onUser}
+                     onSite={setSite} onLoaded={onLoaded} onUser={onUser} walking={nav === "walk"}
                      onWalk={(_, p) => setWalkInfo(p)} onJump={(_, h) => setJump(h)} onWalkLock={setLocked} />
         {twin && (
-          <TerrainPane ref={right} side="right" sceneId={analogId} settings={settings} onCamera={onCamera} onPick={onPick}
-                       onLoaded={onLoaded} onUser={onUser} />
+          <TerrainPane ref={right} side="right" sceneId={live.scene ? null : analogId} sceneData={live.scene} settings={settings}
+                       onCamera={onCamera} onPick={onPick} onLoaded={onLoaded} onUser={onUser} />
         )}
         {twin && <div className="t3-divider" aria-hidden="true"><span>⇄</span></div>}
+        {intro && <GlobeIntro key={intro.id} {...intro} slow={params.get("intro") === "lento"} onDone={endIntro} />}
 
         {/* ---------- barra superior ---------- */}
         <div className="t3-top">
           <div className="t3-crumb">
             <span>{BODIES[planetBody].label}</span><i>›</i><b>{site?.name}</b>
-            {twin && <><i className="t3-vs">⇄</i><span>Terra</span><i>›</i><b>{byId[analogId]?.name}</b></>}
+            {twin && <><i className="t3-vs">⇄</i><span>Terra</span><i>›</i><b>{live.scene ? live.scene.meta.name : byId[analogId]?.name}</b></>}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Seg label="Navegação" options={NAV} value={nav} onChange={setNav} />
@@ -246,7 +291,7 @@ export default function Lab3D() {
               {planets.map((s) => (
                 <button key={s.id} type="button" role="radio" aria-checked={s.id === siteId} onClick={() => setSite(s.id)}>
                   <span className={`t3-dot ${s.body}`} />
-                  <span><b>{s.name}</b><small>{BODIES[s.body].label} · {s.kind === "overview" ? `visão geral ${fmt(s.size_m / 1000, 0)} km` : s.group}</small></span>
+                  <span><b>{s.name}</b><small>{BODIES[s.body].label} · {s.kind === "overview" ? `visão geral ${fmt(s.size_m / 1000, 0)} km` : s.kind === "walk" ? "caminhada em alta resolução" : s.group}</small></span>
                 </button>
               ))}
             </div>
@@ -257,7 +302,7 @@ export default function Lab3D() {
                 {missing3d && <p className="t3-note mb-2">“{missing3d}” ainda não tem cena 3D. Mostrando o melhor análogo que tem relevo 3D gerado.</p>}
                 <div className="t3-list" role="radiogroup" aria-label="Análogo">
                   {ranking.map((r) => (
-                    <button key={r.cell.id} type="button" role="radio" aria-checked={r.cell.id === analogId} onClick={() => setAnalogId(r.cell.id)}>
+                    <button key={r.cell.id} type="button" role="radio" aria-checked={!live.scene && r.cell.id === analogId} onClick={() => { setLive((l) => ({ ...l, scene: null })); setAnalogId(r.cell.id); }}>
                       <span className="t3-rank">{r.position}º</span>
                       <span><b>{byId[r.cell.id]?.name ?? r.cell.id}</b><small>distância {fmt(r.d, 3)} · {r.position}º de {data.cells.length} células{r.position === 1 ? " · o melhor" : ""}</small></span>
                     </button>
@@ -271,9 +316,17 @@ export default function Lab3D() {
               </>
             )}
 
+            {!isOverview && !isWalk && (
+              <>
+                <h2 className="t3-h">Testar qualquer lugar da Terra</h2>
+                <LiveEarthPicker busy={live.busy} progress={live.progress} error={live.error} onTest={testLive}
+                                 active={Boolean(live.scene)} onClear={() => setLive((l) => ({ ...l, scene: null }))} />
+              </>
+            )}
+
             {dims.length > 0 && (
               <>
-                <h2 className="t3-h">Por que é análogo</h2>
+                <h2 className="t3-h">{live.scene ? "Este ponto seria análogo?" : "Por que é análogo"}</h2>
                 <table className="t3-table">
                   <thead><tr><th>Medida</th><th>{BODIES[planetBody].label}</th><th>Terra</th><th /></tr></thead>
                   <tbody>
@@ -285,7 +338,7 @@ export default function Lab3D() {
                     ))}
                   </tbody>
                 </table>
-                {rk && <p className="t3-note">Distância ARA {fmt(rk.d, 3)} — {rk.position}º lugar entre {data.cells.length} células da Terra. Calculado a 100 m, como no ranking.</p>}
+                {rk && <p className="t3-note">Distância ARA {fmt(rk.d, 3)} — {rk.live ? `entraria em ${rk.position}º lugar` : `${rk.position}º lugar`} entre {data.cells.length} células da Terra. Calculado a 100 m, como no ranking.</p>}
                 {L?.stats_inner?.at_100m && R?.stats_inner?.at_100m && (
                   <p className="t3-note">Conferência no 3D (recalculado nesta cena, 100 m): declividade {fmt(L.stats_inner.at_100m.slope_mean_deg, 1)}° × {fmt(R.stats_inner.at_100m.slope_mean_deg, 1)}°,
                     amplitude {fmt(L.stats_inner.at_100m.relief_m, 0)} × {fmt(R.stats_inner.at_100m.relief_m, 0)} m.</p>
@@ -293,6 +346,7 @@ export default function Lab3D() {
                 <p className="t3-note">Não reproduzível na Terra: gravidade ({fmt(gB.g, 2)} vs 9,81 m/s²), atmosfera e radiação.</p>
               </>
             )}
+            {isWalk && <p className="t3-note mt-4">Relevo HiRISE de 1 m e imagem de 25 cm em volta do pouso do Perseverance. Ande pelo terreno com a gravidade de Marte; o trajeto do rover está marcado em branco.</p>}
             {isOverview && <p className="t3-note mt-4">Clique num quadrado dourado no relevo para abrir aquele sítio lado a lado com o melhor análogo da Terra.</p>}
           </div>
         </aside>
@@ -322,7 +376,16 @@ export default function Lab3D() {
               <Toggle on={settings.cell} onChange={(v) => setSettings((s) => ({ ...s, cell: v }))}>Célula de 5 km</Toggle>
               <Toggle on={settings.labels} onChange={(v) => setSettings((s) => ({ ...s, labels: v }))}>Rótulos</Toggle>
               {planetBody === "mars" && <Toggle on={settings.path} onChange={(v) => setSettings((s) => ({ ...s, path: v }))}>Trajeto do Perseverance</Toggle>}
+              {L?.minerals && <Toggle on={settings.minerals} onChange={(v) => setSettings((s) => ({ ...s, minerals: v, layer: v ? "imagem" : s.layer }))}>Minerais (CRISM)</Toggle>}
             </div>
+            {settings.minerals && L?.minerals && (
+              <div className="t3-minlegend">
+                {L.minerals.classes.map((c) => (
+                  <span key={c.value} style={{ "--c": `rgb(${c.color.join(",")})` }}>{c.name}<b>{fmt(c.pct, 1)}%</b></span>
+                ))}
+                <p className="t3-note">{fmt(L.minerals.coverage_pct, 0)}% desta cena tem mapa mineral (borda oeste de Jezero). {L.minerals.note} Valantinas et al. 2026.</p>
+              </div>
+            )}
             <label className="t3-range">
               <span>Exagero vertical <b>{fmt(settings.exag, 1)}×</b></span>
               <input type="range" min="1" max="6" step="0.5" value={settings.exag} onChange={(e) => setSettings((s) => ({ ...s, exag: Number(e.target.value) }))} />
