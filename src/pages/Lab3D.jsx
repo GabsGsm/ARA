@@ -5,6 +5,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import TerrainPane from "../components/lab3d/TerrainPane.jsx";
 import ProfileChart from "../components/lab3d/ProfileChart.jsx";
+import TwinTraversePanel from "../components/lab3d/TwinTraversePanel.jsx";
+import { MODES as TRAV, coarseGrid, earthInSky, findTwin, gradeProfile, metabolic, plan, profileDistance, sunFraction } from "../lib/terrain3d/traverse.js";
 import GlobeIntro from "../components/lab3d/GlobeIntro.jsx";
 import LiveEarthPicker from "../components/lab3d/LiveEarthPicker.jsx";
 import { useMotion } from "../hooks/useMotion.jsx";
@@ -13,7 +15,7 @@ import StatusChip from "../components/ui/StatusChip.jsx";
 import { useAraData } from "../hooks/useAraData.jsx";
 import * as core from "../lib/core.js";
 import { fmt, withUnit } from "../lib/format.js";
-import { BODIES, loadIndex, profile as makeProfile } from "../lib/terrain3d/data.js";
+import { BODIES, heightAt, loadIndex, profile as makeProfile, slopeGrid } from "../lib/terrain3d/data.js";
 import { SEASON, daylight, fmtHour, nowHour, shadowMask, sunPosition } from "../lib/terrain3d/sun.js";
 
 const LAYERS = [
@@ -22,6 +24,11 @@ const LAYERS = [
   { value: "altitude", label: "Altitude" },
   { value: "relevo", label: "Só relevo" },
 ];
+// veículos que podem ser colocados na cena, em escala real (comprimento em metros)
+const VEHICLES = {
+  mars: [["perseverance", "Perseverance", 3.0], ["curiosity", "Curiosity", 3.0], ["mer", "Spirit / Opportunity", 1.6], ["sojourner", "Sojourner (simplificado)", 0.65], ["ingenuity", "Ingenuity", 1.2], ["astronaut", "Astronauta", 0.9]],
+  moon: [["lrv", "Carro lunar Apollo (simplificado)", 3.1], ["lunar_module", "Módulo Lunar Apollo", 9.4], ["astronaut", "Astronauta", 0.9]],
+};
 const NAV = [{ value: "orbit", label: "Órbita" }, { value: "walk", label: "Caminhar" }, { value: "tour", label: "Tour guiado" }];
 const ATTRS = core.RANK_ATTRS;
 
@@ -63,7 +70,7 @@ export default function Lab3D() {
   const [analogId, setAnalogId] = useState(params.get("analog"));
   // a URL pode abrir o laboratório já configurado (?layer=declividade&hour=7.5&exag=3&curvas=1&nav=tour)
   const [settings, setSettings] = useState(() => ({
-    exag: Number(params.get("exag")) || 2, layer: LAYERS.some((l) => l.value === params.get("layer")) ? params.get("layer") : "imagem",
+    exag: Number(params.get("exag")) || 2, layer: [...LAYERS.map((l) => l.value), "operacoes"].includes(params.get("layer")) ? params.get("layer") : "imagem",
     contours: params.get("curvas") === "1", step: Number(params.get("passo")) || 50, labels: true, path: true, cell: true,
     minerals: params.get("minerais") === "1",
   }));
@@ -81,6 +88,11 @@ export default function Lab3D() {
   const [locked, setLocked] = useState(false);
   const [panels, setPanels] = useState({ left: true, right: true });
   const [showSources, setShowSources] = useState(false);
+  const [lib, setLib] = useState({ lat: 0, lon: 0 });   // libração (ponto sub-Terra) para a Lua
+  const [ops, setOps] = useState({});
+  const [vehicle, setVehicle] = useState("");
+  const [travMode, setTravMode] = useState("eva");
+  const [trav, setTrav] = useState(null);
   const [intro, setIntro] = useState(null);         // { id, body, lat, lon, name } enquanto o globo anima
   const [live, setLive] = useState({ scene: null, busy: false, progress: { f: 0, text: "" }, error: null });
   const { calm } = useMotion();
@@ -174,21 +186,96 @@ export default function Lab3D() {
         if (!s || !ref.current?.view) continue;
         const sp = sunFor(s);
         ref.current.view.setSun(sp.azimuth, sp.elevation);
-        const { mask, lit: f } = shadowMask(s.heights, s.n, s.meta.size_m / s.n, sp.azimuth, sp.elevation);
+        const res = s.meta.size_m / s.n;
+        const { mask, lit: f } = shadowMask(s.heights, s.n, res, sp.azimuth, sp.elevation);
         ref.current.view.setShadowMask(mask);
         setLit((l) => ({ ...l, [side]: f }));
+        // Janela operacional (critérios Artemis III): sol + Terra visível + declividade < 10° para pouso
+        const slope = slopeGrid(s);
+        const opsArr = new Float32Array(s.n * s.n);
+        let earthFrac = null, all3 = 0, earthMask = null;
+        if (s.meta.body === "moon") {
+          const e = earthInSky(s.meta.lat, s.meta.lon, lib.lat, lib.lon);
+          const r = shadowMask(s.heights, s.n, res, e.azimuth, e.elevation);
+          earthMask = r.mask; earthFrac = r.lit;
+        }
+        for (let i = 0; i < opsArr.length; i++) {
+          const v = (mask[i] > 0.5 ? 1 : 0) + (slope[i] < 10 ? 1 : 0) + (earthMask ? (earthMask[i] > 0.5 ? 1 : 0) : 1);
+          opsArr[i] = v; if (v === 3) all3++;
+        }
+        ref.current.view.setOpsMask(opsArr);
+        ref.current.view._earthMask = earthMask;
+        setOps((o) => ({ ...o, [side]: { earth: earthFrac, all: all3 / opsArr.length, earthSky: s.meta.body === "moon" ? earthInSky(s.meta.lat, s.meta.lon, lib.lat, lib.lon) : null } }));
       }
     }, 60);
     return () => clearTimeout(t);
-  }, [scenes, sunFor]);
+  }, [scenes, sunFor, lib]);
 
   const onLoaded = useCallback((side, s) => setScenes((m) => ({ ...m, [side]: s })), []);
 
   // ---- perfil
   const onPick = useCallback((side, p) => {
+    if (tool === "travessia") {
+      if (side !== "left") return;
+      setTrav((t) => (!t || t.b ? { a: p } : { ...t, b: p }));
+      return;
+    }
     if (tool !== "profile") return;
     setPts((cur) => (cur.length >= 2 ? [p] : [...cur, p]));
   }, [tool]);
+
+  // ---- Travessia gêmea: rota com os limites da missão no planeta e o trecho de perfil mais parecido no análogo
+  useEffect(() => {
+    const L0 = scenes.left;
+    if (!trav?.a || !L0) { left.current?.view?.setRoutes([]); right.current?.view?.setRoutes([]); return; }
+    if (!trav.b) { left.current?.view?.setRoutes([{ pts: [trav.a], label: "A" }]); return; }
+    if (trav.result) return;
+    const m = TRAV[travMode];
+    const t = setTimeout(() => {
+      const gL = coarseGrid(L0, 128);
+      const route = plan(gL, trav.a, trav.b, m.maxSlope);
+      if (!route) { setTrav((x) => ({ ...x, result: { status: `Não há caminho entre A e B sem passar de ${m.maxSlope}° de declividade. Tente outros pontos ou outro modo.` } })); return; }
+      route.cell = gL.res;
+      left.current?.view?.setRoutes([{ pts: route.pts, color: 0xffd166, label: "A" }]);
+      const R0 = twin ? scenes.right : null;
+      let twinRoute = null, fidelity = null;
+      const chord = Math.hypot(trav.b.u - trav.a.u, trav.b.v - trav.a.v) * L0.meta.size_m;
+      if (R0) {
+        const gR = coarseGrid(R0, 128);
+        twinRoute = findTwin(gR, route, chord, m.maxSlope);
+        if (twinRoute) { fidelity = profileDistance(gradeProfile(route), gradeProfile(twinRoute)); right.current?.view?.setRoutes([{ pts: twinRoute.pts, color: 0x59e0ff, label: "A" }]); }
+      }
+      const gP = L0.body.g;
+      const kcal = travMode === "eva" ? { planet: metabolic(route, gP), earth: metabolic(twinRoute ?? route, 9.807) } : null;
+      const sunF = { planet: sunFraction(route, L0, left.current?.view?.getShadowMask()), earth: twinRoute ? sunFraction(twinRoute, R0, right.current?.view?.getShadowMask()) : null };
+      const em = left.current?.view?._earthMask;
+      const earthVis = em ? route.pts.reduce((s2, q) => s2 + (em[Math.min(L0.n - 1, Math.floor(q.v * L0.n)) * L0.n + Math.min(L0.n - 1, Math.floor(q.u * L0.n))] > 0.5 ? 1 : 0), 0) / route.pts.length : null;
+      setTrav((x) => ({ ...x, result: { route, twin: twinRoute, fidelity, kcal, sun: sunF, earthVis, gPlanet: gP, planetName: L0.meta.name,
+        earthName: R0?.meta.name, profA: gradeProfile(route), profB: twinRoute ? gradeProfile(twinRoute) : null } }));
+    }, 30);
+    return () => clearTimeout(t);
+  }, [trav, travMode, scenes, twin]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // trocar de sítio (inclusive pelo link) zera ferramentas, travessia e veículo
+  useEffect(() => { setTrav(null); setTool(null); setVehicle(params.get("veiculo") || (isWalk ? "perseverance" : "")); setPts([]); }, [siteId, isWalk]);
+
+  // ---- veículo em escala real
+  useEffect(() => {
+    const v = left.current?.view, L0 = scenes.left;
+    if (!v || !L0) return;
+    const spec = (VEHICLES[L0.meta.body] ?? []).find(([k]) => k === vehicle);
+    if (!spec) { v.setVehicle(null); return; }
+    const land = L0.meta.pois?.find((q) => q.kind === "landing");
+    v.setVehicle({ key: spec[0], length: spec[2], u: land ? land.u + 0.004 : 0.5, v: land ? land.v + 0.004 : 0.5, heading: 35 });
+  }, [vehicle, scenes.left]);
+  const goToVehicle = () => {
+    const v = left.current?.view, L0 = scenes.left, req = v?._vehReq;
+    if (!v || !req) return;
+    const S = L0.meta.size_m, e = settings.exag, hy = (heightAt(L0, req.u, req.v) - (L0.meta.height.min + L0.meta.height.max) / 2) / S;
+    const d = (req.length * 4) / S;
+    v.flyTo({ p: [req.u - 0.5 + d * 0.6, hy + d * 0.55, req.v - 0.5 + d], t: [req.u - 0.5, hy, req.v - 0.5] }, 2600);
+    void e;
+  };
   useEffect(() => {
     const [a, b] = pts.length === 2 ? pts : [null, null];
     left.current?.view?.setProfile(a, b);
@@ -366,7 +453,21 @@ export default function Lab3D() {
                   aria-label={panels.right ? "Recolher painel" : "Abrir painel"}>{panels.right ? "›" : "‹"}</button>
           <div className="t3-scroll">
             <h2 className="t3-h">Camada</h2>
-            <Seg label="Camada" options={LAYERS} value={settings.layer} onChange={(v) => setSettings((s) => ({ ...s, layer: v }))} />
+            <Seg label="Camada" options={planetBody === "moon" ? [...LAYERS, { value: "operacoes", label: "Janela operacional" }] : LAYERS} value={settings.layer} onChange={(v) => setSettings((s) => ({ ...s, layer: v }))} />
+            {settings.layer === "operacoes" && planetBody === "moon" && (
+              <div className="t3-ops">
+                <div className="t3-legend">
+                  <span style={{ "--c": "#33c780" }}>Sol + Terra + &lt;10°</span><span style={{ "--c": "#f9d64d" }}>2 de 3</span>
+                  <span style={{ "--c": "#f58033" }}>1 de 3</span><span style={{ "--c": "#bf262e" }}>nenhum</span>
+                </div>
+                <p className="t3-note">Critérios da Artemis III: luz do Sol, Terra acima do horizonte para comunicação direta e declividade &lt; 10° para pouso. Agora: <b>{ops.left?.all == null ? "…" : `${fmt(ops.left.all * 100, 1)}%`}</b> da cena atende aos três; Terra visível em {ops.left?.earth == null ? "…" : `${fmt(ops.left.earth * 100, 0)}%`}{ops.left?.earthSky ? ` (Terra a ${fmt(ops.left.earthSky.elevation, 1)}° de altura, azimute ${fmt(ops.left.earthSky.azimuth, 0)}°)` : ""}.</p>
+                <label className="t3-range"><span>Libração em latitude <b>{fmt(lib.lat, 1)}°</b></span>
+                  <input type="range" min="-6.7" max="6.7" step="0.1" value={lib.lat} onChange={(e) => setLib((l) => ({ ...l, lat: Number(e.target.value) }))} /></label>
+                <label className="t3-range"><span>Libração em longitude <b>{fmt(lib.lon, 1)}°</b></span>
+                  <input type="range" min="-7.9" max="7.9" step="0.1" value={lib.lon} onChange={(e) => setLib((l) => ({ ...l, lon: Number(e.target.value) }))} /></label>
+                <p className="t3-note">A libração muda a posição da Terra no céu lunar ao longo do mês: perto do polo sul ela sobe e desce alguns graus, e o relevo pode escondê-la — é por isso que a comunicação direta entra na escolha do local.</p>
+              </div>
+            )}
             {settings.layer === "declividade" && (
               <div className="t3-legend">
                 <span style={{ "--c": "#2a9e73" }}>&lt;5° fácil</span><span style={{ "--c": "#f9d64d" }}>15° limite rover</span>
@@ -433,13 +534,34 @@ export default function Lab3D() {
             </dl>
             {planetBody === "moon" && L && <p className="t3-note">A {fmt(Math.abs(L.lat), 1)}°S o Sol nunca sobe mais que {fmt(90 - Math.abs(L.lat) + 1.54, 1)}° (90° − latitude + 1,54° de inclinação do eixo lunar). Por isso as sombras são quilométricas, há crateras em sombra permanente e a Artemis III mira as bordas mais iluminadas.</p>}
 
+            {VEHICLES[planetBody] && !isOverview && (
+              <>
+                <h2 className="t3-h">Veículo em escala real</h2>
+                <select className="t3-select" value={vehicle} aria-label="Veículo na cena" onChange={(e) => setVehicle(e.target.value)}>
+                  <option value="">Nenhum</option>
+                  {VEHICLES[planetBody].map(([k, label, len]) => <option key={k} value={k}>{label} · {fmt(len, len < 2 ? 2 : 1)} m</option>)}
+                </select>
+                {vehicle && <div className="t3-btns"><button type="button" onClick={goToVehicle}>Ir até o veículo</button><Link to="/veiculos" className="t3-linkbtn">Ficha dos veículos</Link></div>}
+                {vehicle && <p className="t3-note">Modelos 3D oficiais da NASA (domínio público) carregados de science.nasa.gov; Sojourner e carro lunar são simplificados com as dimensões reais.</p>}
+              </>
+            )}
+
             <h2 className="t3-h">Ferramentas</h2>
             <div className="t3-btns">
-              <button type="button" aria-pressed={tool === "profile"} onClick={() => { setTool((t) => (t === "profile" ? null : "profile")); setPts([]); }}>Perfil A→B</button>
+              <button type="button" aria-pressed={tool === "profile"} onClick={() => { setTool((t) => (t === "profile" ? null : "profile")); setPts([]); setTrav(null); }}>Perfil A→B</button>
+              {!isOverview && <button type="button" className="gold" aria-pressed={tool === "travessia"} onClick={() => { setTool((t) => (t === "travessia" ? null : "travessia")); setTrav(null); setPts([]); }}>Travessia gêmea</button>}
               <button type="button" onClick={download}>Salvar imagem</button>
               <button type="button" onClick={() => { left.current?.view?.resetView(); right.current?.view?.resetView(); }}>Recentrar</button>
               <button type="button" onClick={() => setShowSources((v) => !v)} aria-expanded={showSources}>Fontes dos dados</button>
             </div>
+            {tool === "travessia" && (
+              <div className="mt-2">
+                <select className="t3-select" value={travMode} aria-label="Modo da travessia" onChange={(e) => { setTravMode(e.target.value); setTrav((t) => (t?.b ? { a: t.a, b: t.b } : t)); }}>
+                  {Object.entries(TRAV).map(([k, m]) => <option key={k} value={k}>{m.label} · até {m.maxSlope}°</option>)}
+                </select>
+                <p className="t3-note">{!trav?.a ? "Clique no ponto de partida da missão (relevo da esquerda)." : !trav.b ? "Agora clique no destino." : "Rota planejada. Clique de novo para recomeçar."} O ARA traça a rota de menor custo respeitando o limite de declividade e procura no análogo da Terra o trecho com as mesmas subidas e descidas, para ensaiar exatamente o que a equipe vai enfrentar.</p>
+              </div>
+            )}
             {tool === "profile" && <p className="t3-note">{pts.length === 0 ? "Clique no ponto A do relevo." : pts.length === 1 ? "Agora clique no ponto B." : "Perfil traçado nas duas cenas. Clique de novo para recomeçar."}</p>}
             {showSources && (
               <ul className="t3-sources">
@@ -480,6 +602,7 @@ export default function Lab3D() {
             </p>
           </div>
         )}
+        {tool === "travessia" && trav?.result && <TwinTraversePanel result={trav.result} mode={travMode} onClose={() => { setTrav(null); setTool(null); }} />}
         {profiles.length > 0 && <ProfileChart profiles={profiles} onClose={() => { setPts([]); setTool(null); }} />}
       </div>
     </section>

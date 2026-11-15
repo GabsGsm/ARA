@@ -7,8 +7,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import { CSS2DRenderer, CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { heightAt, slopeAt, slopeGrid, uvToLatLon } from "./data.js";
+import { GLB, PROCEDURAL, fitToLength, loadGLB } from "./models.js";
 
-const LAYERS = { imagem: 0, declividade: 1, altitude: 2, relevo: 3 };
+const LAYERS = { imagem: 0, declividade: 1, altitude: 2, relevo: 3, operacoes: 4 };
 const EYE = 1.75;          // altura dos olhos (m)
 const WALK = 1.4, RUN = 14; // m/s
 const JUMP_V = 2.5;        // m/s — o mesmo impulso nos três corpos
@@ -109,6 +110,8 @@ export default class TerrainView {
     geo.setAttribute("aSlope", new THREE.BufferAttribute(slope, 1));
     this.shadowAttr = new THREE.BufferAttribute(new Float32Array(n * n).fill(1), 1);
     geo.setAttribute("aShadow", this.shadowAttr);
+    this.opsAttr = new THREE.BufferAttribute(new Float32Array(n * n), 1);
+    geo.setAttribute("aOps", this.opsAttr);
     geo.computeVertexNormals();
     geo.computeBoundingSphere();
 
@@ -139,13 +142,13 @@ export default class TerrainView {
     mat.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, this.uniforms);
       sh.vertexShader = sh.vertexShader
-        .replace("#include <common>", "#include <common>\nattribute float aElev;\nattribute float aSlope;\nattribute float aShadow;\nvarying float vElev;\nvarying float vSlope;\nvarying float vShadow;")
-        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvElev = aElev;\nvSlope = aSlope;\nvShadow = aShadow;");
+        .replace("#include <common>", "#include <common>\nattribute float aElev;\nattribute float aSlope;\nattribute float aShadow;\nattribute float aOps;\nvarying float vElev;\nvarying float vSlope;\nvarying float vShadow;\nvarying float vOps;")
+        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvElev = aElev;\nvSlope = aSlope;\nvShadow = aShadow;\nvOps = aOps;");
       sh.fragmentShader = sh.fragmentShader
         .replace("#include <common>", `#include <common>
 uniform int uMode; uniform float uMin; uniform float uMax; uniform float uStep; uniform int uContours;
 uniform sampler2D uMinMap; uniform float uMinOn;
-varying float vElev; varying float vSlope; varying float vShadow;
+varying float vElev; varying float vSlope; varying float vShadow; varying float vOps;
 vec3 slopeColor(float s){
   if (s < 5.0) return mix(vec3(0.16,0.62,0.45), vec3(0.45,0.78,0.42), s/5.0);
   if (s < 15.0) return mix(vec3(0.45,0.78,0.42), vec3(0.98,0.84,0.30), (s-5.0)/10.0);
@@ -165,6 +168,10 @@ float lum = dot(diffuseColor.rgb, vec3(0.299,0.587,0.114));
 if (uMode == 1) diffuseColor.rgb = mix(slopeColor(vSlope), slopeColor(vSlope) * (0.55 + lum), 0.35);
 else if (uMode == 2) diffuseColor.rgb = hypso(clamp((vElev - uMin) / max(uMax - uMin, 1.0), 0.0, 1.0));
 else if (uMode == 3) diffuseColor.rgb = vec3(0.78);
+else if (uMode == 4) {
+  vec3 oc = vOps > 2.5 ? vec3(0.2,0.78,0.5) : vOps > 1.5 ? vec3(0.98,0.84,0.3) : vOps > 0.5 ? vec3(0.96,0.5,0.2) : vec3(0.75,0.15,0.18);
+  diffuseColor.rgb = mix(oc, oc * (0.6 + lum), 0.3);
+}
 #ifdef USE_MAP
 if (uMinOn > 0.5) { vec4 mm = texture2D(uMinMap, vMapUv); diffuseColor.rgb = mix(diffuseColor.rgb, mm.rgb * 1.05, mm.a * 0.78); }
 #endif
@@ -185,6 +192,8 @@ reflectedLight.directSpecular *= vShadow;
     this.overlays.scale.y = this.exag;
 
     this.applyBody(data.body, meta.body);
+    if (this.vehicle) { this.scene.remove(this.vehicle); this.vehicle = null; }
+    this.routes = [];
     this.buildOverlays();
     this.camera.near = Math.max(0.5, S / 20000);
     this.camera.far = S * 12;
@@ -298,6 +307,11 @@ reflectedLight.directSpecular *= vShadow;
       }
     }
     if (this.profilePts) this.drawProfile(...this.profilePts);
+    for (const r of this.routes || []) {
+      if (!r?.pts?.length) continue;
+      this.line(r.pts.map((p) => this.uvToWorld(p.u, p.v, this.S / 700)), r.color ?? 0x59e0ff, 1);
+      if (r.label) this.label(r.label, r.pts[0].u, r.pts[0].v, "pin");
+    }
     this.dirty = true;
   }
 
@@ -305,6 +319,7 @@ reflectedLight.directSpecular *= vShadow;
   setExaggeration(x) {
     this.exag = x;
     if (this.mesh) { this.mesh.scale.y = x; this.overlays.scale.y = x; }
+    this.placeVehicle();
     this.dirty = true;
   }
 
@@ -347,6 +362,46 @@ reflectedLight.directSpecular *= vShadow;
     this.shadowAttr.array.set(mask);
     this.shadowAttr.needsUpdate = true;
     this.dirty = true;
+  }
+
+  /** Contagem de critérios atendidos por ponto (0..3) para a camada "Janela operacional". */
+  setOpsMask(arr) {
+    if (!this.opsAttr || arr.length !== this.opsAttr.array.length) return;
+    this.opsAttr.array.set(arr); this.opsAttr.needsUpdate = true; this.dirty = true;
+  }
+
+  getShadowMask() { return this.shadowAttr?.array ?? null; }
+
+  /** Rotas (lista de {u, v}) desenhadas sobre o relevo. */
+  setRoutes(routes) {
+    this.routes = routes;
+    if (this.data) this.buildOverlays();
+  }
+
+  /** Veículo em escala real apoiado no terreno: { key, u, v, length, heading }. */
+  async setVehicle(spec) {
+    if (this.vehicle) { this.scene.remove(this.vehicle); this.vehicle = null; this.dirty = true; }
+    this._vehReq = spec;
+    if (!spec || !this.data) return;
+    let obj;
+    try {
+      obj = PROCEDURAL[spec.key] ? PROCEDURAL[spec.key]() : await loadGLB(GLB[spec.key]);
+    } catch (e) { console.error(e); return; }
+    if (this._vehReq !== spec) return;
+    const g = fitToLength(obj, spec.length);
+    g.rotation.y = ((spec.heading ?? 0) * Math.PI) / 180;
+    g.traverse((m) => { if (m.isMesh) { m.castShadow = false; m.receiveShadow = false; } });
+    this.vehicle = g;
+    this.placeVehicle();
+    this.scene.add(g);
+    this.dirty = true;
+  }
+
+  placeVehicle() {
+    const v = this.vehicle, s = this._vehReq;
+    if (!v || !s) return;
+    const h = (heightAt(this.data, s.u, s.v) - this.mid) * this.exag;
+    v.position.set((s.u - 0.5) * this.S, h, (s.v - 0.5) * this.S);
   }
 
   setProfile(a, b) {

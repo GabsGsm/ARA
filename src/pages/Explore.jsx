@@ -11,6 +11,7 @@ import DiscoverPanel from "../components/discover/DiscoverPanel.jsx";
 import MineralExplorer from "../components/minerals/MineralExplorer.jsx";
 import EvidencePanel from "../components/evidence/EvidencePanel.jsx";
 import RobustnessMatrix from "../components/evidence/RobustnessMatrix.jsx";
+import EnvironmentGap from "../components/evidence/EnvironmentGap.jsx";
 import { cellExtra, useEvidence } from "../hooks/useEvidence.js";
 import { useAraData } from "../hooks/useAraData.jsx";
 import { useExplorer } from "../hooks/useExplorer.jsx";
@@ -66,6 +67,8 @@ export default function Explore() {
                        sourcesMeta={evidence.manifest?.datasets ?? []}
                        compare={other ? { candidate: asCandidate(other), extra: cellExtra(evidence, other.cell.id) } : null} />) },
     { id: "robustez", label: "Robustez", render: () => <RobustnessMatrix siteId={ex.siteId} /> },
+    { id: "ambiente", label: "Pressão e temperatura", render: () => <EnvironmentGap site={site} siteAttrs={data.sites[ex.siteId]} cell={selected.cell}
+                                                        cellName={data.cellName(selected.cell)} climate={cellExtra(evidence, selected.cell.id)?.climate} /> },
   ] : [];
 
   return (
