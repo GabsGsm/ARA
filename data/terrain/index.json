@@ -1,0 +1,369 @@
+{
+ "version": 1,
+ "scenes": [
+  {
+   "id": "haworth_01",
+   "body": "moon",
+   "name": "Haworth",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -86.768,
+   "lon": -20.514,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 7.603,
+     "roughness_mean_m": 2.137,
+     "relief_m": 473.0,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 7.268,
+     "roughness_mean_m": 10.126,
+     "relief_m": 467.5,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_01",
+   "body": "mars",
+   "name": "Jezero 01",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.592978,
+   "lon": 77.268437,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.405,
+     "roughness_mean_m": 2.697,
+     "relief_m": 565.8,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.516,
+     "roughness_mean_m": 12.237,
+     "relief_m": 561.4,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_02",
+   "body": "mars",
+   "name": "Jezero 02",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.478258,
+   "lon": 77.416899,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 4.519,
+     "roughness_mean_m": 1.281,
+     "relief_m": 186.6,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 3.557,
+     "roughness_mean_m": 5.175,
+     "relief_m": 177.5,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_03",
+   "body": "mars",
+   "name": "Jezero 03",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.350041,
+   "lon": 77.56536,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 2.507,
+     "roughness_mean_m": 0.705,
+     "relief_m": 82.6,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 1.662,
+     "roughness_mean_m": 2.433,
+     "relief_m": 80.9,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_04",
+   "body": "mars",
+   "name": "Jezero 04",
+   "group": "Cratera Jezero",
+   "kind": "site",
+   "lat": 18.367755,
+   "lon": 77.27333,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.023,
+     "roughness_mean_m": 2.549,
+     "relief_m": 556.7,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.417,
+     "roughness_mean_m": 11.779,
+     "relief_m": 544.8,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "jezero_crater",
+   "body": "mars",
+   "name": "Cratera Jezero (visão geral)",
+   "group": "Cratera Jezero",
+   "kind": "overview",
+   "lat": 18.4,
+   "lon": 77.58,
+   "size_m": 60000,
+   "cell_m": null,
+   "stats_inner": {
+    "window_m": 30000,
+    "native": {
+     "slope_mean_deg": 2.858,
+     "roughness_mean_m": 3.932,
+     "relief_m": 1151.6,
+     "res_m": 93.75
+    },
+    "at_100m": {
+     "slope_mean_deg": 2.858,
+     "roughness_mean_m": 3.932,
+     "relief_m": 1151.6,
+     "res_m": 93.8
+    }
+   }
+  },
+  {
+   "id": "lunar_south_pole",
+   "body": "moon",
+   "name": "Polo sul da Lua (regiões Artemis III)",
+   "group": "Regiões candidatas Artemis III",
+   "kind": "overview",
+   "lat": -87.6,
+   "lon": 12.0,
+   "size_m": 180000,
+   "cell_m": null,
+   "stats_inner": {
+    "window_m": 90000,
+    "native": {
+     "slope_mean_deg": 10.516,
+     "roughness_mean_m": 38.48,
+     "relief_m": 9173.3,
+     "res_m": 250.0
+    },
+    "at_100m": {
+     "slope_mean_deg": 10.516,
+     "roughness_mean_m": 38.48,
+     "relief_m": 9173.3,
+     "res_m": 250.0
+    }
+   }
+  },
+  {
+   "id": "malapert_massif_01",
+   "body": "moon",
+   "name": "Malapert Massif",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -85.942,
+   "lon": -0.944,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 13.635,
+     "roughness_mean_m": 3.917,
+     "relief_m": 1066.5,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 13.38,
+     "roughness_mean_m": 18.852,
+     "relief_m": 1044.9,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "mons_mouton_01",
+   "body": "moon",
+   "name": "Mons Mouton",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -85.4,
+   "lon": 31.7,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 9.077,
+     "roughness_mean_m": 2.552,
+     "relief_m": 507.4,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 8.743,
+     "roughness_mean_m": 12.118,
+     "relief_m": 498.3,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "nobile_rim_01",
+   "body": "moon",
+   "name": "Nobile Rim 1",
+   "group": "Região candidata Artemis III",
+   "kind": "site",
+   "lat": -85.295,
+   "lon": 36.917,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 13.617,
+     "roughness_mean_m": 3.9,
+     "relief_m": 1141.7,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 13.346,
+     "roughness_mean_m": 18.81,
+     "relief_m": 1108.4,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_atacama_01",
+   "body": "earth",
+   "name": "Valle de la Luna, Atacama (Chile)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": -22.9112,
+   "lon": -68.323,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 5.276,
+     "roughness_mean_m": 1.534,
+     "relief_m": 265.1,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 3.805,
+     "roughness_mean_m": 5.512,
+     "relief_m": 252.4,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_death_valley_01",
+   "body": "earth",
+   "name": "Death Valley (USA)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 36.42,
+   "lon": -116.812,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 14.038,
+     "roughness_mean_m": 4.256,
+     "relief_m": 578.0,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 9.602,
+     "roughness_mean_m": 14.168,
+     "relief_m": 545.3,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_timanfaya_01",
+   "body": "earth",
+   "name": "Timanfaya, Lanzarote (Spain)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 29.035,
+   "lon": -13.783,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 2.861,
+     "roughness_mean_m": 0.804,
+     "relief_m": 298.2,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 2.655,
+     "roughness_mean_m": 3.711,
+     "relief_m": 291.1,
+     "res_m": 97.7
+    }
+   }
+  },
+  {
+   "id": "p1_wadi_rum_01",
+   "body": "earth",
+   "name": "Wadi Rum (Jordan)",
+   "group": "Análogo terrestre",
+   "kind": "analog",
+   "lat": 29.64,
+   "lon": 35.434,
+   "size_m": 10000,
+   "cell_m": 5000,
+   "stats_inner": {
+    "window_m": 5000,
+    "native": {
+     "slope_mean_deg": 13.244,
+     "roughness_mean_m": 4.131,
+     "relief_m": 471.6,
+     "res_m": 19.53
+    },
+    "at_100m": {
+     "slope_mean_deg": 9.205,
+     "roughness_mean_m": 14.026,
+     "relief_m": 439.2,
+     "res_m": 97.7
+    }
+   }
+  }
+ ]
+}

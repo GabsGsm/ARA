@@ -1,0 +1,95 @@
+{
+ "id": "lunar_south_pole",
+ "body": "moon",
+ "name": "Polo sul da Lua (regiões Artemis III)",
+ "group": "Regiões candidatas Artemis III",
+ "lat": -87.6,
+ "lon": 12.0,
+ "size_m": 180000,
+ "kind": "overview",
+ "cell_m": null,
+ "height": {
+  "file": "lunar_south_pole_h.png",
+  "n": 720,
+  "min": -4372.85,
+  "max": 7021.18,
+  "res_m": 250.0,
+  "native_res_m": 213.6,
+  "valid_pct": 100.0
+ },
+ "stats_inner": {
+  "window_m": 90000,
+  "native": {
+   "slope_mean_deg": 10.516,
+   "roughness_mean_m": 38.48,
+   "relief_m": 9173.3,
+   "res_m": 250.0
+  },
+  "at_100m": {
+   "slope_mean_deg": 10.516,
+   "roughness_mean_m": 38.48,
+   "relief_m": 9173.3,
+   "res_m": 250.0
+  }
+ },
+ "pois": [
+  {
+   "name": "Polo Sul",
+   "u": 0.5,
+   "v": 0.9043,
+   "kind": "feature"
+  },
+  {
+   "name": "Cratera Shackleton",
+   "u": 0.5492,
+   "v": 0.9302,
+   "kind": "feature"
+  },
+  {
+   "name": "Cratera de Gerlache",
+   "u": 0.2504,
+   "v": 0.9442,
+   "kind": "feature"
+  },
+  {
+   "name": "Mons Mouton",
+   "u": 0.761,
+   "v": 0.1746,
+   "kind": "site",
+   "site": "mons_mouton_01",
+   "half": 0.0139
+  },
+  {
+   "name": "Malapert Massif",
+   "u": 0.347,
+   "v": 0.238,
+   "kind": "site",
+   "site": "malapert_massif_01",
+   "half": 0.0139
+  },
+  {
+   "name": "Haworth",
+   "u": 0.2075,
+   "v": 0.4451,
+   "kind": "site",
+   "site": "haworth_01",
+   "half": 0.0139
+  },
+  {
+   "name": "Nobile Rim 1",
+   "u": 0.8337,
+   "v": 0.1853,
+   "kind": "site",
+   "site": "nobile_rim_01",
+   "half": 0.0139
+  }
+ ],
+ "sources": [
+  {
+   "name": "LOLA LDEM_80S_40MPP_ADJ (40 m)",
+   "by": "NASA Goddard PGDA · Barker et al. (2021)",
+   "url": "https://pgda.gsfc.nasa.gov/products/90"
+  }
+ ],
+ "built_utc": "2026-11-15T08:59:39Z"
+}

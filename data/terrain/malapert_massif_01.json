@@ -1,0 +1,44 @@
+{
+ "id": "malapert_massif_01",
+ "body": "moon",
+ "name": "Malapert Massif",
+ "group": "Região candidata Artemis III",
+ "lat": -85.942,
+ "lon": -0.944,
+ "size_m": 10000,
+ "kind": "site",
+ "cell_m": 5000,
+ "height": {
+  "file": "malapert_massif_01_h.png",
+  "n": 512,
+  "min": 2656.05,
+  "max": 5044.32,
+  "res_m": 19.53,
+  "native_res_m": 40.0,
+  "valid_pct": 100.0
+ },
+ "stats_inner": {
+  "window_m": 5000,
+  "native": {
+   "slope_mean_deg": 13.635,
+   "roughness_mean_m": 3.917,
+   "relief_m": 1066.5,
+   "res_m": 19.53
+  },
+  "at_100m": {
+   "slope_mean_deg": 13.38,
+   "roughness_mean_m": 18.852,
+   "relief_m": 1044.9,
+   "res_m": 97.7
+  }
+ },
+ "pois": [],
+ "sources": [
+  {
+   "name": "LOLA LDEM_80S_40MPP_ADJ (40 m)",
+   "by": "NASA Goddard PGDA · Barker et al. (2021)",
+   "url": "https://pgda.gsfc.nasa.gov/products/90"
+  }
+ ],
+ "built_utc": "2026-11-15T08:31:52Z"
+}

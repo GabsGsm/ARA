@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import Header from "./components/layout/Header.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import Sky from "./components/fx/Sky.jsx";
@@ -7,7 +7,11 @@ import Home from "./pages/Home.jsx";
 import Explore from "./pages/Explore.jsx";
 import Analyses from "./pages/Analyses.jsx";
 import About from "./pages/About.jsx";
+
 import { useAraData } from "./hooks/useAraData.jsx";
+
+// o 3D (three.js) só é baixado quando alguém abre a página
+const Lab3D = lazy(() => import("./pages/Lab3D.jsx"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -39,6 +43,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/explorar" element={<Explore />} />
             <Route path="/analises" element={<Analyses />} />
+            <Route path="/3d" element={<Suspense fallback={<p className="note p-8" role="status">Carregando o laboratório 3D…</p>}><Lab3D /></Suspense>} />
             <Route path="/sobre" element={<About />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

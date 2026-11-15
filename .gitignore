@@ -20,3 +20,6 @@ __pycache__/
 .venv/
 .ipynb_checkpoints/
 .DS_Store
+
+# material de referência local (não publicar)
+design/referencias/
