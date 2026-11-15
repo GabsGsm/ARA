@@ -7,7 +7,7 @@ import TerrainView from "../lib/terrain3d/TerrainView.js";
 import { BODIES, heightAt, loadIndex, loadScene, slopeGrid, uvToLatLon } from "../lib/terrain3d/data.js";
 import { buildLiveScene } from "../lib/terrain3d/liveEarth.js";
 import { SEASON, fmtHour, shadowMask, sunPosition } from "../lib/terrain3d/sun.js";
-import { ROVERS, SOURCES, critAngle, softFromTI, startState, step, tiSampler } from "../lib/mission/rover.js";
+import { ROVERS, SOURCES, critAngle, softFromTI, startState, steerForWarp, step, tiSampler, withinTargetRadius } from "../lib/mission/rover.js";
 import { STRATEGIES, describeRoute, hazardGrid, obstacleLimit, planRover, routeEnergy } from "../lib/mission/planner.js";
 import { ROCK_SOURCES, clearRockCache, rockAbundance, rocksNear } from "../lib/mission/rocks.js";
 import { PP_SOURCES, at, consequences, loadMemory, permanentShadow, rasterTracks, rasterZones, saveMemory, sceneMemory, scienceFromMinerals } from "../lib/mission/pristine.js";
@@ -254,19 +254,16 @@ export default function Mission() {
   }, [scene, ground, kWorld, body]);
 
   // ---- escolher veículo: confirma e a câmera voa até ele no terreno
-  const focusVehicle = () => {
+  const focusVehicle = (vehicleSpec = spec) => {
     const v = view.current;
     if (!v || !scene) return;
     const a = pts.a ?? { u: 0.5, v: 0.5 };
-    const hy = (heightAt(scene, a.u, a.v) - (scene.meta.height.min + scene.meta.height.max) / 2) / S;
-    const d = (spec.len * 5) / S;
-    v.cancelFly();
-    v.flyTo({ p: [a.u - 0.5 + d * 0.7, hy + d * 0.5, a.v - 0.5 + d], t: [a.u - 0.5, hy, a.v - 0.5] }, 2200);
+    v.focusOnVehicle({ u: a.u, v: a.v, length: vehicleSpec.len }, 2200);
   };
   const confirmVehicle = (k) => {
     setRoverKey(k); setPicker(false);
     try { sessionStorage.setItem("ara-picked", "1"); } catch { /* ignora */ }
-    setTimeout(focusVehicle, 400);
+    setTimeout(() => focusVehicle(ROVERS[k]), 400);
   };
 
   // ---- clique no terreno
@@ -310,11 +307,11 @@ export default function Mission() {
     if (!v || !scene || phase !== "plan") return;
     const list = [];
     if (routes) for (const st of STRATEGIES) if (routes[st.id] && st.id !== strategy) list.push({ pts: routes[st.id].pts, color: 0x8899aa });
-    if (chosen) list.push({ pts: chosen.pts, color: 0xffd166 });
+    if (chosen) list.push({ pts: chosen.pts, color: 0xffd166, corridorWidth: spec.width + 2 });
     if (pts.a) list.push({ pts: [pts.a], label: "A", color: 0xffd166 });
     if (pts.b) list.push({ pts: [pts.b], label: "B", color: 0x59e0ff });
     v.setRoutes(list);
-  }, [routes, strategy, chosen, pts, phase, scene]);
+  }, [routes, strategy, chosen, pts, phase, scene, spec]);
 
   // ---- missão rápida: A e B escolhidos pelo ARA
   const quick = () => {
@@ -343,7 +340,9 @@ export default function Mission() {
     const heading = nxt ? Math.atan2(nxt.u - pts.a.u, -(nxt.v - pts.a.v)) : 0;
     setLayer("imagem");
     const hits = new Set();
-    sim.current = { st: startState(spec, { ...pts.a, heading }), acc: 0, hour0: hour, route, lastBlock: 0 };
+    const arrivalRadius = Math.max(2, spec.len * 1.25);
+    const startTargetDistance = pts.b ? Math.hypot(pts.a.u - pts.b.u, pts.a.v - pts.b.v) * S : Infinity;
+    sim.current = { st: startState(spec, { ...pts.a, heading }), acc: 0, hour0: hour, route, lastBlock: 0, arrivalRadius, startTargetDistance };
     v.setDriver((input, dt) => {
       const M = sim.current;
       if (!M) return null;
@@ -355,9 +354,16 @@ export default function Mission() {
         rocks: (x, z, r) => rocksNear(x, z, r, kWorld),
         sunlit: (u, w) => sp.elevation > 0 && (!lit || lit[Math.min(scene.n - 1, Math.floor(w * scene.n)) * scene.n + Math.min(scene.n - 1, Math.floor(u * scene.n))] > 0.5) };
       const thr = input.brake ? 0 : Math.max(-1, Math.min(1, input.throttle));
-      const nsub = Math.max(1, Math.ceil(sdt / 5));
-      for (let i = 0; i < nsub; i++) M.st = step(M.st, spec, { throttle: thr, steer: input.steer * (W > 60 ? 60 / W : 1) }, sdt / nsub, env);
-      if (pts.b && M.st.status === "ok" && Math.hypot(M.st.u - pts.b.u, M.st.v - pts.b.v) * S < Math.max(12, spec.len * 4)) M.st = { ...M.st, status: "chegou" };
+      const maxStep = spec.vmax > 1 ? (spec.len * 0.4) / spec.vmax : 5;
+      const nsub = Math.max(1, Math.ceil(sdt / maxStep));
+      for (let i = 0; i < nsub; i++) {
+        const previous = M.st;
+        M.st = step(M.st, spec, { throttle: thr, steer: steerForWarp(input.steer, W) }, sdt / nsub, env);
+        if (pts.b && M.startTargetDistance > M.arrivalRadius && M.st.status === "ok" &&
+            withinTargetRadius(previous, M.st, pts.b, M.arrivalRadius, S)) {
+          M.st = { ...M.st, status: "chegou" };
+        }
+      }
       if (M.st.blocked && performance.now() - M.lastBlock > 1500) { M.lastBlock = performance.now(); if (sounds) beep(330, 160); }
       M.acc += dt;
       if (M.acc > 0.12 || M.st.status !== "ok") {
@@ -366,7 +372,7 @@ export default function Mission() {
         setHud({ ...M.st, hour: ((hNow % 24) + 24) % 24, sunElev: sp.elevation, inSun: env.sunlit(M.st.u, M.st.v), soft: ground.softAt(M.st.u, M.st.v),
           toB: pts.b ? Math.hypot(M.st.u - pts.b.u, M.st.v - pts.b.v) * S : null, off });
         v.setRoutes([
-          ...(route?.pts ? [{ pts: route.pts, color: 0xffd166 }] : []),
+          ...(route?.pts ? [{ pts: route.pts, color: 0xffd166, corridorWidth: spec.width + 2 }] : []),
           ...(pts.b ? [{ pts: [pts.b], label: "B", color: 0x59e0ff }] : []),
           ...(M.st.track.length > 1 ? [{ pts: [...M.st.track, { u: M.st.u, v: M.st.v }], color: 0x7dffb0 }] : []),
         ]);
@@ -402,6 +408,12 @@ export default function Mission() {
     v?.setMode("orbit");
     v?.resetView();
   }, []);
+  const selectOtherVehicle = () => {
+    stopDrive();
+    sim.current = null;
+    setHud(null); setReport(null); setPhase("plan"); setPicker(true);
+    setPanels({ left: true, right: true });
+  };
   const replan = () => { stopDrive(); sim.current = null; setHud(null); setReport(null); setPhase("plan"); setPanels({ left: true, right: true }); setPts((p) => ({ ...p })); };
   const retry = () => { stopDrive(); start(); };
   useEffect(() => () => stopDrive(), [stopDrive]);
@@ -524,6 +536,7 @@ export default function Mission() {
                       );
                     })}
                   </div>
+                  <p className="t3-note">{tr("A faixa dourada mostra a largura do rover mais uma margem de segurança. A rota evita áreas com maior densidade estimada de pedras; a distribuição visível é um modelo estatístico, não um mapa de cada pedra observada.", "The gold band shows the rover's width plus a safety margin. The route avoids areas with higher estimated rock density; visible rocks are a statistical model, not a map of individually observed rocks.")}</p>
                   <p className="t3-note">{tr("Linha reta", "Straight line")}: {fmt(routes.straight.len, 0)} m · {tr("máx.", "max")} {fmt(routes.straight.maxSlope, 1)}° · {tr("patinagem", "slip")} {fmt(routes.straight.maxSlip * 100, 0)}%{routes.straight.maxSlip >= 0.99 ? ` — ${tr("atolaria", "would get stuck")}` : ""}. {tr("“Pedras” = número esperado de pedras maiores que a roda no caminho.", "“Rocks” = expected number of rocks taller than the wheel on the path.")}</p>
                   {!chosen && <p className="ms-alert">{tr("Esta estratégia não encontrou caminho seguro. Escolha outra ou outro destino.", "This strategy found no safe path. Pick another one or another target.")}</p>}
                 </>
@@ -574,6 +587,7 @@ export default function Mission() {
             {body === "moon" && <p className="t3-note">{tr("Luz ambiente realçada para enxergar o chão; sombras e energia seguem o Sol real.", "Ambient light boosted so you can see the ground; shadows and energy follow the real Sun.")}</p>}
             <div className="t3-btns">
               {phase === "end" && !showReport && <button type="button" className="gold" onClick={() => setShowReport(true)}>{tr("Ver relatório", "Show report")}</button>}
+              <button type="button" onClick={selectOtherVehicle}>{tr("Escolher outro veículo", "Choose another vehicle")}</button>
               <button type="button" onClick={replan}>{tr("Voltar ao planejamento", "Back to planning")}</button>
             </div>
           </aside>
@@ -600,7 +614,7 @@ export default function Mission() {
               </tbody>
             </table>
             <p className="t3-note">{tr("A travessia foi salva na memória da exploração deste local: a próxima missão a vê na camada Proteção e pode reaproveitar a trilha.", "The traverse was saved in this site's exploration memory: the next mission sees it in the Protection layer and can reuse the track.")}</p>
-            <div className="t3-btns"><button type="button" className="gold" onClick={retry}>{tr("Tentar de novo", "Try again")}</button><button type="button" onClick={replan}>{tr("Nova rota", "New route")}</button><button type="button" onClick={() => setShowReport(false)}>{tr("Ver o terreno", "View terrain")}</button></div>
+            <div className="t3-btns"><button type="button" className="gold" onClick={retry}>{tr("Tentar de novo", "Try again")}</button><button type="button" onClick={replan}>{tr("Nova rota", "New route")}</button><button type="button" onClick={selectOtherVehicle}>{tr("Escolher outro veículo", "Choose another vehicle")}</button><button type="button" onClick={() => setShowReport(false)}>{tr("Ver o terreno", "View terrain")}</button></div>
           </div>
         )}
 

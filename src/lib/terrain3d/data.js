@@ -7,7 +7,7 @@ const cache = new Map();
 
 export const BODIES = {
   mars: { get label() { return T("Marte", "Mars"); }, radius: 3396190, g: 3.721, day_h: 24.66, sky: ["#d7a477", "#8a5a3c"], fog: "#c99a72", ambient: 0.32, ambientColor: "#f0c9a0", sunColor: "#fff1dc", sunI: 2.6 },
-  moon: { get label() { return T("Lua", "Moon"); }, radius: 1737400, g: 1.62, day_h: 708.7, sky: ["#000000", "#05070a"], fog: "#000000", ambient: 0.025, ambientColor: "#9fb0c8", sunColor: "#ffffff", sunI: 3.2 },
+  moon: { get label() { return T("Lua", "Moon"); }, radius: 1737400, g: 1.62, day_h: 708.7, sky: ["#000000", "#05070a"], fog: "#000000", ambient: 0.08, ambientColor: "#9fb0c8", sunColor: "#ffffff", sunI: 3.2 },
   earth: { get label() { return T("Terra", "Earth"); }, radius: 6371008, g: 9.807, day_h: 24, sky: ["#8fb7dc", "#d9e7f2"], fog: "#c7d9e8", ambient: 0.45, ambientColor: "#cfe2ff", sunColor: "#fff6e6", sunI: 2.4 },
 };
 

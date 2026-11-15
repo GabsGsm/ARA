@@ -16,7 +16,7 @@ import StatusChip from "../components/ui/StatusChip.jsx";
 import { useAraData } from "../hooks/useAraData.jsx";
 import * as core from "../lib/core.js";
 import { fmt, withUnit } from "../lib/format.js";
-import { BODIES, heightAt, loadIndex, profile as makeProfile, slopeGrid } from "../lib/terrain3d/data.js";
+import { BODIES, loadIndex, profile as makeProfile, slopeGrid } from "../lib/terrain3d/data.js";
 import { SEASON, daylight, fmtHour, nowHour, shadowMask, sunPosition } from "../lib/terrain3d/sun.js";
 import { T } from "../lib/i18n.js";
 
@@ -136,11 +136,11 @@ export default function Lab3D() {
     left.current?.view?.resetView(); right.current?.view?.resetView();
   };
 
-  // ---- descida a partir do globo (Marte/Lua), uma vez por sítio
-  const introFor = useRef(null);
+  // ---- descida a partir do globo (Marte/Lua), uma vez por corpo celeste
+  const introBodies = useRef(new Set());
   useEffect(() => {
-    if (!site || site.body === "earth" || calm || params.get("intro") === "0" || introFor.current === site.id) return;
-    introFor.current = site.id;
+    if (!site || site.body === "earth" || calm || params.get("intro") === "0" || introBodies.current.has(site.body)) return;
+    introBodies.current.add(site.body);
     setIntro({ id: site.id, body: site.body, lat: site.lat, lon: site.lon, name: site.name });
   }, [site, calm]); // eslint-disable-line react-hooks/exhaustive-deps
   const endIntro = () => { setIntro(null); left.current?.view?.descend(); right.current?.view?.descend(); };
@@ -273,12 +273,9 @@ export default function Lab3D() {
     v.setVehicle({ key: spec[0], length: spec[2], u: land ? land.u + 0.004 : 0.5, v: land ? land.v + 0.004 : 0.5, heading: 35 });
   }, [vehicle, scenes.left]);
   const goToVehicle = () => {
-    const v = left.current?.view, L0 = scenes.left, req = v?._vehReq;
+    const v = left.current?.view, req = v?._vehReq;
     if (!v || !req) return;
-    const S = L0.meta.size_m, e = settings.exag, hy = (heightAt(L0, req.u, req.v) - (L0.meta.height.min + L0.meta.height.max) / 2) / S;
-    const d = (req.length * 4) / S;
-    v.flyTo({ p: [req.u - 0.5 + d * 0.6, hy + d * 0.55, req.v - 0.5 + d], t: [req.u - 0.5, hy, req.v - 0.5] }, 2600);
-    void e;
+    v.focusOnVehicle(req);
   };
   useEffect(() => {
     const [a, b] = pts.length === 2 ? pts : [null, null];
@@ -597,8 +594,8 @@ export default function Lab3D() {
         {nav === "walk" && (
           <div className="t3-walk card">
             {!locked
-              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {BODIES[planetBody].label}.</b> {T("Clique no relevo da esquerda para começar.")} <kbd>W A S D</kbd> {T("anda", "walk")}, <kbd>Shift</kbd> {T("corre", "run")}, <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}, <kbd>Esc</kbd> {T("solta o mouse.", "releases the mouse.")}</p>
-              : <p className="m-0">{T("Andando", "Walking")} · <kbd>Esc</kbd> {T("para soltar o mouse", "to release the mouse")}</p>}
+              ? <p className="m-0"><b>{T("Modo caminhada em", "Walk mode on")} {BODIES[planetBody].label}.</b> {T("Clique no relevo da esquerda para começar.")} <kbd>W A S D</kbd> {T("ou", "or")} <kbd>↑ ↓ ← →</kbd> {T("anda", "walk")}, <kbd>Shift</kbd> {T("corre", "run")}, <kbd>{T("Espaço", "Space")}</kbd> {T("pula", "jump")}, <kbd>Esc</kbd> {T("solta o mouse.", "releases the mouse.")}</p>
+              : <p className="m-0">{T("Andando", "Walking")} · <kbd>W A S D</kbd> {T("ou", "or")} <kbd>↑ ↓ ← →</kbd> {T("para andar", "to walk")} · <kbd>Esc</kbd> {T("para soltar o mouse", "to release the mouse")}</p>}
             {walkInfo && <p className="m-0 mt-1 text-[13px]">{T("Altitude", "Altitude")} {fmt(walkInfo.h, 0)} m · {T("declividade sob os pés", "slope underfoot")} {fmt(walkInfo.slope, 1)}°</p>}
             <p className="m-0 mt-1 text-[13px]">
               {T("Mesmo impulso de pulo (2,5 m/s):", "Same jump impulse (2.5 m/s):")} <b>{fmt(jumpH(gB.g), 2)} m {T("em", "on")} {gB.label}</b> · {fmt(jumpH(9.807), 2)} m {T("na Terra", "on Earth")}
