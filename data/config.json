@@ -1,28 +1,82 @@
 {
   "attributes": {
-    "slope_mean_deg":   { "label": "Mean slope",     "unit": "°", "scale": 10 },
-    "roughness_mean_m": { "label": "Mean roughness", "unit": "m", "scale": 15 },
-    "relief_m":         { "label": "Relief",         "unit": "m", "scale": 500 }
+    "slope_mean_deg": {
+      "label": "Declividade média",
+      "unit": "°",
+      "scale": 10
+    },
+    "roughness_mean_m": {
+      "label": "Rugosidade média",
+      "unit": "m",
+      "scale": 15
+    },
+    "relief_m": {
+      "label": "Amplitude do relevo",
+      "unit": "m",
+      "scale": 500
+    }
   },
   "objectives": {
-    "default":   { "label": "Prototype 1 (default)", "weights": { "slope_mean_deg": 0.40, "roughness_mean_m": 0.35, "relief_m": 0.25 } },
-    "rover":     { "label": "Rover mobility tests",  "weights": { "slope_mean_deg": 0.50, "roughness_mean_m": 0.40, "relief_m": 0.10 } },
-    "landscape": { "label": "Landscape / relief",    "weights": { "slope_mean_deg": 0.25, "roughness_mean_m": 0.25, "relief_m": 0.50 } }
+    "default": {
+      "label": "Protótipo 1 (padrão)",
+      "weights": {
+        "slope_mean_deg": 0.4,
+        "roughness_mean_m": 0.35,
+        "relief_m": 0.25
+      }
+    },
+    "rover": {
+      "label": "Testes de mobilidade de rover",
+      "weights": {
+        "slope_mean_deg": 0.5,
+        "roughness_mean_m": 0.4,
+        "relief_m": 0.1
+      }
+    },
+    "landscape": {
+      "label": "Paisagem e relevo",
+      "weights": {
+        "slope_mean_deg": 0.25,
+        "roughness_mean_m": 0.25,
+        "relief_m": 0.5
+      }
+    }
   },
-  "thresholds": { "good": 0.15, "weak": 0.40 },
-  "stability": { "draws": 2000, "seed": 42, "distribution": "Dirichlet(1,1,1)", "top_k": 10 },
+  "thresholds": {
+    "good": 0.15,
+    "weak": 0.4
+  },
+  "stability": {
+    "draws": 2000,
+    "seed": 42,
+    "distribution": "Dirichlet(1,1,1)",
+    "top_k": 10
+  },
   "top_n": 10,
   "planet_maps": {
     "mars": {
       "url": "https://trek.nasa.gov/tiles/Mars/EQ/Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
       "max_native_zoom": 7,
-      "attribution": "NASA Mars Trek WMTS · Viking MDIM 2.1 colour mosaic (232 m)",
+      "attribution": "NASA Mars Trek WMTS · mosaico colorido Viking MDIM 2.1 (232 m)",
       "note": "Higher-resolution Mars Trek layers can be swapped in after checking their WMTSCapabilities.xml"
     }
   },
   "earth_limits": [
-    { "dimension": "Gravity", "text": "Earth gravity is 6x the Moon's and 2.6x Mars'. Mobility and dust behaviour differ." },
-    { "dimension": "Atmosphere", "text": "The Moon has no atmosphere and Mars has less than 1% of Earth's surface pressure. Earth sites cannot reproduce this." },
-    { "dimension": "Radiation", "text": "Without a global magnetic field and thick atmosphere, surface radiation on the Moon and Mars is far higher." }
-  ]
+    {
+      "dimension": "Gravidade",
+      "text": "A gravidade da Terra é 6 vezes a da Lua e 2,6 vezes a de Marte. Mobilidade e comportamento da poeira mudam."
+    },
+    {
+      "dimension": "Atmosfera",
+      "text": "A Lua não tem atmosfera e Marte tem menos de 1% da pressão da Terra. Nenhum local terrestre reproduz isso."
+    },
+    {
+      "dimension": "Radiação",
+      "text": "Sem campo magnético global e atmosfera espessa, a radiação na superfície da Lua e de Marte é muito maior."
+    }
+  ],
+  "globes": {
+    "mars": "https://trek.nasa.gov/tiles/Mars/EQ/Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/0/0/1.jpg",
+    "moon": "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0/default/default028mm/0/0/1.jpg"
+  }
 }

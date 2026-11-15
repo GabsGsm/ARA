@@ -39,7 +39,7 @@ def bbox_from_center(lat, lon, radius_km, half_km=terrain.CELL_KM / 2):
 # Centros (linha, coluna) dos setores no DEM CTX original de 20 m (1512 x 1596 px), do notebook/mock
 JEZERO_PX = {"Jezero_01": (380, 320), "Jezero_02": (720, 760), "Jezero_03": (1100, 1200), "Jezero_04": (1047, 334)}
 JEZERO_IMG = {"src": "img/jezero_ctx_dem.png", "frame_px": [1512, 1596],
-              "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation"}
+              "caption": "DEM CTX de Jezero (NASA/USGS), elevação em falsa cor"}
 
 
 def mars_sites(p1):
@@ -56,9 +56,9 @@ def mars_sites(p1):
         lat, lon = g["latitude_centro"], g["longitude_centro"]
         bbox = ([g["longitude_min"], g["latitude_min"], g["longitude_max"], g["latitude_max"]]
                 if "longitude_min" in g else bbox_from_center(lat, lon, MARS_R_KM))
-        cat.append({"id": sid, "body": "mars", "name": key.replace("_", " "), "group": "Jezero crater",
+        cat.append({"id": sid, "body": "mars", "name": key.replace("_", " "), "group": "Cratera Jezero",
                     "kind": "landing_site",
-                    "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+                    "why": "Área de pouso do Perseverance; a NASA usou Jezero como exemplo de Zona de Exploração para missões humanas",
                     "center": {"lat": lat, "lon": lon}, "bbox": bbox,
                     "cell_km": terrain.CELL_KM, "res_m": terrain.RES_M,
                     "image": JEZERO_IMG | {"box_px": [JEZERO_PX[key][1] - 125, JEZERO_PX[key][0] - 125, 250, 250]},
@@ -85,13 +85,13 @@ def moon_sites():
         c = computed.get(s["id"], {})
         ready = bool(c.get("terrain"))
         lat, lon = s["lat"], s["lon"]
-        cat.append({"id": s["id"], "body": "moon", "name": s["name"], "group": "Artemis III candidate region",
+        cat.append({"id": s["id"], "body": "moon", "name": s["name"], "group": "Região candidata Artemis III",
                     "kind": "landing_region",
-                    "why": "NASA candidate landing region for Artemis III near the lunar south pole",
+                    "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
                     "center": {"lat": lat, "lon": lon} if lat is not None else None,
                     "bbox": bbox_from_center(lat, lon, MOON_R_KM) if lat is not None else None,
                     "cell_km": terrain.CELL_KM, "res_m": terrain.RES_M,
-                    "image": {"src": f"img/{s['id']}.png", "caption": "LOLA hillshade (NASA Goddard PGDA)"},
+                    "image": {"src": f"img/{s['id']}.png", "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"},
                     "status": "ready" if ready else "pending",
                     "sources": [ARTEMIS_SOURCE, LOLA_SOURCE]})
         attrs[s["id"]] = {"terrain": c.get("terrain"), "thermal": c.get("thermal"),

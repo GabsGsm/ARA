@@ -71,12 +71,12 @@ export function explain(siteAttrs, cell, config) {
     site: siteAttrs?.terrain?.[attr] ?? null, cell: cell[attr] ?? null,
     ...dimensionStatus(siteAttrs?.terrain?.[attr], cell[attr], meta.scale, config.thresholds),
   }));
-  dims.push({ dimension: "Surface temperature", attr: "thermal", status: "no_data", diff: null,
-              note: siteAttrs?.thermal ? "Planet value available; Earth value not yet computed" : "Not computed yet" });
-  dims.push({ dimension: "Mineralogy", attr: "mineralogy", status: "no_data", diff: null,
+  dims.push({ dimension: "Temperatura da superfície", attr: "thermal", status: "no_data", diff: null,
+              note: siteAttrs?.thermal ? "Valor planetário disponível; valor da Terra ainda não calculado" : "Ainda não calculada" });
+  dims.push({ dimension: "Mineralogia", attr: "mineralogy", status: "no_data", diff: null,
               note: cell.context?.lithology?.length
-                ? `Earth: mapped lithology (${cell.context.lithology.join(", ")}); minerals not verified`
-                : "Earth mineralogy not verified" });
+                ? `Terra: litologia mapeada (${cell.context.lithology.join(", ")}); minerais não verificados`
+                : "Mineralogia da Terra não verificada" });
   config.earth_limits.forEach((l) => dims.push({ dimension: l.dimension, attr: "limit", status: "not_analog", diff: null, note: l.text }));
   return dims;
 }
@@ -95,13 +95,14 @@ export function cellsForVariant(cells, variant, simulation) {
     .map((c) => ({ ...c, ...simulation.earth[c.id][variant], simulated: true }));
 }
 
-const STATUS_WORD = { analog: "analogous", partial: "partially analogous", not_analog: "not analogous", no_data: "no data" };
+const br = (v, d) => (v == null ? "—" : Number(v).toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d }));
+const STATUS_WORD = { analog: "análogo", partial: "parcialmente análogo", not_analog: "não análogo", no_data: "sem dado" };
 
 export function describeCell(cell, dims, position) {
   const parts = dims.filter((d) => ["slope_mean_deg", "roughness_mean_m", "relief_m"].includes(d.attr))
-    .map((d) => `${d.dimension.toLowerCase()} ${d.cell?.toFixed(1)} ${d.unit} (${STATUS_WORD[d.status]})`);
-  const name = cell.known ? `${cell.known}, known analog` : "new candidate";
-  return `#${position}: cell ${cell.id}, ${name}, at ${cell.lat.toFixed(2)}°, ${cell.lon.toFixed(2)}°. ${parts.join("; ")}.`;
+    .map((d) => `${d.dimension.toLowerCase()} ${br(d.cell, 1)}${d.unit === "°" ? "" : " "}${d.unit} (${STATUS_WORD[d.status]})`);
+  const name = cell.known ? `${cell.known}, análogo conhecido` : "novo candidato";
+  return `${position}º: célula ${cell.id}, ${name}, em ${br(cell.lat, 2)}°, ${br(cell.lon, 2)}°. ${parts.join("; ")}.`;
 }
 
 export function cellBounds(cell, halfKm = 2.5) {

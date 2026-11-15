@@ -59,9 +59,13 @@ python pipeline/build_catalog.py
 python pipeline/stability.py
 python pipeline/enrich_context.py --top 50
 python pipeline/build_simulation.py --mars-tif jezero_01=.../jezero_01_dem_100m.tif
-# view locally
-rm -rf web/data && mkdir web/data && cp data/*.json web/data/ && python -m http.server -d web 8000
+# view locally (serves web/ and reads data/ directly; no copying)
+python tools/dev.py
 ```
+
+## Design
+
+Colours: deep petrol blue `#071d24 → #123a40` fading to sage `#8fa98f`, gold accent `#f2b53a`, ink `#f4f1e8`. Fonts: Michroma (headings, logo) and Lexend (text), from Google Fonts. Design tokens live at the top of `web/css/style.css`. The home-page planets use NASA Trek tiles (Viking colour mosaic, LRO WAC) when online, with a gradient fallback offline.
 
 ## Limitations
 

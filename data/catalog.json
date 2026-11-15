@@ -5,16 +5,16 @@
    "id": "moon_mons_mouton",
    "body": "moon",
    "name": "Mons Mouton",
-   "group": "Artemis III candidate region",
+   "group": "Região candidata Artemis III",
    "kind": "landing_region",
-   "why": "NASA candidate landing region for Artemis III near the lunar south pole",
+   "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
    "center": null,
    "bbox": null,
    "cell_km": 5,
    "res_m": 100,
    "image": {
     "src": "img/moon_mons_mouton.png",
-    "caption": "LOLA hillshade (NASA Goddard PGDA)"
+    "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"
    },
    "status": "pending",
    "sources": [
@@ -32,16 +32,16 @@
    "id": "moon_malapert_massif",
    "body": "moon",
    "name": "Malapert Massif",
-   "group": "Artemis III candidate region",
+   "group": "Região candidata Artemis III",
    "kind": "landing_region",
-   "why": "NASA candidate landing region for Artemis III near the lunar south pole",
+   "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
    "center": null,
    "bbox": null,
    "cell_km": 5,
    "res_m": 100,
    "image": {
     "src": "img/moon_malapert_massif.png",
-    "caption": "LOLA hillshade (NASA Goddard PGDA)"
+    "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"
    },
    "status": "pending",
    "sources": [
@@ -59,16 +59,16 @@
    "id": "moon_haworth",
    "body": "moon",
    "name": "Haworth",
-   "group": "Artemis III candidate region",
+   "group": "Região candidata Artemis III",
    "kind": "landing_region",
-   "why": "NASA candidate landing region for Artemis III near the lunar south pole",
+   "why": "Região candidata da NASA ao pouso do Artemis III, perto do polo sul lunar",
    "center": null,
    "bbox": null,
    "cell_km": 5,
    "res_m": 100,
    "image": {
     "src": "img/moon_haworth.png",
-    "caption": "LOLA hillshade (NASA Goddard PGDA)"
+    "caption": "Relevo sombreado LOLA (NASA Goddard PGDA)"
    },
    "status": "pending",
    "sources": [
@@ -86,9 +86,9 @@
    "id": "jezero_01",
    "body": "mars",
    "name": "Jezero 01",
-   "group": "Jezero crater",
+   "group": "Cratera Jezero",
    "kind": "landing_site",
-   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "why": "Área de pouso do Perseverance; a NASA usou Jezero como exemplo de Zona de Exploração para missões humanas",
    "center": {
     "lat": 18.592978,
     "lon": 77.268437
@@ -107,7 +107,7 @@
      1512,
      1596
     ],
-    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "caption": "DEM CTX de Jezero (NASA/USGS), elevação em falsa cor",
     "box_px": [
      195,
      255,
@@ -130,9 +130,9 @@
    "id": "jezero_02",
    "body": "mars",
    "name": "Jezero 02",
-   "group": "Jezero crater",
+   "group": "Cratera Jezero",
    "kind": "landing_site",
-   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "why": "Área de pouso do Perseverance; a NASA usou Jezero como exemplo de Zona de Exploração para missões humanas",
    "center": {
     "lat": 18.478258,
     "lon": 77.416899
@@ -151,7 +151,7 @@
      1512,
      1596
     ],
-    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "caption": "DEM CTX de Jezero (NASA/USGS), elevação em falsa cor",
     "box_px": [
      635,
      595,
@@ -174,9 +174,9 @@
    "id": "jezero_03",
    "body": "mars",
    "name": "Jezero 03",
-   "group": "Jezero crater",
+   "group": "Cratera Jezero",
    "kind": "landing_site",
-   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "why": "Área de pouso do Perseverance; a NASA usou Jezero como exemplo de Zona de Exploração para missões humanas",
    "center": {
     "lat": 18.350041,
     "lon": 77.56536
@@ -195,7 +195,7 @@
      1512,
      1596
     ],
-    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "caption": "DEM CTX de Jezero (NASA/USGS), elevação em falsa cor",
     "box_px": [
      1075,
      975,
@@ -218,9 +218,9 @@
    "id": "jezero_04",
    "body": "mars",
    "name": "Jezero 04",
-   "group": "Jezero crater",
+   "group": "Cratera Jezero",
    "kind": "landing_site",
-   "why": "Perseverance landing area; NASA used Jezero as an example human Exploration Zone",
+   "why": "Área de pouso do Perseverance; a NASA usou Jezero como exemplo de Zona de Exploração para missões humanas",
    "center": {
     "lat": 18.367755,
     "lon": 77.27333
@@ -239,7 +239,7 @@
      1512,
      1596
     ],
-    "caption": "Jezero CTX DEM (NASA/USGS), false-colour elevation",
+    "caption": "DEM CTX de Jezero (NASA/USGS), elevação em falsa cor",
     "box_px": [
      209,
      922,

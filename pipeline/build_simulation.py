@@ -33,10 +33,10 @@ CACHE = HERE / "cache"
 SEED = 7
 
 VARIANTS = [
-    {"id": "base", "label": "Original data (100 m)", "kind": "base"},
-    {"id": "res_300", "label": "Lower resolution (300 m)", "kind": "resolution"},
-    {"id": "gap_30", "label": "30% of the area missing", "kind": "missing"},
-    {"id": "noise_5", "label": "Elevation noise (±5 m, 1σ)", "kind": "noise"},
+    {"id": "base", "label": "Dados originais (100 m)", "kind": "base"},
+    {"id": "res_300", "label": "Resolução menor (300 m)", "kind": "resolution"},
+    {"id": "gap_30", "label": "30% da área sem dados", "kind": "missing"},
+    {"id": "noise_5", "label": "Ruído na elevação (±5 m)", "kind": "noise"},
 ]
 KEEP = terrain.RANK_ATTRS + ["valid_pct"]
 
