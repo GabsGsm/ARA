@@ -111,7 +111,7 @@ export default function Explore() {
             </p>
           )}
           {ex.viewMode === "map"
-            ? <EarthMap results={results} selected={ex.selected} focus={focus} onPick={pick} />
+            ? <EarthMap results={results} selected={ex.selected} focus={focus} onPick={pick} fitKey={`${ex.siteId}|${ex.variant}`} />
             : <ResultsTable results={results} selected={ex.selected} onPick={pickFromTable} />}
         </section>
 
