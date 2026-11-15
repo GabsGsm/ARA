@@ -57,13 +57,17 @@ export default function DiscoverPanel() {
     runId.current++; setRun(null);
   };
 
+  const searchId = useRef(0);   // só a busca mais recente preenche a lista
   const search = async () => {
-    if (!query.trim()) return;
-    setFound({ loading: true });
+    const q = query.trim();
+    if (!q) return;
+    const id = ++searchId.current;
+    setFound({ loading: true, q });
     try {
-      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(query)}`, { headers: { "Accept-Language": T("pt-BR", "en") } });
-      setFound({ list: (await r.json()).map((x) => ({ name: x.display_name, lat: +x.lat, lon: +x.lon })) });
-    } catch { setFound({ error: T("Busca indisponível agora — use coordenadas ou clique no mapa.", "Search unavailable right now — use coordinates or click the map.") }); }
+      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(q)}`, { headers: { "Accept-Language": T("pt-BR", "en") } });
+      const list = (await r.json()).map((x) => ({ name: x.display_name, lat: +x.lat, lon: +x.lon }));
+      if (id === searchId.current) setFound({ list, q });
+    } catch { if (id === searchId.current) setFound({ error: T("Busca indisponível agora — use coordenadas ou clique no mapa.", "Search unavailable right now — use coordinates or click the map.") }); }
   };
 
   // célula do catálogo que contém o ponto (para validação e para evidências pré-processadas)

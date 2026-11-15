@@ -165,22 +165,33 @@ export default function Lab3D() {
   useEffect(() => { if (isWalk) { setNav("walk"); setSettings((s) => ({ ...s, exag: 1 })); } }, [isWalk, siteId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ---- testar um lugar qualquer da Terra
+  // cada teste tem um número: escolher outro análogo ou começar outro teste invalida o anterior (resultado e progresso)
+  const liveReq = useRef(0);
+  const cancelLive = () => { liveReq.current++; setLive((l) => ({ ...l, scene: null, busy: false, progress: { f: 0, text: "" } })); };
   const testLive = async (lat, lon, name) => {
+    const id = ++liveReq.current;
     setLive((l) => ({ ...l, busy: true, error: null, progress: { f: 0, text: T("Começando…", "Starting…") } }));
     try {
-      const sc = await buildLiveScene(lat, lon, name, (text, f) => setLive((l) => ({ ...l, progress: { text, f } })));
-      setLive({ scene: sc, busy: false, progress: { f: 1, text: "" }, error: null });
+      const sc = await buildLiveScene(lat, lon, name, (text, f) => { if (id === liveReq.current) setLive((l) => ({ ...l, progress: { text, f } })); });
+      if (id === liveReq.current) setLive({ scene: sc, busy: false, progress: { f: 1, text: "" }, error: null });
     } catch (e) {
       console.error(e);
-      setLive((l) => ({ ...l, busy: false, error: T("Não consegui baixar os dados desse ponto (sem rede ou fora da cobertura). Tente outro.", "Could not download data for this point (no network or outside coverage). Try another.") }));
+      if (id === liveReq.current) setLive((l) => ({ ...l, busy: false, error: T("Não consegui baixar os dados desse ponto (sem rede ou fora da cobertura). Tente outro.", "Could not download data for this point (no network or outside coverage). Try another.") }));
     }
   };
 
   // ---- ponto vindo do modo Descobrir do Explorar (?lat=&lon=&nome=)
   const askedLive = useRef(false);
   useEffect(() => {
-    const la = Number(params.get("lat")), lo = Number(params.get("lon"));
-    if (askedLive.current || !params.has("lat") || !Number.isFinite(la) || !Number.isFinite(lo)) return;
+    if (askedLive.current || !params.has("lat")) return;
+    // exige lat E lon válidas (Number(null) seria 0 e carregaria um ponto não pedido)
+    const num = (v) => (v == null || String(v).trim() === "" ? NaN : Number(String(v).replace(",", ".")));
+    const la = num(params.get("lat")), lo = num(params.get("lon"));
+    if (!Number.isFinite(la) || !Number.isFinite(lo) || Math.abs(la) > 85 || Math.abs(lo) > 180) {
+      askedLive.current = true;
+      setLive((l) => ({ ...l, error: T("Link incompleto ou inválido: são precisos latitude e longitude válidas para testar um ponto.", "Incomplete or invalid link: a valid latitude and longitude are needed to test a point.") }));
+      return;
+    }
     askedLive.current = true;
     testLive(la, lo, params.get("nome") || `Ponto ${la.toFixed(3)}°, ${lo.toFixed(3)}°`);
   }, [params]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -426,7 +437,7 @@ export default function Lab3D() {
                 {missing3d && <p className="t3-note mb-2">{T(`“${missing3d}” ainda não tem cena 3D. Mostrando o melhor análogo que tem relevo 3D gerado.`, `“${missing3d}” has no 3D scene yet. Showing the best analog with generated 3D relief.`)}</p>}
                 <div className="t3-list" role="radiogroup" aria-label={T("Análogo", "Analog")}>
                   {ranking.map((r) => (
-                    <button key={r.cell.id} type="button" role="radio" aria-checked={!live.scene && r.cell.id === analogId} onClick={() => { setLive((l) => ({ ...l, scene: null })); setAnalogId(r.cell.id); }}>
+                    <button key={r.cell.id} type="button" role="radio" aria-checked={!live.scene && r.cell.id === analogId} onClick={() => { cancelLive(); setAnalogId(r.cell.id); }}>
                       <span className="t3-rank">{r.position}º</span>
                       <span><b>{byId[r.cell.id]?.name ?? r.cell.id}</b><small>{T(`distância ${fmt(r.d, 3)} · ${r.position}º de ${data.cells.length} células${r.position === 1 ? " · o melhor" : ""}`, `distance ${fmt(r.d, 3)} · #${r.position} of ${data.cells.length} cells${r.position === 1 ? " · the best" : ""}`)}</small></span>
                     </button>
@@ -444,7 +455,7 @@ export default function Lab3D() {
               <>
                 <h2 className="t3-h">{tr("Testar qualquer lugar da Terra")}</h2>
                 <LiveEarthPicker busy={live.busy} progress={live.progress} error={live.error} onTest={testLive}
-                                 active={Boolean(live.scene)} onClear={() => setLive((l) => ({ ...l, scene: null }))} />
+                                 active={Boolean(live.scene)} onClear={cancelLive} />
               </>
             )}
 

@@ -152,6 +152,11 @@ export default function Field() {
     svc.geology(at[0], at[1]).then((r) => { if (id === geoReq.current) setGeo({ ...r, at }); });
   }, [pos?.[0], pos?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // a caracterização vale para o ponto em que foi feita: se a posição andar mais de 100 m, ela é descartada
+  useEffect(() => {
+    if (pos && terr?.at && hav(terr.at, pos) > 100) { setTerr(null); terrReq.current++; }
+  }, [pos?.[0], pos?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const characterize = async () => {
     if (!pos) return;
     const id = ++terrReq.current, at = pos;
@@ -208,7 +213,7 @@ export default function Field() {
           {pos && <Marker position={pos} icon={me} />}
           {pos && <Rectangle bounds={core.cellBounds({ lat: pos[0], lon: pos[1] })} pathOptions={{ color: "#f2b53a", weight: 1, dashArray: "4 6", fillOpacity: 0 }} />}
           <Follow pos={pos} follow={mode !== "map"} />
-          <Pick on={mode === "map"} onPick={(la, lo) => { setFix({ lat: la, lon: lo, acc: 0, t: Date.now() }); setTerr(null); }} />
+          <Pick on={mode === "map"} onPick={(la, lo) => { setFix({ lat: la, lon: lo, acc: 0, t: Date.now() }); setTerr(null); terrReq.current++; }} />
         </MapContainer>
         <div className="fx-hud" role="status">
           <span>{mode === "gps" ? (running ? T("● Acompanhando", "● Tracking") : T("Pausado", "Paused")) : mode === "demo" ? (running ? T("● Simulando", "● Simulating") : T("Simulação parada", "Simulation stopped")) : T("Local escolhido no mapa", "Place picked on the map")}</span>

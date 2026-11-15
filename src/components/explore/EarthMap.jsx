@@ -15,13 +15,13 @@ function allBounds(results) {
 }
 
 /** Enquadra todas as células quando o conjunto muda; voa até a célula escolhida pelo usuário. */
-function MapSync({ results, focus, fitTick }) {
+function MapSync({ results, focus, fitTick, fitKey }) {
   const map = useMap();
-  const idsKey = results.map((r) => r.cell.id).join("|");
+  // reenquadra tudo só quando muda o local/variante ou a pessoa pede ("Ver todos"); mudar pesos não tira o foco escolhido
   useEffect(() => {
     const pts = allBounds(results);
     if (pts.length) map.fitBounds(pts, { padding: [30, 30], maxZoom: CELL_ZOOM });
-  }, [map, idsKey, fitTick]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [map, fitKey, fitTick]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const r = focus && results.find((x) => x.cell.id === focus.id);
     // enquadra a célula com folga (não enche a tela de amarelo) e anima rápido para não travar
@@ -32,7 +32,7 @@ function MapSync({ results, focus, fitTick }) {
 
 import { useTr } from "../../hooks/useSettings.jsx";
 
-export default function EarthMap({ results, selected, focus, onPick }) {
+export default function EarthMap({ results, selected, focus, onPick, fitKey = "" }) {
   const tr = useTr();
   const { cellName } = useAraData();
   const [gibs, setGibs] = useState(false);
@@ -58,7 +58,7 @@ export default function EarthMap({ results, selected, focus, onPick }) {
             </CircleMarker>,
           ];
         })}
-        <MapSync results={results} focus={focus} fitTick={fitTick} />
+        <MapSync results={results} focus={focus} fitTick={fitTick} fitKey={fitKey} />
       </MapContainer>
       <button type="button" onClick={() => setFitTick((t) => t + 1)}
               className="absolute right-2.5 top-2.5 z-[500] cursor-pointer rounded-full border border-line bg-petrol-950/85 px-3 py-1.5 text-[13px] text-ink hover:border-gold">

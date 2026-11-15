@@ -37,16 +37,17 @@ export default function RobustnessMatrix({ siteId, top = 6 }) {
       <div className="overflow-x-auto">
         <table className="data-table ev-robust">
           <thead>
-            <tr><th>{T("Candidato", "Candidate")}</th>{scenarios.map((s) => <th key={s.id} title={`${s.objective} · ${s.variant}`}><span>{s.objective.split(" ")[0]}</span><small>{s.variant.replace(/\(.*\)/, "").trim()}</small><small className="opacity-70">{T(`de ${s.n}`, `of ${s.n}`)}</small></th>)}<th>{T("No top 10", "In top 10")}</th></tr>
+            <tr><th>{T("Candidato", "Candidate")}</th>{scenarios.map((s) => <th key={s.id} title={`${s.objective} · ${s.variant}`}><span>{s.objective.split(" ")[0]}</span><small>{s.variant.replace(/\(.*\)/, "").trim()}</small><small className="opacity-70">{T(`de ${s.n}`, `of ${s.n}`)}</small></th>)}<th>{T("No top 10 (cenários com dados)", "In top 10 (scenarios with data)")}</th></tr>
           </thead>
           <tbody>
             {list.map((r) => {
               const n = r.positions.filter(inTop).length;
+              const elig = r.positions.filter((p) => p != null).length, missing = scenarios.length - elig;
               return (
                 <tr key={r.cell.id}>
                   <th scope="row">{data.cellName(r.cell)}</th>
                   {r.positions.map((p, i) => <td key={i} className={inTop(p) ? "in" : p == null ? "na" : ""}>{p == null ? "—" : `${p}º`}</td>)}
-                  <td><b>{n}/{scenarios.length}</b></td>
+                  <td><b>{n}/{elig}</b>{missing > 0 && <small className="block text-muted">{T(`${missing} de ${scenarios.length} cenários sem dados`, `${missing} of ${scenarios.length} scenarios without data`)}</small>}</td>
                 </tr>
               );
             })}
